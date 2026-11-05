@@ -44,7 +44,7 @@
       </p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#building">See what I'm building</a>
-        <a class="btn btn-ghost" href="mailto:evan@evanmurrayjones.com">Get in touch</a>
+        <a class="btn btn-ghost" href="#contact">Get in touch</a>
       </div>
     </section>
 
@@ -166,7 +166,7 @@
     <section id="contact" class="section section-contact" aria-labelledby="contact-title">
       <h2 id="contact-title">Get in touch</h2>
       <p class="contact-lede">The best way to reach me is email.</p>
-      <a class="email-link" href="mailto:evan@evanmurrayjones.com">evan@evanmurrayjones.com</a>
+      <a class="email-link js-email" data-u="evan" data-d="evanmurrayjones.com" href="#">evan <span aria-hidden="true">[at]</span> evanmurrayjones.com</a>
     </section>
   </main>
 
@@ -180,6 +180,12 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+    // Assemble email on the client so address-harvesting bots can't scrape it from the HTML.
+    document.querySelectorAll('.js-email').forEach(function (el) {
+      var addr = el.dataset.u + '@' + el.dataset.d;
+      el.href = 'mailto:' + addr;
+      el.textContent = addr;
+    });
   </script>
 </body>
 </html>
