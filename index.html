@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Evan Murray Jones</title>
+  <meta name="description" content="Evan Murray Jones — builder of AI systems and automation. Personal home for the things I make." />
+  <meta name="author" content="Evan Murray Jones" />
+
+  <!-- Open Graph / social -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Evan Murray Jones" />
+  <meta property="og:description" content="Builder of AI systems and automation. Personal home for the things I make." />
+  <meta property="og:url" content="https://evanmurrayjones.com" />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">EMJ</a>
+      <div class="nav-links">
+        <a href="#building">Building</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="eyebrow">Evan Murray Jones</p>
+      <h1 id="hero-title">I build AI systems<br />that do real work.</h1>
+      <p class="lede">
+        Automation, voice agents, data migration, and the tools in between.
+        This is my own corner of the web — where the things I make live,
+        apart from any company or client.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#building">See what I'm building</a>
+        <a class="btn btn-ghost" href="mailto:evan@evanmurrayjones.com">Get in touch</a>
+      </div>
+    </section>
+
+    <!-- BUILDING -->
+    <section id="building" class="section" aria-labelledby="building-title">
+      <div class="section-head">
+        <h2 id="building-title">Things I'm building</h2>
+        <p class="section-sub">A living list. It grows as I do.</p>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <div class="card-top">
+            <span class="tag">AI · Voice</span>
+          </div>
+          <h3>Production voice agents</h3>
+          <p>Conversational AI that answers real phone calls — modeled on top human operators, grounded in real transcripts, live in production.</p>
+        </article>
+
+        <article class="card">
+          <div class="card-top">
+            <span class="tag">AI · Data</span>
+          </div>
+          <h3>Field-type-aware migration</h3>
+          <p>Systems that read a source schema and infer what each field <em>means</em> — type, format, value domain — so a target can be generated automatically.</p>
+        </article>
+
+        <article class="card">
+          <div class="card-top">
+            <span class="tag">Product</span>
+          </div>
+          <h3>Software of the people</h3>
+          <p>Tools built for myself first, then opened up — user-driven roadmaps, cost-based pricing, improvements that belong to the people who ask for them.</p>
+        </article>
+
+        <article class="card">
+          <div class="card-top">
+            <span class="tag">Automation</span>
+          </div>
+          <h3>Personal automation stack</h3>
+          <p>Unattended agents that handle the operational grind — comms, scheduling, ingestion, monitoring — so the real work gets the attention.</p>
+        </article>
+
+        <article class="card card-add">
+          <div class="card-top">
+            <span class="tag tag-muted">More</span>
+          </div>
+          <h3>And more, soon</h3>
+          <p>This hub is where new projects land. Check back — or reach out if you want a look.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section section-about" aria-labelledby="about-title">
+      <div class="about-wrap">
+        <h2 id="about-title">About</h2>
+        <p>
+          I'm Evan Murray Jones. I design and build AI-driven software — voice
+          agents, automation, and data systems — with a background in structured
+          form and data design that shapes how I think about every system:
+          the field type, the format, and the value domain <em>are</em> the meaning.
+        </p>
+        <p>
+          I build for myself first and prove it in the real world before offering
+          it to anyone else. This site is deliberately independent — my own domain,
+          my own stack, meant to stay online indefinitely.
+        </p>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section section-contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">Get in touch</h2>
+      <p class="contact-lede">The best way to reach me is email.</p>
+      <a class="email-link" href="mailto:evan@evanmurrayjones.com">evan@evanmurrayjones.com</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© <span id="year">2026</span> Evan Murray Jones</span>
+      <span class="footer-dot">·</span>
+      <span>evanmurrayjones.com</span>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
