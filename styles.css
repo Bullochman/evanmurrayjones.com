@@ -245,6 +245,62 @@ h2 {
   background: #000;
 }
 
+.trust-line { color: var(--text-faint); font-size: .85rem; margin: 1.6rem 0 0; }
+.app-blurb { color: var(--text-soft); font-size: 1.02rem; margin: 1.4rem 0 0; max-width: 70ch; }
+.app-card-aa .app-icon { background: #16203A; }
+.btn-lg { padding: .95rem 1.7rem; font-size: 1.05rem; }
+
+/* ---------- Project cards: icon + subtitle + tag variants ---------- */
+.card-icon { border-radius: 10px; flex:0 0 auto; }
+.card-top { display:flex; align-items:center; justify-content:space-between; gap:.6rem; margin-bottom:1rem; }
+.card-sub { color: var(--text); font-weight: 600; font-size: .98rem; margin: 0 0 .5rem; }
+.tag-soon { color: var(--warn, #b8841f); background: rgba(216,162,60,.16); }
+.tag-case { color: var(--text-faint); background: var(--bg-soft); }
+@media (prefers-color-scheme: dark){ .tag-soon{ color:#e0b253; } }
+
+/* ---------- Skills ---------- */
+.section-skills { background: var(--bg-soft); max-width:none; padding-left:0; padding-right:0; }
+.skills-wrap { max-width: var(--maxw); margin:0 auto; padding: 0 1.5rem; }
+.skill-block { margin-bottom: 1.6rem; }
+.skill-block h4 { margin:0 0 .7rem; font-size:1rem; color: var(--text); letter-spacing: .01em; display:flex; align-items:center; gap:.5rem; }
+.count-badge { font-size:.72rem; font-weight:700; color:var(--accent); background:var(--accent-soft); padding:.15rem .5rem; border-radius:999px; }
+.chips { display:flex; flex-wrap:wrap; gap:.5rem; }
+.chips span {
+  font-size:.86rem; color: var(--text-soft); background: var(--surface);
+  border:1px solid var(--border); border-radius:999px; padding:.4rem .8rem;
+}
+.chips-api span.hot, .chips span.hot {
+  color:#fff; background: var(--accent); border-color: transparent; font-weight:600;
+}
+
+/* ---------- Work with me ---------- */
+.section-work { }
+.work-card {
+  max-width: 720px; margin:0 auto; text-align:center;
+  background: var(--surface); border:1px solid var(--border); border-radius:22px;
+  box-shadow: var(--shadow); padding: clamp(2rem,5vw,3.2rem);
+}
+.work-lede { color:var(--text-soft); font-size:1.08rem; margin: .6rem auto 1.4rem; max-width: 56ch; }
+.price-row { margin: .5rem 0 1.4rem; }
+.price { font-family: var(--serif); font-size: 3rem; font-weight:600; color: var(--text); }
+.per { color: var(--text-faint); font-size:1.1rem; margin-left:.2rem; }
+.work-list { list-style:none; padding:0; margin:0 auto 1.8rem; max-width: 44ch; text-align:left; display:inline-block; }
+.work-list li { position:relative; padding-left:1.6rem; margin-bottom:.6rem; color:var(--text-soft); }
+.work-list li::before { content:"✓"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+.work-note { color:var(--text-faint); font-size:.85rem; margin: 1.1rem 0 0; }
+
+/* ---------- Vault ---------- */
+.section-vault { }
+.vault-wrap {
+  max-width: 640px; margin:0 auto; text-align:center;
+  border:1.5px dashed var(--border); border-radius:22px; padding: clamp(2rem,5vw,3rem);
+  background: linear-gradient(180deg, transparent, var(--bg-soft));
+}
+.vault-wrap h2 { margin:.3rem 0 .8rem; }
+.vault-lede { color:var(--text-soft); max-width: 52ch; margin:0 auto 1.6rem; }
+
+.about-trust { color: var(--text-faint); font-size: .92rem; border-top:1px solid var(--border); padding-top:1.2rem; margin-top:1.4rem !important; }
+
 /* ---------- Building grid ---------- */
 .grid {
   display: grid;
