@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evan Jones — Financial Situation</title>
+<style>
+:root{
+  color-scheme: light dark;
+  --page:#f4f4f1; --surface:#ffffff; --surface-2:#faf9f6;
+  --ink:#12110f; --ink-2:#55534e; --muted:#8a887f;
+  --hair:#e5e3db; --ring:rgba(15,15,10,.08);
+  --series-1:#2a78d6; --series-3:#e87ba4; --series-4:#eda100;
+  --series-5:#1baf7a; --series-6:#eb6834;
+  --good:#0a8f0a; --crit:#d03b3b; --crit-soft:#fbe7e7;
+  --shadow:0 1px 2px rgba(15,15,10,.05),0 4px 16px rgba(15,15,10,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    --page:#0d0d0c; --surface:#1a1a19; --surface-2:#201f1d;
+    --ink:#f7f6f2; --ink-2:#c3c2b7; --muted:#8a887f;
+    --hair:#2c2c2a; --ring:rgba(255,255,255,.08);
+    --series-1:#3987e5; --series-3:#d55181; --series-4:#c98500;
+    --series-5:#199e70; --series-6:#d95926;
+    --good:#0ca30c; --crit:#e66767; --crit-soft:#3a1f1f;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 20px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --page:#0d0d0c; --surface:#1a1a19; --surface-2:#201f1d;
+  --ink:#f7f6f2; --ink-2:#c3c2b7; --muted:#8a887f;
+  --hair:#2c2c2a; --ring:rgba(255,255,255,.08);
+  --series-1:#3987e5; --series-3:#d55181; --series-4:#c98500;
+  --series-5:#199e70; --series-6:#d95926;
+  --good:#0ca30c; --crit:#e66767; --crit-soft:#3a1f1f;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{max-width:100%;overflow-x:hidden;}
+body{margin:0;background:var(--page);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  line-height:1.5;-webkit-font-smoothing:antialiased;overflow-wrap:break-word;}
+.wrap{max-width:960px;margin:0 auto;padding:28px 20px 80px;}
+header.top{margin-bottom:8px;}
+h1{font-size:1.7rem;margin:0 0 4px;letter-spacing:-.02em;}
+.sub{color:var(--ink-2);font-size:.98rem;margin:0;}
+.caption{color:var(--muted);font-size:.8rem;margin-top:10px;}
+.caption b{color:var(--ink-2);font-weight:600;}
+section{background:var(--surface);border:1px solid var(--hair);border-radius:16px;
+  padding:22px;margin-top:20px;box-shadow:var(--shadow);}
+h2{font-size:1.12rem;margin:0 0 4px;letter-spacing:-.01em;}
+.h-note{color:var(--muted);font-size:.85rem;margin:0 0 16px;}
+.lede{font-size:1.02rem;color:var(--ink-2);margin:0 0 4px;}
+.lede b{color:var(--ink);font-weight:650;}
+
+/* stat tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+.tile{background:var(--surface-2);border:1px solid var(--hair);border-radius:13px;padding:15px 16px;}
+.tile .k{font-size:.76rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:6px;}
+.tile .v{font-size:1.5rem;font-weight:680;letter-spacing:-.02em;}
+.tile .cap{font-size:.78rem;color:var(--ink-2);margin-top:3px;}
+.tile.gap{background:var(--crit-soft);border-color:transparent;}
+.tile.gap .v{color:var(--crit);}
+.tile.good .v{color:var(--good);}
+
+/* gap hero */
+.gap-hero{display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  background:var(--crit-soft);border-radius:14px;padding:18px 20px;margin-top:16px;}
+.gap-hero .big{font-size:2.5rem;font-weight:720;color:var(--crit);letter-spacing:-.03em;line-height:1;}
+.gap-hero .txt{color:var(--ink-2);font-size:.95rem;flex:1;min-width:200px;}
+
+/* comparison bars */
+.cmp{margin-top:6px;}
+.cmp-row{display:flex;align-items:center;gap:12px;margin:10px 0;}
+.cmp-lab{width:120px;font-size:.9rem;color:var(--ink-2);flex-shrink:0;}
+.cmp-track{flex:1;background:var(--surface-2);border-radius:8px;height:34px;position:relative;overflow:hidden;border:1px solid var(--hair);}
+.cmp-fill{height:100%;border-radius:7px;display:flex;align-items:center;justify-content:flex-end;
+  padding-right:10px;color:#fff;font-weight:640;font-size:.9rem;min-width:60px;}
+
+/* horizontal bar charts */
+.bar-row{display:grid;grid-template-columns:150px 1fr 92px;align-items:center;gap:10px;margin:7px 0;}
+.bar-label{font-size:.86rem;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bar-track{background:var(--surface-2);border-radius:6px;height:16px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:6px;}
+.bar-val{font-size:.85rem;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink);}
+
+/* donut */
+.donut-wrap{display:flex;gap:26px;align-items:center;flex-wrap:wrap;}
+.donut{flex-shrink:0;}
+.donut-seg{transform:rotate(-90deg);transform-origin:70px 70px;}
+.donut-center{font-size:.72rem;fill:var(--muted);}
+.donut-total{font-size:1.05rem;font-weight:700;fill:var(--ink);}
+.legend{flex:1;min-width:230px;}
+.lg-row{display:flex;align-items:center;gap:9px;padding:5px 0;border-bottom:1px solid var(--hair);font-size:.9rem;}
+.lg-row:last-child{border-bottom:none;}
+.sw{width:11px;height:11px;border-radius:3px;flex-shrink:0;}
+.lg-label{flex:1;color:var(--ink-2);}
+.lg-val{font-variant-numeric:tabular-nums;font-weight:600;}
+.lg-pct{color:var(--muted);font-weight:400;}
+
+/* property cards */
+.props{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+.prop{background:var(--surface-2);border:1px solid var(--hair);border-radius:13px;padding:17px;}
+.prop h3{margin:0 0 2px;font-size:1.02rem;}
+.prop .loc{color:var(--muted);font-size:.82rem;margin-bottom:12px;}
+.kv{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--hair);font-size:.9rem;}
+.kv:last-child{border-bottom:none;}
+.kv .kk{color:var(--ink-2);}
+.kv .vv{font-weight:600;font-variant-numeric:tabular-nums;}
+.pill{display:inline-block;font-size:.72rem;padding:2px 9px;border-radius:20px;font-weight:600;margin-bottom:10px;}
+.pill.rent{background:rgba(27,175,122,.15);color:var(--series-5);}
+.pill.home{background:rgba(42,120,214,.15);color:var(--series-1);}
+
+/* bill columns */
+.bills{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;}
+.bill-group h4{margin:0 0 8px;font-size:.92rem;display:flex;justify-content:space-between;
+  padding-bottom:7px;border-bottom:2px solid var(--hair);}
+.bill-group h4 .gt{font-variant-numeric:tabular-nums;color:var(--ink-2);}
+.bill-row{display:flex;justify-content:space-between;font-size:.85rem;padding:3.5px 0;color:var(--ink-2);}
+.bill-amt{font-variant-numeric:tabular-nums;color:var(--ink);}
+
+/* tables */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:340px;}
+th{text-align:left;color:var(--muted);font-weight:600;font-size:.76rem;text-transform:uppercase;
+  letter-spacing:.03em;padding:7px 10px;border-bottom:1px solid var(--hair);}
+td{padding:8px 10px;border-bottom:1px solid var(--hair);}
+tr:last-child td{border-bottom:none;}
+td.num{text-align:right;font-variant-numeric:tabular-nums;}
+td.nw{white-space:nowrap;color:var(--ink-2);}
+td.neg{color:var(--crit);} td.pos{color:var(--good);}
+td.muted,.muted{color:var(--muted);}
+
+/* net worth */
+.nw-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.nw-col h4{margin:0 0 8px;font-size:.92rem;}
+.nw-line{display:flex;justify-content:space-between;font-size:.88rem;padding:5px 0;border-bottom:1px solid var(--hair);}
+.nw-line .est{color:var(--muted);font-size:.78rem;}
+.nw-line.tot{font-weight:700;border-bottom:none;border-top:2px solid var(--hair);margin-top:4px;padding-top:9px;}
+.note-box{background:var(--surface-2);border-left:3px solid var(--series-4);border-radius:8px;
+  padding:11px 14px;margin-top:14px;font-size:.85rem;color:var(--ink-2);}
+.support{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+.sup-card{background:var(--surface-2);border:1px solid var(--hair);border-radius:12px;padding:16px;}
+.sup-card .who{font-weight:650;font-size:1rem;margin-bottom:8px;}
+.sup-card .amt{font-size:1.6rem;font-weight:700;letter-spacing:-.02em;color:var(--series-5);}
+.sup-card .d{font-size:.83rem;color:var(--ink-2);margin-top:6px;}
+footer{color:var(--muted);font-size:.8rem;text-align:center;margin-top:34px;line-height:1.6;}
+@media (max-width:560px){
+  h1{font-size:1.35rem;}
+  .wrap{padding:22px 15px 70px;}
+  section{padding:18px;}
+  .bar-row{grid-template-columns:104px 1fr 76px;gap:8px;}
+  .nw-grid{grid-template-columns:1fr;}
+  .gap-hero .big{font-size:2rem;}
+  .cmp-lab{width:84px;}
+  .tile .v{font-size:1.3rem;}
+}
+.chart-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 10px 6px;overflow-x:auto;}
+.lchart{width:100%;height:auto;display:block;max-width:100%;}
+.lchart .grd{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;}
+.lchart .axl{fill:var(--muted);font-size:10px;font-family:inherit;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>Evan Jones — Financial Situation</h1>
+  <p class="sub">A full, honest picture of income, obligations, property, and the monthly shortfall.</p>
+  <p class="caption">As of <b>November 7, 2026</b> · auto-refreshed from live bank data ·
+  transaction history 2022-01-03 to 2026-11-04 (8,403 transactions).
+  Credentials, passwords, SSNs, and full account numbers are <b>deliberately excluded</b> — accounts shown by last 4 only.</p>
+</header>
+
+<section>
+  <p class="lede">The short version: after tax, income runs about <b>$7,555/month</b>,
+  but the fixed obligations on two homes, child support, and Jack's therapy come to about
+  <b>$10,300/month</b>. That leaves a <b>structural gap of roughly $2,745 every month</b>
+  before any groceries, gas, or emergencies — which is why the checking balance stays thin and family help has been closing the gap.</p>
+  <div class="gap-hero">
+    <div class="big">-$2,745/mo</div>
+    <div class="txt">Monthly structural gap — the difference between what comes in and the fixed bills that must go out.
+    Over a year that is about <b>$32,940</b> that has to come from savings, credit, or family support.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Where things stand today</h2>
+  <p class="h-note">Liquid cash on hand plus the monthly cash-flow math.</p>
+  <div class="tiles">
+    <div class="tile"><div class="k">Liquid cash</div><div class="v">$1,485.53</div>
+      <div class="cap">Checking + savings, all accounts</div></div>
+    <div class="tile good"><div class="k">Monthly income</div><div class="v">$7,555</div>
+      <div class="cap">Pay + rental income</div></div>
+    <div class="tile"><div class="k">Monthly obligations</div><div class="v">$10,300</div>
+      <div class="cap">Fixed bills only</div></div>
+    <div class="tile gap"><div class="k">Structural gap</div><div class="v">-$2,745</div>
+      <div class="cap">Every month, before spending</div></div>
+  </div>
+  <div class="cmp">
+    <div class="cmp-row"><div class="cmp-lab">Income</div>
+      <div class="cmp-track"><div class="cmp-fill" style="width:73.3%;background:var(--series-5)">$7,555</div></div></div>
+    <div class="cmp-row"><div class="cmp-lab">Obligations</div>
+      <div class="cmp-track"><div class="cmp-fill" style="width:100.0%;background:var(--crit)">$10,300</div></div></div>
+  </div>
+</section>
+
+<section>
+  <h2>The two properties</h2>
+  <p class="h-note">One primary home and one rental — both carry mortgages; family currently funds much of the payments.</p>
+  <div class="props">
+    <div class="prop">
+      <span class="pill home">Primary home</span>
+      <h3>1523 Scout Ridge Drive</h3>
+      <div class="loc">Hoover, AL</div>
+      <div class="kv"><span class="kk">Lender</span><span class="vv">WestStar Mortgage</span></div>
+      <div class="kv"><span class="kk">Payment</span><span class="vv">~$2,750/mo</span></div>
+      <div class="kv"><span class="kk">Paid from</span><span class="vv">Checking (9326)</span></div>
+      <div class="kv"><span class="kk">Balance owed</span><span class="vv">~$403,000</span></div>
+      <div class="kv"><span class="kk">Home value</span><span class="vv muted">not yet connected</span></div>
+      <p class="h-note" style="margin:10px 0 0">Evan's mother often funds this mortgage payment directly.</p>
+    </div>
+    <div class="prop">
+      <span class="pill rent">Rental — cash-flowing</span>
+      <h3>6445 Southern Trace Drive</h3>
+      <div class="loc">Leeds, AL</div>
+      <div class="kv"><span class="kk">Lender</span><span class="vv">Rocket Mortgage</span></div>
+      <div class="kv"><span class="kk">Balance owed</span><span class="vv">$50,424.81</span></div>
+      <div class="kv"><span class="kk">Est. value</span><span class="vv">~$295,300</span></div>
+      <div class="kv"><span class="kk">Equity</span><span class="vv">~$244,875</span></div>
+      <div class="kv"><span class="kk">Rented for</span><span class="vv">$1,850/mo</span></div>
+      <div class="kv"><span class="kk">Payment</span><span class="vv">~$1,241/mo</span></div>
+      <p class="h-note" style="margin:10px 0 0">Auto-drafts ~$1,241/mo from Evan's mother's account; rent covers the payment.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Monthly obligations — $10,337</h2>
+  <p class="h-note">Every fixed monthly commitment, grouped. Figures from the household bills workbook.</p>
+  <div class="donut-wrap">
+    <svg class="donut" width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="Obligations by group">
+      <circle class="donut-seg" r="52" cx="70" cy="70" fill="none" stroke="var(--series-1)" stroke-width="20" stroke-dasharray="179.60 147.13" stroke-dashoffset="-0.00"></circle>
+<circle class="donut-seg" r="52" cx="70" cy="70" fill="none" stroke="var(--series-5)" stroke-width="20" stroke-dasharray="52.30 274.42" stroke-dashoffset="-179.60"></circle>
+<circle class="donut-seg" r="52" cx="70" cy="70" fill="none" stroke="var(--series-4)" stroke-width="20" stroke-dasharray="47.41 279.31" stroke-dashoffset="-231.90"></circle>
+<circle class="donut-seg" r="52" cx="70" cy="70" fill="none" stroke="var(--series-3)" stroke-width="20" stroke-dasharray="37.93 288.80" stroke-dashoffset="-279.31"></circle>
+<circle class="donut-seg" r="52" cx="70" cy="70" fill="none" stroke="var(--series-6)" stroke-width="20" stroke-dasharray="9.48 317.24" stroke-dashoffset="-317.24"></circle>
+      <text class="donut-total" x="70" y="68" text-anchor="middle">$10,337</text>
+      <text class="donut-center" x="70" y="84" text-anchor="middle">per month</text>
+    </svg>
+    <div class="legend"><div class="lg-row"><span class="sw" style="background:var(--series-1)"></span><span class="lg-label">1523 Scout Ridge (home)</span><span class="lg-val">$5,682<span class="lg-pct"> · 55%</span></span></div>
+<div class="lg-row"><span class="sw" style="background:var(--series-5)"></span><span class="lg-label">6445 Southern Trace (rental)</span><span class="lg-val">$1,655<span class="lg-pct"> · 16%</span></span></div>
+<div class="lg-row"><span class="sw" style="background:var(--series-4)"></span><span class="lg-label">Child support</span><span class="lg-val">$1,500<span class="lg-pct"> · 15%</span></span></div>
+<div class="lg-row"><span class="sw" style="background:var(--series-3)"></span><span class="lg-label">Jack&#x27;s therapy</span><span class="lg-val">$1,200<span class="lg-pct"> · 12%</span></span></div>
+<div class="lg-row"><span class="sw" style="background:var(--series-6)"></span><span class="lg-label">Pool service</span><span class="lg-val">$300<span class="lg-pct"> · 3%</span></span></div></div>
+  </div>
+  <div class="bills" style="margin-top:22px">
+    <div class="bill-group">
+      <h4>1523 Scout Ridge <span class="gt">$5,682</span></h4>
+      <div class="bill-row"><span>1523 Mortgage (WestStar Mortgage Company)</span><span class="bill-amt">$2,750</span></div>
+<div class="bill-row"><span>BCBS Family Health</span><span class="bill-amt">$743</span></div>
+<div class="bill-row"><span>Birmingham Water Works</span><span class="bill-amt">$532</span></div>
+<div class="bill-row"><span>Alabama Power</span><span class="bill-amt">$500</span></div>
+<div class="bill-row"><span>Lawn Care</span><span class="bill-amt">$280</span></div>
+<div class="bill-row"><span>Pool Maintenance</span><span class="bill-amt">$250</span></div>
+<div class="bill-row"><span>Spire</span><span class="bill-amt">$163</span></div>
+<div class="bill-row"><span>Terminex</span><span class="bill-amt">$99</span></div>
+<div class="bill-row"><span>BCBS Family Dental</span><span class="bill-amt">$82</span></div>
+<div class="bill-row"><span>ADT Home Security</span><span class="bill-amt">$70</span></div>
+<div class="bill-row"><span>Lawn Treatment</span><span class="bill-amt">$50</span></div>
+<div class="bill-row"><span>Trace Crossings Residential (HOA1)</span><span class="bill-amt">$42</span></div>
+<div class="bill-row"><span>Brock&#x27;s Gap Swim Club (HOA2)</span><span class="bill-amt">$42</span></div>
+<div class="bill-row"><span>Nationwide Recreation Vehicle</span><span class="bill-amt">$32</span></div>
+<div class="bill-row"><span>Wall Street Journal</span><span class="bill-amt">$25</span></div>
+<div class="bill-row"><span>Netflix</span><span class="bill-amt">$22</span></div>
+    </div>
+    <div class="bill-group">
+      <h4>6445 Southern Trace <span class="gt">$1,655</span></h4>
+      <div class="bill-row"><span>6445 Southern Trace Drive Mortgage</span><span class="bill-amt">$1,241</span></div>
+<div class="bill-row"><span>Alabama Power</span><span class="bill-amt">$250</span></div>
+<div class="bill-row"><span>Leeds Water Works</span><span class="bill-amt">$100</span></div>
+<div class="bill-row"><span>Southern Trace Homeowners Association:</span><span class="bill-amt">$39</span></div>
+<div class="bill-row"><span>Spire</span><span class="bill-amt">$25</span></div>
+    </div>
+    <div class="bill-group">
+      <h4>Other fixed <span class="gt">$3,000</span></h4>
+      <div class="bill-row"><span>Child support</span><span class="bill-amt">$1,500</span></div>
+<div class="bill-row"><span>Jack&#x27;s therapy</span><span class="bill-amt">$1,200</span></div>
+<div class="bill-row"><span>Pool service</span><span class="bill-amt">$300</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Income sources</h2>
+  <p class="h-note">Take-home pay plus rental income. Payroll figure is the trailing-12-month total from the bank feed.</p>
+  <div class="tiles">
+    <div class="tile"><div class="k">MdR payroll</div><div class="v">~$2,700</div>
+      <div class="cap">Biweekly · $86,336 over last 12 mo (32 deposits)</div></div>
+    <div class="tile"><div class="k">Leeds rent</div><div class="v">$1,850</div>
+      <div class="cap">Per month, rental property</div></div>
+    <div class="tile"><div class="k">Other</div><div class="v">minor</div>
+      <div class="cap">Occasional Stripe / parking reimbursements</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Where the money goes</h2>
+  <p class="h-note">Top spending categories, last 12 months, from 8,403 categorized bank transactions.</p>
+  <div class="bar-row"><div class="bar-label">Uncategorized</div><div class="bar-track"><div class="bar-fill" style="width:100.0%;background:var(--series-1)"></div></div><div class="bar-val">$30,714</div></div>
+<div class="bar-row"><div class="bar-label">Mortgage</div><div class="bar-track"><div class="bar-fill" style="width:83.9%;background:var(--series-1)"></div></div><div class="bar-val">$25,764</div></div>
+<div class="bar-row"><div class="bar-label">Shopping</div><div class="bar-track"><div class="bar-fill" style="width:72.3%;background:var(--series-1)"></div></div><div class="bar-val">$22,209</div></div>
+<div class="bar-row"><div class="bar-label">P2P (Venmo/PayPal/Zelle)</div><div class="bar-track"><div class="bar-fill" style="width:59.9%;background:var(--series-1)"></div></div><div class="bar-val">$18,389</div></div>
+<div class="bar-row"><div class="bar-label">Utilities</div><div class="bar-track"><div class="bar-fill" style="width:32.5%;background:var(--series-1)"></div></div><div class="bar-val">$9,991</div></div>
+<div class="bar-row"><div class="bar-label">Entertainment</div><div class="bar-track"><div class="bar-fill" style="width:32.5%;background:var(--series-1)"></div></div><div class="bar-val">$9,991</div></div>
+<div class="bar-row"><div class="bar-label">Home</div><div class="bar-track"><div class="bar-fill" style="width:25.6%;background:var(--series-1)"></div></div><div class="bar-val">$7,855</div></div>
+<div class="bar-row"><div class="bar-label">Restaurants</div><div class="bar-track"><div class="bar-fill" style="width:22.5%;background:var(--series-1)"></div></div><div class="bar-val">$6,903</div></div>
+<div class="bar-row"><div class="bar-label">Other</div><div class="bar-track"><div class="bar-fill" style="width:20.3%;background:var(--series-1)"></div></div><div class="bar-val">$6,243</div></div>
+<div class="bar-row"><div class="bar-label">Insurance</div><div class="bar-track"><div class="bar-fill" style="width:16.0%;background:var(--series-1)"></div></div><div class="bar-val">$4,913</div></div>
+  <div class="scroll" style="margin-top:16px">
+    <table>
+      <thead><tr><th>Category</th><th class="num">Spent (12 mo)</th><th class="num">Txns</th></tr></thead>
+      <tbody><tr><td>Uncategorized</td><td class="num">$30,714.35</td><td class="num muted">217</td></tr>
+<tr><td>Mortgage</td><td class="num">$25,763.80</td><td class="num muted">7</td></tr>
+<tr><td>Shopping</td><td class="num">$22,209.44</td><td class="num muted">357</td></tr>
+<tr><td>P2P (Venmo/PayPal/Zelle)</td><td class="num">$18,388.58</td><td class="num muted">255</td></tr>
+<tr><td>Utilities</td><td class="num">$9,991.30</td><td class="num muted">43</td></tr>
+<tr><td>Entertainment</td><td class="num">$9,991.03</td><td class="num muted">261</td></tr>
+<tr><td>Home</td><td class="num">$7,855.08</td><td class="num muted">162</td></tr>
+<tr><td>Restaurants</td><td class="num">$6,902.81</td><td class="num muted">179</td></tr>
+<tr><td>Other</td><td class="num">$6,242.55</td><td class="num muted">63</td></tr>
+<tr><td>Insurance</td><td class="num">$4,913.02</td><td class="num muted">53</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>Household spending at Walmart</h2>
+  <p class="h-note">Itemized grocery &amp; goods orders reconstructed from Walmart's records — the bulk of household consumables run through here.</p>
+  <div class="tiles" style="margin-bottom:18px">
+    <div class="tile"><div class="k">Total</div><div class="v">$29,587</div>
+      <div class="cap">Itemized line items</div></div>
+    <div class="tile"><div class="k">Orders</div><div class="v">205</div>
+      <div class="cap">Delivery + pickup</div></div>
+    <div class="tile"><div class="k">Span</div><div class="v">3 yrs</div>
+      <div class="cap">2023-07-23 to 2026-07-17</div></div>
+  </div>
+  <div class="bar-row"><div class="bar-label">Grocery / Food</div><div class="bar-track"><div class="bar-fill" style="width:100.0%;background:var(--series-5)"></div></div><div class="bar-val">$19,031</div></div>
+<div class="bar-row"><div class="bar-label">Other</div><div class="bar-track"><div class="bar-fill" style="width:25.9%;background:var(--series-5)"></div></div><div class="bar-val">$4,931</div></div>
+<div class="bar-row"><div class="bar-label">Household / Cleaning</div><div class="bar-track"><div class="bar-fill" style="width:14.3%;background:var(--series-5)"></div></div><div class="bar-val">$2,729</div></div>
+<div class="bar-row"><div class="bar-label">Health / Personal</div><div class="bar-track"><div class="bar-fill" style="width:5.5%;background:var(--series-5)"></div></div><div class="bar-val">$1,042</div></div>
+<div class="bar-row"><div class="bar-label">Pet</div><div class="bar-track"><div class="bar-fill" style="width:3.6%;background:var(--series-5)"></div></div><div class="bar-val">$685</div></div>
+<div class="bar-row"><div class="bar-label">Baby / Kids</div><div class="bar-track"><div class="bar-fill" style="width:3.5%;background:var(--series-5)"></div></div><div class="bar-val">$666</div></div>
+<div class="bar-row"><div class="bar-label">Home Goods</div><div class="bar-track"><div class="bar-fill" style="width:2.0%;background:var(--series-5)"></div></div><div class="bar-val">$383</div></div>
+</section>
+
+<section>
+  <h2>Net worth sketch</h2>
+  <p class="h-note">A partial picture — several accounts are not yet connected, so this understates both sides.</p>
+  <div class="nw-grid">
+    <div class="nw-col">
+      <h4>Assets</h4>
+      <div class="nw-line"><span>6445 Leeds equity</span><span>~$244,875</span></div>
+      <div class="nw-line"><span>Liquid cash</span><span>$1,485.53</span></div>
+      <div class="nw-line"><span>1523 home equity <span class="est">value not yet connected</span></span><span class="est">TBD</span></div>
+      <div class="nw-line tot"><span>Known assets</span><span>~$246,361</span></div>
+    </div>
+    <div class="nw-col">
+      <h4>Liabilities</h4>
+      <div class="nw-line"><span>WestStar mortgage (1523)</span><span>~$403,000</span></div>
+      <div class="nw-line"><span>Rocket mortgage (6445)</span><span>$50,424.81</span></div>
+      <div class="nw-line"><span>HOA dues — <span class="est">in litigation</span></span><span>~$1,485.50</span></div>
+      <div class="nw-line tot"><span>Known liabilities</span><span>~$454,910</span></div>
+    </div>
+  </div>
+  <div class="note-box" style="border-left-color:var(--crit)">
+    <b>Active lawsuit:</b> Trace Crossings HOA (1523 Scout Ridge) has filed suit over unpaid dues —
+    Jefferson County Circuit Court, case 68-CV-2026-900729. About $1,485.50 remains
+    outstanding after a $1,822 payment in October; the suit stays open until it is dismissed.
+  </div>
+  <div class="note-box">
+    <b>Not yet connected / estimated:</b> the 1523 home value (needed to complete its equity — the ~$403,000 WestStar
+    balance is a liability with no asset value entered yet), plus Coinbase, any HELOC, and the 401(k).
+    Once the 1523 home value is added, known assets rise substantially — a ~$400,000+ home against a $403,000 balance.
+  </div>
+</section>
+
+<section>
+  <h2>Family support received (last ~2 years)</h2>
+  <p class="h-note">Recorded factually and with gratitude — this help is what has bridged the monthly gap.</p>
+  <div class="support">
+    <div class="sup-card">
+      <div class="who">Dad — Bruce</div>
+      <div class="amt">~$85,500</div>
+      <div class="d">In larger one-time gifts over the period.</div>
+    </div>
+    <div class="sup-card">
+      <div class="who">Mom — Kathy</div>
+      <div class="amt">~$16,600</div>
+      <div class="d">In transfers, <b>plus</b> covering the Leeds mortgage directly (~$15,000/yr).</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Monthly spending trend</h2>
+  <p class="h-note">Total money out each month (card + checking, excluding internal savings transfers),
+  trailing 12 months. Averaging <b>$10,483/mo</b>; most recent month <b>$1,214</b>.</p>
+  <div class="chart-box"><svg class="lchart" viewBox="0 0 640 220" role="img"
+      aria-label="Monthly spending trend" preserveAspectRatio="xMidYMid meet">
+  <line x1="38" y1="182.0" x2="602" y2="182.0" class="grd"></line><text x="32" y="186.0" text-anchor="end" class="axl">$0</text><line x1="38" y1="110.0" x2="602" y2="110.0" class="grd"></line><text x="32" y="114.0" text-anchor="end" class="axl">$11,917</text><line x1="38" y1="38.0" x2="602" y2="38.0" class="grd"></line><text x="32" y="42.0" text-anchor="end" class="axl">$23,834</text>
+  <polygon points="38.0,182.0 38.0,117.4 89.3,73.4 140.5,143.2 191.8,130.4 243.1,105.6 294.4,53.4 345.6,127.7 396.9,130.4 448.2,154.4 499.5,139.3 550.7,74.0 602.0,174.7 602.0,182.0" fill="var(--series-1)" fill-opacity="0.10" stroke="none"></polygon>
+  <polyline points="38.0,117.4 89.3,73.4 140.5,143.2 191.8,130.4 243.1,105.6 294.4,53.4 345.6,127.7 396.9,130.4 448.2,154.4 499.5,139.3 550.7,74.0 602.0,174.7" fill="none" stroke="var(--series-1)" stroke-width="2.5"
+    stroke-linejoin="round" stroke-linecap="round"></polyline>
+  <circle cx="38.0" cy="117.4" r="3.5" fill="var(--series-1)"></circle><circle cx="89.3" cy="73.4" r="3.5" fill="var(--series-1)"></circle><circle cx="140.5" cy="143.2" r="3.5" fill="var(--series-1)"></circle><circle cx="191.8" cy="130.4" r="3.5" fill="var(--series-1)"></circle><circle cx="243.1" cy="105.6" r="3.5" fill="var(--series-1)"></circle><circle cx="294.4" cy="53.4" r="3.5" fill="var(--series-1)"></circle><circle cx="345.6" cy="127.7" r="3.5" fill="var(--series-1)"></circle><circle cx="396.9" cy="130.4" r="3.5" fill="var(--series-1)"></circle><circle cx="448.2" cy="154.4" r="3.5" fill="var(--series-1)"></circle><circle cx="499.5" cy="139.3" r="3.5" fill="var(--series-1)"></circle><circle cx="550.7" cy="74.0" r="3.5" fill="var(--series-1)"></circle><circle cx="602.0" cy="174.7" r="3.5" fill="var(--series-1)"></circle>
+  <text x="38.0" y="210" text-anchor="middle" class="axl">25-12</text><text x="140.5" y="210" text-anchor="middle" class="axl">26-02</text><text x="243.1" y="210" text-anchor="middle" class="axl">26-04</text><text x="345.6" y="210" text-anchor="middle" class="axl">26-06</text><text x="448.2" y="210" text-anchor="middle" class="axl">26-08</text><text x="550.7" y="210" text-anchor="middle" class="axl">26-10</text><text x="602.0" y="210" text-anchor="middle" class="axl">26-11</text>
+</svg></div>
+</section>
+
+<section>
+  <h2>Recent activity</h2>
+  <p class="h-note">Last 15 transactions from the bank feed.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Date</th><th>Merchant</th><th class="num">Amount</th></tr></thead>
+      <tbody><tr><td class="nw">2026-11-04</td><td>PayPal</td><td class="num neg">-$19.99</td></tr>
+<tr><td class="nw">2026-11-04</td><td>Alabama Power</td><td class="num neg">-$529.36</td></tr>
+<tr><td class="nw">2026-11-04</td><td>PayPal</td><td class="num neg">-$10.99</td></tr>
+<tr><td class="nw">2026-11-03</td><td>PayPal</td><td class="num neg">-$62.40</td></tr>
+<tr><td class="nw">2026-11-03</td><td>Progressive</td><td class="num neg">-$245.83</td></tr>
+<tr><td class="nw">2026-11-03</td><td>Progressive</td><td class="num neg">-$88.67</td></tr>
+<tr><td class="nw">2026-11-02</td><td>Walmart</td><td class="num neg">-$6.83</td></tr>
+<tr><td class="nw">2026-11-02</td><td>Walmart</td><td class="num pos">+$6.76</td></tr>
+<tr><td class="nw">2026-11-02</td><td>Walmart</td><td class="num neg">-$201.32</td></tr>
+<tr><td class="nw">2026-11-02</td><td>Walmart</td><td class="num pos">+$6.83</td></tr>
+<tr><td class="nw">2026-11-02</td><td>Walmart</td><td class="num neg">-$20.64</td></tr>
+<tr><td class="nw">2026-11-02</td><td>PayPal</td><td class="num neg">-$28.44</td></tr>
+<tr><td class="nw">2026-10-30</td><td>Automatic Transfer</td><td class="num pos">+$125.00</td></tr>
+<tr><td class="nw">2026-10-30</td><td>Service Charge</td><td class="num neg">-$5.00</td></tr>
+<tr><td class="nw">2026-10-30</td><td>Automatic Transfer</td><td class="num neg">-$125.00</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  Generated November 7, 2026 · auto-refreshed from live bank data ·
+  Self-contained, local, private.<br>
+  Credentials, passwords, SSNs, and full account numbers are deliberately excluded from this document.
+</footer>
+
+</div>
+</body>
+</html>
