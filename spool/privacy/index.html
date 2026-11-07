@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spool — Privacy Policy</title>
+<meta name="description" content="Privacy policy for Spool, a local-first personal location-history archive.">
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1c1c1e; --muted: #6b6b70; --rule: #e5e5ea;
+    --accent: #0a84ff; --card: #f7f7f8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0f0f11; --fg: #ececf1; --muted: #9a9aa2; --rule: #2a2a2e; --accent: #4aa3ff; --card: #17171a; }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 16px 80px; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 4px; }
+  h2 { font-size: 1.25rem; margin: 2.2em 0 0.4em; padding-top: 0.6em; border-top: 1px solid var(--rule); }
+  .updated { color: var(--muted); font-size: 0.95rem; margin: 0 0 1.5em; }
+  p, li { margin: 0.6em 0; }
+  ul, ol { padding-left: 1.3em; }
+  a { color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; margin: 1em 0; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  .lead { background: var(--card); border-radius: 12px; padding: 4px 20px; margin: 1.5em 0; }
+  footer { margin-top: 3em; color: var(--muted); font-size: 0.9rem; }
+  code { background: var(--card); padding: 2px 6px; border-radius: 6px; font-size: 0.9em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Spool — Privacy Policy</h1>
+  <p class="updated">Last updated: November 6, 2026</p>
+
+  <p>Spool is a personal location-history archive. It is built local-first and privacy-first. This policy
+  describes exactly what Spool does and does not do with your data. It is written to match the app's actual
+  behavior — if the two ever disagree, that is a bug; please report it.</p>
+
+  <div class="lead">
+    <h2 style="border-top:none;padding-top:0.6em">The short version</h2>
+    <ul>
+      <li><strong>Your location history is stored on your device.</strong> By default it never leaves your phone or iPad.</li>
+      <li><strong>We (the developer) cannot see your data.</strong> There is no Spool account, no Spool server that
+        receives your history, and no analytics that include any location.</li>
+      <li><strong>Sync is opt-in and end-to-end encrypted.</strong> If you turn on iCloud Sync, your archive is stored
+        in <em>your own</em> private iCloud (CloudKit private database) under your Apple ID. Location-bearing fields are
+        written to CloudKit's encrypted values, so Apple cannot read them and neither can we.</li>
+      <li><strong>No third-party trackers or advertising SDKs.</strong> None. This is reflected in the app's privacy
+        manifest and "Data Not Collected" nutrition label.</li>
+    </ul>
+  </div>
+
+  <h2>What Spool stores, and where</h2>
+  <table>
+    <thead><tr><th>Data</th><th>Where it lives</th><th>Leaves the device?</th></tr></thead>
+    <tbody>
+      <tr><td>GPS points (time, coordinates, accuracy, motion context)</td><td>On-device database</td><td>Only if you enable iCloud Sync (to your own private iCloud)</td></tr>
+      <tr><td>Places you name (Home, Work, etc.)</td><td>On-device database</td><td>Only with iCloud Sync, encrypted</td></tr>
+      <tr><td>Imported history (Location Log, Google Takeout, GPX/KML/CSV/GeoJSON, photo EXIF)</td><td>On-device database</td><td>Same as above</td></tr>
+      <tr><td>App settings (capture mode, units, day-boundary)</td><td>On-device (UserDefaults)</td><td>No</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Network access</h2>
+  <p>Spool makes <strong>no</strong> network requests to any Spool-operated server — there is no such server for your data.</p>
+  <p>The app does contact Apple's own services in these narrow, standard cases:</p>
+  <ol>
+    <li><strong>Map tiles</strong> are loaded from Apple Maps (MapKit) to draw the map, the same as any Maps-based app.</li>
+    <li><strong>Place names are resolved on-device.</strong> Turning a coordinate into a human-readable place name uses a
+      reverse geocoder bundled inside the app (GeoNames data), so your coordinates are <strong>not</strong> sent anywhere to be named.</li>
+    <li><strong>Address search (only when you ask for it).</strong> If you type an address while adding or naming a place, that
+      text query is sent to <strong>Apple's geocoding service</strong> to find the matching location. This happens only when
+      you actively search an address — never in the background.</li>
+  </ol>
+  <p>If you enable <strong>iCloud Sync</strong>, the app uses Apple's CloudKit to store your archive in your private iCloud
+  database and to deliver change notifications across your devices. This is governed by
+  <a href="https://www.apple.com/legal/privacy/">Apple's iCloud terms and privacy policy</a>.</p>
+
+  <h2>Sub-processors</h2>
+  <ul>
+    <li><strong>Apple Inc.</strong> — Maps and address search (as described above), and CloudKit/iCloud (only if you enable sync).</li>
+  </ul>
+  <p>When optional server-side AI for complex questions ships (a future, opt-in, per-query feature), the provider
+  (Anthropic) will be disclosed here as a sub-processor, the feature will be clearly marked as "this leaves your device,"
+  and the endpoint will be zero-data-retention. It is not part of the current app.</p>
+
+  <h2>Your controls</h2>
+  <ul>
+    <li><strong>Delete</strong> any range of history, the last N days, or everything — permanently, with no soft-delete or
+      server copy, from Settings → Data.</li>
+    <li><strong>Export</strong> your full archive (GPX / CSV / GeoJSON) at any time from Settings → Data.</li>
+    <li><strong>Turn sync off</strong> at any time; your local archive remains intact.</li>
+    <li><strong>Lock the app</strong> with Face ID / passcode.</li>
+  </ul>
+
+  <h2>Children</h2>
+  <p>Spool is not directed at children and collects no personal information for any user.</p>
+
+  <h2>Contact</h2>
+  <p>Questions or data-handling concerns: <a href="https://evanmurrayjones.com">https://evanmurrayjones.com</a>.</p>
+
+  <footer>© 2026 Evan Jones. Spool is a personal location-history archive for iPhone and iPad.</footer>
+</main>
+</body>
+</html>
