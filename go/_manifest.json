@@ -1,0 +1,14 @@
+{
+  "evan": {
+    "destination": "https://evanmurrayjones.com",
+    "label": "My site",
+    "short_url": "https://evanmurrayjones.com/go/evan",
+    "updated": "2026-11-09"
+  },
+  "evan-clay": {
+    "destination": "https://evanmurrayjones.com",
+    "label": "My site (branded)",
+    "short_url": "https://evanmurrayjones.com/go/evan-clay",
+    "updated": "2026-11-09"
+  }
+}

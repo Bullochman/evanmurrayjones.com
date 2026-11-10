@@ -8,3 +8,4 @@ __pycache__/
 .DS_Store
 call-briefs/
 admin/
+tools/qr/.venv/
