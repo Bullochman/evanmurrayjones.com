@@ -124,15 +124,38 @@
     <section class="card">
       <div class="seg" role="group" aria-label="Code type">
         <button id="tab-qr" aria-pressed="true">QR code</button>
+        <button id="tab-vc" aria-pressed="false">Contact card</button>
         <button id="tab-bc" aria-pressed="false">Barcode</button>
       </div>
 
       <div class="gen-grid">
         <div class="controls">
-          <div class="field" style="margin-top:0;">
+          <div class="field" id="data-field" style="margin-top:0;">
             <label for="data" id="data-label">Where should it go? (link or text)</label>
             <input id="data" type="text" placeholder="https://your-shop.etsy.com" />
             <span class="hint" id="data-hint">Paste a website, or type any text.</span>
+          </div>
+
+          <!-- Contact-card-only: vCard fields -->
+          <div id="vc-fields" hidden style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div class="field" style="margin-top:0;"><label for="vc-first">First name</label><input id="vc-first" type="text" autocomplete="given-name" /></div>
+              <div class="field" style="margin-top:0;"><label for="vc-last">Last name</label><input id="vc-last" type="text" autocomplete="family-name" /></div>
+            </div>
+            <div class="field" style="margin-top:0;"><label for="vc-phone">Phone</label><input id="vc-phone" type="tel" placeholder="(205) 555-1234" autocomplete="tel" /></div>
+            <div class="field" style="margin-top:0;"><label for="vc-email">Email</label><input id="vc-email" type="email" autocomplete="email" /></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div class="field" style="margin-top:0;"><label for="vc-org">Company <span class="hint">(optional)</span></label><input id="vc-org" type="text" autocomplete="organization" /></div>
+              <div class="field" style="margin-top:0;"><label for="vc-title">Title <span class="hint">(optional)</span></label><input id="vc-title" type="text" autocomplete="organization-title" /></div>
+            </div>
+            <div class="field" style="margin-top:0;"><label for="vc-street">Street address <span class="hint">(optional)</span></label><input id="vc-street" type="text" autocomplete="street-address" /></div>
+            <div style="display:grid;grid-template-columns:1.5fr 1fr .8fr;gap:10px;">
+              <div class="field" style="margin-top:0;"><label for="vc-city">City</label><input id="vc-city" type="text" /></div>
+              <div class="field" style="margin-top:0;"><label for="vc-state">State</label><input id="vc-state" type="text" /></div>
+              <div class="field" style="margin-top:0;"><label for="vc-zip">ZIP</label><input id="vc-zip" type="text" /></div>
+            </div>
+            <div class="field" style="margin-top:0;"><label for="vc-url">Website <span class="hint">(optional)</span></label><input id="vc-url" type="text" placeholder="https://" /></div>
+            <span class="hint">Fill in what you want to share. Someone scans it → their phone offers to add you as a contact.</span>
           </div>
 
           <!-- QR-only: color -->
@@ -250,17 +273,45 @@
 
     function setMode(m) {
       mode = m;
-      $("#tab-qr").setAttribute("aria-pressed", m === "qr");
-      $("#tab-bc").setAttribute("aria-pressed", m === "bc");
-      $("#qr-color-field").hidden = m !== "qr";
-      $("#bc-format-field").hidden = m !== "bc";
-      $("#data-label").textContent = m === "qr" ? "Where should it go? (link or text)" : "Barcode value";
-      $("#data-hint").textContent = m === "qr" ? "Paste a website, or type any text." : "Numbers or text, depending on the barcode type.";
-      $("#data").placeholder = m === "qr" ? "https://your-shop.etsy.com" : "012345678905";
+      var isQ = m === "qr", isB = m === "bc", isC = m === "contact";
+      $("#tab-qr").setAttribute("aria-pressed", isQ);
+      $("#tab-bc").setAttribute("aria-pressed", isB);
+      $("#tab-vc").setAttribute("aria-pressed", isC);
+      $("#data-field").hidden = isC;
+      $("#vc-fields").hidden = !isC;
+      $("#bc-format-field").hidden = !isB;
+      $("#qr-color-field").hidden = isB;   // color applies to QR + contact (both are QR codes), not barcodes
+      if (!isC) {
+        $("#data-label").textContent = isQ ? "Where should it go? (link or text)" : "Barcode value";
+        $("#data-hint").textContent = isQ ? "Paste a website, or type any text." : "Numbers or text, depending on the barcode type.";
+        $("#data").placeholder = isQ ? "https://your-shop.etsy.com" : "012345678905";
+      }
       resetPreview();
     }
     $("#tab-qr").addEventListener("click", function(){ setMode("qr"); });
+    $("#tab-vc").addEventListener("click", function(){ setMode("contact"); });
     $("#tab-bc").addEventListener("click", function(){ setMode("bc"); });
+
+    // vCard (contact card) assembly
+    function vcEsc(s) { return String(s || "").replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\n/g, "\\n"); }
+    function buildVCard() {
+      var g = function (id) { return (document.getElementById("vc-" + id).value || "").trim(); };
+      var first = g("first"), last = g("last"), phone = g("phone"), email = g("email"),
+          org = g("org"), title = g("title"), street = g("street"), city = g("city"),
+          state = g("state"), zip = g("zip"), url = g("url");
+      var fn = (first + " " + last).trim();
+      var lines = ["BEGIN:VCARD", "VERSION:3.0"];
+      lines.push("N:" + vcEsc(last) + ";" + vcEsc(first) + ";;;");
+      if (fn) lines.push("FN:" + vcEsc(fn));
+      if (org) lines.push("ORG:" + vcEsc(org));
+      if (title) lines.push("TITLE:" + vcEsc(title));
+      if (phone) lines.push("TEL;TYPE=CELL:" + vcEsc(phone));
+      if (email) lines.push("EMAIL;TYPE=INTERNET:" + vcEsc(email));
+      if (street || city || state || zip) lines.push("ADR;TYPE=WORK:;;" + vcEsc(street) + ";" + vcEsc(city) + ";" + vcEsc(state) + ";" + vcEsc(zip) + ";");
+      if (url) lines.push("URL:" + vcEsc(url));
+      lines.push("END:VCARD");
+      return { text: lines.join("\n"), hasData: !!(fn || phone || email) };
+    }
 
     // color swatches
     Array.prototype.forEach.call(document.querySelectorAll(".swatch"), function (sw) {
@@ -290,9 +341,26 @@
 
     function generate() {
       var err = $("#gen-err"); err.textContent = "";
+      var p = $("#preview");
+      // contact card mode: assemble a vCard and render as a QR
+      if (mode === "contact") {
+        var vc = buildVCard();
+        if (!vc.hasData) { err.textContent = "Add at least a name, phone, or email."; return; }
+        p.innerHTML = "";
+        try {
+          CodeGen.renderQR(p, vc.text, { size: 512, dark: qrColor, light: "#ffffff", ecLevel: "M" });
+        } catch (ex2) {
+          resetPreview();
+          err.textContent = "That's a lot for one code — try trimming the address or leaving out optional fields.";
+          return;
+        }
+        var cnode = p.querySelector("canvas") || p.querySelector("svg") || p.querySelector("img");
+        Promise.resolve(CodeGen.toPNG(cnode)).then(function (url) { lastPNG = url; $("#dl-btn").disabled = false; }).catch(function () { $("#dl-btn").disabled = true; });
+        return;
+      }
       var data = ($("#data").value || "").trim();
       if (!data) { err.textContent = "Type something first."; return; }
-      var p = $("#preview"); p.innerHTML = "";
+      p.innerHTML = "";
       try {
         if (mode === "qr") {
           CodeGen.renderQR(p, data, { size: 512, dark: qrColor, light: "#ffffff", ecLevel: "H" });
@@ -314,7 +382,7 @@
     $("#data").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); generate(); } });
     $("#dl-btn").addEventListener("click", function () {
       if (!lastPNG) return;
-      var base = (mode === "qr" ? "qr" : "barcode");
+      var base = (mode === "qr" ? "qr" : mode === "contact" ? "contact-card" : "barcode");
       CodeGen.download(lastPNG, base + "-" + Date.now() + ".png");
     });
 
