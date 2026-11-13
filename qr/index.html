@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Code Studio — Evan Murray Jones</title>
+  <meta name="description" content="A private QR code and barcode generator. Sign in to create codes that live online permanently." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>▦</text></svg>" />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    /* Code Studio — gated generator. Reuses site tokens from ../styles.css */
+    .studio { max-width: 820px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left,0px)); padding-right: max(18px, env(safe-area-inset-right,0px)); padding-block: 32px 72px; }
+    .studio h1 { font-family: var(--serif); font-size: clamp(1.9rem, 6vw, 2.6rem); line-height: 1.08; margin: 0 0 6px; letter-spacing: -.01em; }
+    .studio .sub { color: var(--text-soft); margin: 0 0 28px; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; }
+    .card + .card { margin-top: 20px; }
+
+    /* login */
+    #login-view { min-height: 70vh; display: grid; place-items: center; }
+    .login-box { width: 100%; max-width: 380px; text-align: center; }
+    .login-box .mark { font-size: 2.4rem; }
+    .field { text-align: left; display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
+    .field label { font-size: .82rem; font-weight: 600; color: var(--text-soft); letter-spacing: .02em; }
+    input[type=text], input[type=password], textarea, select {
+      font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 11px 13px; width: 100%;
+    }
+    textarea { min-height: 92px; resize: vertical; }
+    input:focus, textarea:focus, select:focus { outline: 3px solid var(--ring); outline-offset: 1px; border-color: var(--accent); }
+
+    .btn { font: inherit; font-weight: 600; cursor: pointer; border-radius: 10px; padding: 11px 18px; border: 1px solid transparent; background: var(--accent); color: #fff; transition: filter .15s, transform .05s; }
+    .btn:hover { filter: brightness(1.06); }
+    .btn:active { transform: translateY(1px); }
+    .btn[disabled] { opacity: .5; cursor: not-allowed; }
+    .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .err { color: var(--accent); font-size: .88rem; margin-top: 12px; min-height: 1.2em; }
+
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; flex-wrap: wrap; }
+    .who { font-size: .9rem; color: var(--text-soft); }
+    .who b { color: var(--text); }
+
+    /* generator */
+    .seg { display: inline-flex; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 12px; padding: 4px; gap: 4px; }
+    .seg button { font: inherit; font-weight: 600; border: 0; background: transparent; color: var(--text-soft); padding: 8px 16px; border-radius: 9px; cursor: pointer; }
+    .seg button[aria-pressed=true] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+
+    .gen-grid { display: grid; grid-template-columns: 1fr 260px; gap: 24px; margin-top: 18px; align-items: start; }
+    @media (max-width: 640px) { .gen-grid { grid-template-columns: 1fr; } }
+    .controls { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+    .swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+    .swatch { width: 30px; height: 30px; border-radius: 8px; border: 2px solid var(--border); cursor: pointer; padding: 0; }
+    .swatch[aria-pressed=true] { outline: 3px solid var(--ring); outline-offset: 1px; border-color: var(--accent); }
+
+    .preview { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 16px; display: grid; place-items: center; min-height: 240px; }
+    .preview canvas, .preview svg, .preview img { max-width: 100%; height: auto; }
+    .preview .empty { color: #9a978d; font-size: .9rem; text-align: center; }
+
+    .hint { font-size: .82rem; color: var(--text-faint); }
+
+    /* voice feedback */
+    .vf-head { display: flex; align-items: center; gap: 12px; }
+    .mic {
+      width: 56px; height: 56px; border-radius: 50%; border: 0; cursor: pointer; flex: 0 0 auto;
+      background: var(--accent); color: #fff; font-size: 1.4rem; display: grid; place-items: center;
+      box-shadow: var(--shadow); transition: transform .1s;
+    }
+    .mic[aria-pressed=true] { animation: pulse 1.3s infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 var(--ring); } 50% { box-shadow: 0 0 0 10px transparent; } }
+    @media (prefers-reduced-motion: reduce) { .mic[aria-pressed=true] { animation: none; } }
+    .vf-status { font-size: .9rem; color: var(--text-soft); }
+    .vf-transcript { margin-top: 14px; }
+    .cat-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .chip { font: inherit; font-size: .85rem; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg); color: var(--text-soft); cursor: pointer; }
+    .chip[aria-pressed=true] { background: var(--accent-soft); color: var(--text); border-color: var(--accent); }
+    .ok { color: #1f8a4c; font-size: .9rem; min-height: 1.2em; margin-top: 10px; }
+    @media (prefers-color-scheme: dark) { .ok { color: #58d08a; } }
+
+    .backlink { display: inline-block; margin-bottom: 20px; color: var(--text-soft); font-size: .9rem; }
+    .lead-note { font-size: .82rem; color: var(--text-faint); margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== LOGIN ===================== -->
+  <section id="login-view" class="studio" hidden>
+    <div class="login-box card">
+      <div class="mark">▦</div>
+      <h1 style="font-size:1.6rem;margin:.3rem 0 2px;">Code Studio</h1>
+      <p class="sub" style="margin-bottom:4px;">Sign in to create your codes.</p>
+      <form id="login-form" autocomplete="on">
+        <div class="field">
+          <label for="u">Username</label>
+          <input id="u" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required />
+        </div>
+        <div class="field">
+          <label for="p">Password</label>
+          <input id="p" type="password" autocomplete="current-password" required />
+        </div>
+        <div class="btn-row" style="justify-content:center;">
+          <button class="btn" type="submit" id="login-btn">Sign in</button>
+        </div>
+        <div class="err" id="login-err" role="alert"></div>
+      </form>
+      <p class="lead-note">A private tool. Your codes you make here are hosted on evanmurrayjones.com.</p>
+    </div>
+  </section>
+
+  <!-- ===================== APP ===================== -->
+  <main id="app-view" class="studio" hidden>
+    <a class="backlink" href="/">&larr; evanmurrayjones.com</a>
+
+    <div class="topbar">
+      <div>
+        <h1>Code Studio</h1>
+        <p class="sub" style="margin:0;">Make a QR code or barcode. Download it. Use it anywhere, forever.</p>
+      </div>
+      <div class="who">Signed in as <b id="who-name">—</b> · <a href="#" id="logout" style="color:var(--accent);">Sign out</a></div>
+    </div>
+
+    <!-- GENERATOR -->
+    <section class="card">
+      <div class="seg" role="group" aria-label="Code type">
+        <button id="tab-qr" aria-pressed="true">QR code</button>
+        <button id="tab-bc" aria-pressed="false">Barcode</button>
+      </div>
+
+      <div class="gen-grid">
+        <div class="controls">
+          <div class="field" style="margin-top:0;">
+            <label for="data" id="data-label">Where should it go? (link or text)</label>
+            <input id="data" type="text" placeholder="https://your-shop.etsy.com" />
+            <span class="hint" id="data-hint">Paste a website, or type any text.</span>
+          </div>
+
+          <!-- QR-only: color -->
+          <div class="field" id="qr-color-field">
+            <label>Color</label>
+            <div class="swatches" id="swatches">
+              <button class="swatch" data-color="#000000" style="background:#000" aria-pressed="true" title="Black (best scan)"></button>
+              <button class="swatch" data-color="#c6442a" style="background:#c6442a" aria-pressed="false" title="Brand red-clay"></button>
+              <button class="swatch" data-color="#1f6f6a" style="background:#1f6f6a" aria-pressed="false" title="Teal"></button>
+              <button class="swatch" data-color="#2b4c7e" style="background:#2b4c7e" aria-pressed="false" title="Blue"></button>
+            </div>
+            <span class="hint">Black scans most reliably.</span>
+          </div>
+
+          <!-- Barcode-only: format -->
+          <div class="field" id="bc-format-field" hidden>
+            <label for="bc-format">Barcode type</label>
+            <select id="bc-format"></select>
+            <span class="hint" id="bc-hint">Code 128 handles any text.</span>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn" id="make-btn" type="button">Generate</button>
+            <button class="btn btn-ghost" id="dl-btn" type="button" disabled>Download PNG</button>
+          </div>
+          <div class="err" id="gen-err" role="alert"></div>
+        </div>
+
+        <div>
+          <div class="preview" id="preview"><span class="empty">Your code shows up here</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VOICE FEEDBACK -->
+    <section class="card">
+      <div class="vf-head">
+        <button class="mic" id="mic" aria-pressed="false" aria-label="Start voice feedback" title="Tap and talk">🎤</button>
+        <div>
+          <strong>Tell Evan what you think</strong>
+          <div class="vf-status" id="vf-status">Tap the mic and just talk — what&rsquo;s working, what&rsquo;s not, what you wish it did.</div>
+        </div>
+      </div>
+
+      <div class="vf-transcript">
+        <div class="field" style="margin-top:0;">
+          <label for="fb-text">Your feedback</label>
+          <textarea id="fb-text" placeholder="Speak with the mic, or just type here…"></textarea>
+        </div>
+        <div class="cat-row" role="group" aria-label="Feedback type">
+          <button class="chip" data-cat="improvement" aria-pressed="true">💡 Improvement</button>
+          <button class="chip" data-cat="bug" aria-pressed="false">🐞 Something&rsquo;s broken</button>
+          <button class="chip" data-cat="request" aria-pressed="false">✨ I wish it could…</button>
+          <button class="chip" data-cat="other" aria-pressed="false">💬 Other</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn" id="fb-send" type="button">Send to Evan</button>
+        </div>
+        <div class="ok" id="fb-ok" role="status"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ====== libraries (QR + barcode), pinned exact versions ====== -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
+
+  <!-- ====== app modules ====== -->
+  <script src="auth.js"></script>
+  <script src="codegen.js"></script>
+  <script src="voice.js"></script>
+
+  <!-- ====== glue ====== -->
+  <script>
+  (function () {
+    "use strict";
+    var $ = function (s) { return document.querySelector(s); };
+
+    // ---------- view switching ----------
+    function showApp() {
+      $("#login-view").hidden = true;
+      $("#app-view").hidden = false;
+      var who = (window.Gate && Gate.currentUser && Gate.currentUser()) || "friend";
+      $("#who-name").textContent = who;
+    }
+    function showLogin() {
+      $("#app-view").hidden = true;
+      $("#login-view").hidden = false;
+      setTimeout(function(){ try { $("#u").focus(); } catch(e){} }, 50);
+    }
+    if (window.Gate && Gate.isAuthed && Gate.isAuthed()) showApp(); else showLogin();
+
+    // ---------- login ----------
+    $("#login-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var btn = $("#login-btn"), err = $("#login-err");
+      err.textContent = ""; btn.disabled = true; btn.textContent = "Checking…";
+      Promise.resolve(Gate.login($("#u").value, $("#p").value)).then(function (ok) {
+        btn.disabled = false; btn.textContent = "Sign in";
+        if (ok) { $("#p").value = ""; showApp(); }
+        else { err.textContent = "That username and password didn’t match. Try again."; }
+      }).catch(function () {
+        btn.disabled = false; btn.textContent = "Sign in";
+        err.textContent = "Something went wrong signing in. Try again.";
+      });
+    });
+    $("#logout").addEventListener("click", function (e) {
+      e.preventDefault(); try { Gate.logout(); } catch(_){} showLogin();
+    });
+
+    // ---------- generator ----------
+    var mode = "qr";            // 'qr' | 'bc'
+    var qrColor = "#000000";
+    var lastPNG = null;
+
+    function setMode(m) {
+      mode = m;
+      $("#tab-qr").setAttribute("aria-pressed", m === "qr");
+      $("#tab-bc").setAttribute("aria-pressed", m === "bc");
+      $("#qr-color-field").hidden = m !== "qr";
+      $("#bc-format-field").hidden = m !== "bc";
+      $("#data-label").textContent = m === "qr" ? "Where should it go? (link or text)" : "Barcode value";
+      $("#data-hint").textContent = m === "qr" ? "Paste a website, or type any text." : "Numbers or text, depending on the barcode type.";
+      $("#data").placeholder = m === "qr" ? "https://your-shop.etsy.com" : "012345678905";
+      resetPreview();
+    }
+    $("#tab-qr").addEventListener("click", function(){ setMode("qr"); });
+    $("#tab-bc").addEventListener("click", function(){ setMode("bc"); });
+
+    // color swatches
+    Array.prototype.forEach.call(document.querySelectorAll(".swatch"), function (sw) {
+      sw.addEventListener("click", function () {
+        qrColor = sw.getAttribute("data-color");
+        Array.prototype.forEach.call(document.querySelectorAll(".swatch"), function (o) {
+          o.setAttribute("aria-pressed", o === sw);
+        });
+      });
+    });
+
+    // populate barcode formats (from CodeGen)
+    function initBarcodeFormats() {
+      var sel = $("#bc-format");
+      if (!window.CodeGen || !CodeGen.barcodeFormats) { return; }
+      CodeGen.barcodeFormats.forEach(function (f) {
+        var o = document.createElement("option");
+        o.value = f.value; o.textContent = f.label; sel.appendChild(o);
+      });
+    }
+
+    function resetPreview() {
+      var p = $("#preview");
+      p.innerHTML = '<span class="empty">Your code shows up here</span>';
+      lastPNG = null; $("#dl-btn").disabled = true; $("#gen-err").textContent = "";
+    }
+
+    function generate() {
+      var err = $("#gen-err"); err.textContent = "";
+      var data = ($("#data").value || "").trim();
+      if (!data) { err.textContent = "Type something first."; return; }
+      var p = $("#preview"); p.innerHTML = "";
+      try {
+        if (mode === "qr") {
+          CodeGen.renderQR(p, data, { size: 512, dark: qrColor, light: "#ffffff", ecLevel: "H" });
+        } else {
+          CodeGen.renderBarcode(p, data, { format: $("#bc-format").value, lineColor: "#000000", background: "#ffffff", displayValue: true });
+        }
+      } catch (ex) {
+        resetPreview();
+        err.textContent = (ex && ex.message) ? ex.message : "Couldn’t make that code — check the value.";
+        return;
+      }
+      // prep download
+      var node = p.querySelector("canvas") || p.querySelector("svg") || p.querySelector("img");
+      Promise.resolve(CodeGen.toPNG(node)).then(function (url) {
+        lastPNG = url; $("#dl-btn").disabled = false;
+      }).catch(function () { $("#dl-btn").disabled = true; });
+    }
+    $("#make-btn").addEventListener("click", generate);
+    $("#data").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); generate(); } });
+    $("#dl-btn").addEventListener("click", function () {
+      if (!lastPNG) return;
+      var base = (mode === "qr" ? "qr" : "barcode");
+      CodeGen.download(lastPNG, base + "-" + Date.now() + ".png");
+    });
+
+    // ---------- voice feedback ----------
+    var fbCat = "improvement";
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"), function (c) {
+      c.addEventListener("click", function () {
+        fbCat = c.getAttribute("data-cat");
+        Array.prototype.forEach.call(document.querySelectorAll(".chip"), function (o) { o.setAttribute("aria-pressed", o === c); });
+      });
+    });
+
+    var listening = false, baseText = "";
+    var mic = $("#mic"), status = $("#vf-status"), ta = $("#fb-text");
+
+    function stopListening() {
+      listening = false; mic.setAttribute("aria-pressed", "false");
+      status.textContent = "Saved what you said. Edit if you like, then Send.";
+      try { VoiceFeedback.stop(); } catch (_) {}
+    }
+    mic.addEventListener("click", function () {
+      if (!window.VoiceFeedback || !VoiceFeedback.supported()) {
+        status.textContent = "Voice isn’t supported in this browser — just type your feedback below.";
+        ta.focus(); return;
+      }
+      if (listening) { stopListening(); return; }
+      listening = true; baseText = ta.value ? ta.value.trim() + " " : "";
+      mic.setAttribute("aria-pressed", "true");
+      status.textContent = "Listening… talk now. Tap the mic again to stop.";
+      try { VoiceFeedback.speak("Go ahead, I'm listening."); } catch (_) {}
+      VoiceFeedback.start(
+        function onPartial(interim) { ta.value = baseText + interim; },
+        function onFinal(finalText) { baseText = (baseText + finalText + " "); ta.value = baseText; },
+        function onError(msg) { status.textContent = "Mic problem: " + msg + " — you can type instead."; stopListening(); }
+      );
+    });
+
+    $("#fb-send").addEventListener("click", function () {
+      var text = (ta.value || "").trim(), ok = $("#fb-ok");
+      if (!text) { ok.style.color = ""; ok.textContent = "Say or type something first 🙂"; return; }
+      var who = (window.Gate && Gate.currentUser && Gate.currentUser()) || "";
+      var fb = VoiceFeedback.buildFeedback(text, { page: location.pathname, category: fbCat, username: who });
+      $("#fb-send").disabled = true; ok.textContent = "Sending…";
+      Promise.resolve(VoiceFeedback.submit(fb)).then(function (res) {
+        $("#fb-send").disabled = false;
+        ta.value = ""; status.textContent = "Thank you — Evan got it. Tap the mic anytime.";
+        ok.textContent = (res && res.via === "mailto") ? "Opening your email to send it ✓" : "Sent to Evan ✓ Thank you!";
+      }).catch(function () {
+        $("#fb-send").disabled = false;
+        ok.textContent = "Couldn’t send just now — it’s saved; try again in a bit.";
+      });
+    });
+
+    // ---------- boot ----------
+    initBarcodeFormats();
+    setMode("qr");
+  })();
+  </script>
+</body>
+</html>
