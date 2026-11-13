@@ -28,9 +28,9 @@ h1{font-size:22px;margin:0}
 .bar input{flex:1;min-width:140px;padding:9px 12px;border:1px solid var(--hair);border-radius:10px;background:var(--surface)}
 .bar select{padding:9px 10px;border:1px solid var(--hair);border-radius:10px;background:var(--surface)}
 .tabs{display:none;gap:6px;padding:4px 16px 8px}
-.tabs button{flex:1;padding:9px 4px;border:1px solid var(--hair);border-radius:10px;background:var(--surface);font-size:13px;font-weight:600}
+.tabs button{flex:1;min-width:0;padding:9px 4px;border:1px solid var(--hair);border-radius:10px;background:var(--surface);font-size:13px;font-weight:600}
 .tabs button.on{border-color:var(--accent);color:var(--accent)}
-.board{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:12px;padding:0 16px 16px;max-width:1400px;margin:0 auto}
+.board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr);gap:12px;padding:0 16px 16px;max-width:1400px;margin:0 auto}
 .col{background:var(--surface);border:1px solid var(--hair);border-radius:14px;display:flex;flex-direction:column;min-width:0;max-height:78vh}
 .col.drop{outline:2px dashed var(--accent);outline-offset:-4px}
 .col h2{font-size:14px;margin:0;padding:12px 14px 6px;letter-spacing:.5px;text-transform:uppercase}
@@ -90,7 +90,11 @@ summary{cursor:pointer;font-weight:700}
 .msg{max-width:520px;margin:60px auto;padding:0 16px;text-align:center;color:var(--ink-2)}
 @media (max-width:899px){
   .tabs{display:flex}
-  .board{grid-template-columns:1fr}
+  .board{grid-template-columns:minmax(0,1fr)}
+  .tabs button{min-width:0;font-size:12px}
+  .bar select{max-width:150px}
+  .p .rk{display:none}
+  .p{gap:6px}
   .col{display:none;max-height:none}
   .col.show{display:flex}
   .p{cursor:pointer}
