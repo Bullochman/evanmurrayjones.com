@@ -9,4 +9,4 @@ __pycache__/
 call-briefs/
 admin/
 tools/qr/.venv/
-feedback/
+/feedback/
