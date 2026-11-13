@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alliance Merger Board</title>
+<style>
+:root{
+  color-scheme: dark light;
+  --page:#0d1117; --surface:#161b22; --surface-2:#1c2330; --ink:#e6edf3; --ink-2:#8b949e;
+  --hair:#30363d; --accent:#f0a020; --am:#58a6ff; --ddi:#3fb950;
+  --good:#3fb950; --warn:#e3a008; --bad:#f85149; --unk:#6e7681;
+}
+@media (prefers-color-scheme: light){
+  :root{ --page:#f4f4f1; --surface:#ffffff; --surface-2:#f7f6f2; --ink:#12110f; --ink-2:#5c5a54;
+    --hair:#e1dfd7; --accent:#b86e00; --am:#2a78d6; --ddi:#1f8f3a; --good:#1f8f3a; --warn:#b07800; --bad:#c93030; --unk:#8a887f; }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--page);color:var(--ink);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}
+header{padding:16px 16px 8px;max-width:1400px;margin:0 auto}
+h1{font-size:22px;margin:0}
+.sub{color:var(--ink-2);font-size:13px;margin-top:4px}
+.me{font-size:13px;color:var(--ink-2);margin-top:6px}
+.me a{color:var(--accent);cursor:pointer}
+.bar{display:flex;gap:8px;flex-wrap:wrap;padding:8px 16px;max-width:1400px;margin:0 auto}
+.bar input{flex:1;min-width:140px;padding:9px 12px;border:1px solid var(--hair);border-radius:10px;background:var(--surface)}
+.bar select{padding:9px 10px;border:1px solid var(--hair);border-radius:10px;background:var(--surface)}
+.tabs{display:none;gap:6px;padding:4px 16px 8px}
+.tabs button{flex:1;padding:9px 4px;border:1px solid var(--hair);border-radius:10px;background:var(--surface);font-size:13px;font-weight:600}
+.tabs button.on{border-color:var(--accent);color:var(--accent)}
+.board{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:12px;padding:0 16px 16px;max-width:1400px;margin:0 auto}
+.col{background:var(--surface);border:1px solid var(--hair);border-radius:14px;display:flex;flex-direction:column;min-width:0;max-height:78vh}
+.col.drop{outline:2px dashed var(--accent);outline-offset:-4px}
+.col h2{font-size:14px;margin:0;padding:12px 14px 6px;letter-spacing:.5px;text-transform:uppercase}
+.col .meta{padding:0 14px 10px;color:var(--ink-2);font-size:12.5px;border-bottom:1px solid var(--hair)}
+.list{overflow-y:auto;padding:6px;flex:1}
+.main .stats{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+.count{font-size:22px;font-weight:800;color:var(--ink)}
+.count.full{color:var(--bad)}
+.appr{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.badge{font-size:12px;padding:3px 8px;border-radius:20px;border:1px solid var(--hair);color:var(--ink-2)}
+.badge.ok{border-color:var(--good);color:var(--good)}
+.approve{width:100%;margin-top:8px;padding:11px;border:0;border-radius:10px;background:var(--accent);color:#111;font-weight:700;cursor:pointer}
+.approve:disabled{opacity:.55;cursor:default}
+.p{display:flex;align-items:center;gap:8px;padding:7px 8px 7px 10px;margin:3px 0;border-radius:9px;background:var(--surface-2);border-left:4px solid var(--hair);cursor:grab;user-select:none;-webkit-user-select:none}
+.p.am{border-left-color:var(--am)} .p.ddi{border-left-color:var(--ddi)}
+.p.sel{outline:2px solid var(--accent)}
+.p.pending{opacity:.55}
+.p .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.p .rk{font-size:11px;color:var(--ink-2);width:22px;text-align:center}
+.p .pw{font-variant-numeric:tabular-nums;font-weight:700;font-size:13.5px;min-width:52px;text-align:right}
+.act{font-size:11px;padding:2px 6px;border-radius:10px;white-space:nowrap;border:1px solid}
+.act.g{color:var(--good);border-color:var(--good)} .act.w{color:var(--warn);border-color:var(--warn)}
+.act.b{color:var(--bad);border-color:var(--bad)} .act.u{color:var(--unk);border-color:var(--unk)}
+.p .tag{font-size:10.5px;font-weight:700;color:var(--ink-2)}
+.empty{color:var(--ink-2);font-size:13px;padding:14px;text-align:center}
+.panel{max-width:1400px;margin:0 auto;padding:0 16px 40px}
+details{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:10px 14px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:700}
+.feed{font-size:13px;max-height:320px;overflow-y:auto;margin-top:8px}
+.feed div{padding:5px 0;border-top:1px solid var(--hair)}
+.feed time{color:var(--ink-2);font-size:11.5px;margin-right:6px}
+.cbox{display:flex;gap:8px;margin-top:8px}
+.cbox input{flex:1;min-width:0;padding:9px 12px;border:1px solid var(--hair);border-radius:10px;background:var(--page)}
+.cbox button,.sheet button,.modal button{padding:9px 14px;border:0;border-radius:10px;background:var(--accent);color:#111;font-weight:700;cursor:pointer}
+.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--hair);padding:14px 16px calc(14px + env(safe-area-inset-bottom));display:none;z-index:20;box-shadow:0 -8px 24px rgba(0,0,0,.35)}
+.sheet.on{display:block}
+.sheet .who{font-weight:700;margin-bottom:4px}
+.sheet .det{color:var(--ink-2);font-size:13px;margin-bottom:10px}
+.sheet .row{display:flex;gap:8px}
+.sheet .row button{flex:1;padding:12px}
+.sheet .row .ghost{background:transparent;border:1px solid var(--hair);color:var(--ink)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--ink);color:var(--page);padding:10px 14px;border-radius:12px;display:none;gap:12px;align-items:center;z-index:30;max-width:calc(100% - 32px);font-size:14px}
+.toast.on{display:flex}
+.toast.err{background:var(--bad);color:#fff}
+.toast a{color:var(--accent);font-weight:700;cursor:pointer;white-space:nowrap}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:40;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:var(--surface);border:1px solid var(--hair);border-radius:16px;padding:20px;width:100%;max-width:380px}
+.modal h3{margin:0 0 6px}
+.modal p{color:var(--ink-2);font-size:13.5px;margin:0 0 14px}
+.modal label{display:block;font-size:13px;font-weight:600;margin:10px 0 6px}
+.modal input{width:100%;padding:10px 12px;border:1px solid var(--hair);border-radius:10px;background:var(--page)}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;background:var(--page)!important;color:var(--ink)!important;border:1px solid var(--hair)!important}
+.seg button.on{border-color:var(--accent)!important;color:var(--accent)!important}
+.modal .go{width:100%;margin-top:16px;padding:12px}
+.msg{max-width:520px;margin:60px auto;padding:0 16px;text-align:center;color:var(--ink-2)}
+@media (max-width:899px){
+  .tabs{display:flex}
+  .board{grid-template-columns:1fr}
+  .col{display:none;max-height:none}
+  .col.show{display:flex}
+  .p{cursor:pointer}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Alliance Merger Board</h1>
+  <div class="sub">Proposed new alliance = top 100 by power, active in the last 48h. Move players in or out; each alliance approves when happy.</div>
+  <div class="me" id="me"></div>
+</header>
+<div id="app" style="display:none">
+  <div class="bar">
+    <input id="q" type="search" placeholder="Search players" autocomplete="off">
+    <select id="sort"><option value="power">Sort: Power</option><option value="act">Sort: Most active</option></select>
+  </div>
+  <div class="tabs" id="tabs">
+    <button data-t="main" class="on">New alliance</button>
+    <button data-t="DDI">DDI bench</button>
+    <button data-t="12AM">12AM bench</button>
+  </div>
+  <div class="board">
+    <section class="col bench" data-zone="DDI"><h2 style="color:var(--ddi)">DDI bench</h2><div class="meta" id="m-DDI"></div><div class="list" id="l-DDI"></div></section>
+    <section class="col main show" data-zone="main"><h2>New alliance</h2><div class="meta" id="m-main"></div><div class="list" id="l-main"></div></section>
+    <section class="col bench" data-zone="12AM"><h2 style="color:var(--am)">12AM bench</h2><div class="meta" id="m-12AM"></div><div class="list" id="l-12AM"></div></section>
+  </div>
+  <div class="panel">
+    <details id="d-com" open><summary>Comments <span id="ccount"></span></summary>
+      <div class="cbox"><input id="ctext" maxlength="300" placeholder="Add a comment for both alliances"><button id="csend">Post</button></div>
+      <div class="feed" id="comments"></div>
+    </details>
+    <details><summary>Activity log</summary><div class="feed" id="log"></div></details>
+    <div class="sub" id="src"></div>
+  </div>
+</div>
+<div class="msg" id="msg">Loading…</div>
+
+<div class="sheet" id="sheet">
+  <div class="who" id="s-name"></div>
+  <div class="det" id="s-det"></div>
+  <div class="row"><button class="ghost" id="s-cancel">Cancel</button><button id="s-go"></button></div>
+</div>
+<div class="toast" id="toast"><span id="t-msg"></span><a id="t-undo">Undo</a></div>
+<div class="modal" id="modal"><div class="box">
+  <h3>Who's editing?</h3>
+  <p>Your name shows next to every change you make, so both alliances can see who moved whom.</p>
+  <label for="i-name">Your in-game name</label>
+  <input id="i-name" maxlength="30" autocomplete="off">
+  <label>Your alliance</label>
+  <div class="seg" id="i-side"><button data-s="DDI">DDI</button><button data-s="12AM">12AM</button></div>
+  <button class="go" id="i-go">Continue</button>
+</div></div>
+
+<script>
+const API = "https://emj-upload.bullochman.workers.dev/merger";
+const $ = id => document.getElementById(id);
+const ls = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch {} },
+};
+const url = new URL(location.href);
+let code = url.searchParams.get("c") || ls.get("mb_code") || "";
+if (url.searchParams.get("c")) ls.set("mb_code", code);
+let me = { who: ls.get("mb_who") || "", side: ls.get("mb_side") || "" };
+let S = null, pending = new Map(), tab = "main", selected = null, undoMove = null, toastT;
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pw = p => p.power ? (p.power/1e6).toFixed(1) + "M" : "—";
+const isMain = p => pending.has(p.name) ? pending.get(p.name) : p.main;
+function actClass(p){
+  const a = (p.act || "").toLowerCase();
+  if (a === "online" || a === "leadership") return "g";
+  if (p.hrs == null) return "u";
+  return p.hrs < 24 ? "g" : p.hrs <= 48 ? "w" : "b";
+}
+const actText = p => ({"not in their screenshots":"not in screens","last-online not read":"not read"}[p.act] || p.act || "unknown");
+const actRank = p => (p.act||"").toLowerCase()==="online"||p.act==="leadership" ? 0 : p.hrs==null ? 1e6 : p.hrs;
+const ago = iso => { const m = Math.round((Date.now()-new Date(iso))/6e4); return m<1?"just now":m<60?m+"m ago":m<1440?Math.round(m/60)+"h ago":Math.round(m/1440)+"d ago"; };
+
+async function call(path, body){
+  const opt = body ? {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({c:code, who:me.who, side:me.side, ...body})} : {};
+  const r = await fetch(API + path + (body ? "" : "?c=" + encodeURIComponent(code)), opt);
+  const j = await r.json().catch(() => ({error: "server error " + r.status}));
+  if (!r.ok || j.error) throw new Error(j.error || r.status);
+  return j;
+}
+
+function render(){
+  if (!S) return;
+  const q = $("q").value.trim().toLowerCase();
+  const sort = $("sort").value;
+  const cmp = sort === "act" ? (a,b) => actRank(a)-actRank(b) || (b.power||0)-(a.power||0)
+                             : (a,b) => (b.lead-a.lead) || (b.power||0)-(a.power||0);
+  const all = S.players.slice().sort(cmp);
+  const main = all.filter(isMain), cap = S.cap;
+  const zones = { main, DDI: all.filter(p => !isMain(p) && p.side === "DDI"), "12AM": all.filter(p => !isMain(p) && p.side === "12AM") };
+  for (const z of ["main","DDI","12AM"]) {
+    const list = zones[z].filter(p => !q || p.name.toLowerCase().includes(q));
+    $("l-"+z).innerHTML = list.length ? list.map(p => `
+      <div class="p ${p.side==="12AM"?"am":"ddi"}${pending.has(p.name)?" pending":""}${selected===p.name?" sel":""}" draggable="true" data-n="${esc(p.name)}">
+        <span class="rk">${esc(p.rank||"")}</span>
+        <span class="nm">${esc(p.name)}${p.lead?" ★":""}</span>
+        ${z==="main"?`<span class="tag" style="color:var(--${p.side==="12AM"?"am":"ddi"})">${p.side}</span>`:""}
+        <span class="act ${actClass(p)}">${esc(actText(p))}</span>
+        <span class="pw">${pw(p)}</span>
+      </div>`).join("") : `<div class="empty">${q ? "No matches" : z==="main" ? "Empty" : "Everyone from this alliance is in the new alliance"}</div>`;
+  }
+  const n = main.length, tot = main.reduce((s,p) => s+(p.power||0), 0)/1e9;
+  const nA = main.filter(p => p.side==="12AM").length;
+  const ap = S.approvals || {};
+  const badge = s => ap[s] ? `<span class="badge ok">✓ ${s} approved by ${esc(ap[s].who)}</span>` : `<span class="badge">${s}: not yet</span>`;
+  const mine = me.side && ap[me.side];
+  $("m-main").innerHTML = `
+    <div class="stats"><span class="count${n>=cap?" full":""}">${n}/${cap}</span>
+      <span>${tot.toFixed(2)}B power</span>
+      <span><b style="color:var(--am)">${nA}</b> 12AM · <b style="color:var(--ddi)">${n-nA}</b> DDI</span></div>
+    <div class="appr">${badge("DDI")}${badge("12AM")}</div>
+    <button class="approve" id="approve" ${!me.side||mine?"disabled":""}>${mine ? `${me.side} has approved this list` : `Approve this list for ${esc(me.side||"my alliance")}`}</button>
+    <div style="margin-top:6px;font-size:12px">Any move clears both approvals.</div>`;
+  $("approve").onclick = approve;
+  for (const s of ["DDI","12AM"]) $("m-"+s).textContent = `${zones[s].length} not in the new alliance`;
+  $("tabs").children[0].textContent = `New alliance (${n})`;
+  $("tabs").children[1].textContent = `DDI bench (${zones.DDI.length})`;
+  $("tabs").children[2].textContent = `12AM bench (${zones["12AM"].length})`;
+  const com = (S.comments||[]).slice().reverse();
+  $("ccount").textContent = com.length ? `(${com.length})` : "";
+  $("comments").innerHTML = com.map(c => `<div><time>${ago(c.at)}</time><b>${esc(c.who)}</b> <span class="tag">${esc(c.side)}</span>: ${esc(c.text)}</div>`).join("") || `<div class="sub">No comments yet.</div>`;
+  $("log").innerHTML = (S.log||[]).slice().reverse().map(l => `<div><time>${ago(l.at)}</time><b>${esc(l.who)}</b>${l.side?` (${esc(l.side)})`:""} ${l.name ? `moved <b>${esc(l.name)}</b> to ${l.to==="main"?"the new alliance":"the bench"}` : esc(l.to)}</div>`).join("") || `<div class="sub">No changes yet.</div>`;
+  $("src").textContent = S.sources ? `Data: ${S.sources}` : "";
+}
+
+function toast(text, undo, err){
+  $("t-msg").textContent = text;
+  $("t-undo").style.display = undo ? "" : "none";
+  undoMove = undo || null;
+  $("toast").className = "toast on" + (err ? " err" : "");
+  clearTimeout(toastT); toastT = setTimeout(() => $("toast").className = "toast", err ? 6000 : 5000);
+}
+
+async function move(name, toMain, silent){
+  const p = S.players.find(p => p.name === name);
+  if (!p || isMain(p) === toMain) return;
+  if (!me.who || !me.side) return askWho();
+  if (toMain && S.players.filter(isMain).length >= S.cap) return toast(`The new alliance is full (${S.cap}). Move someone to the bench first.`, null, true);
+  pending.set(name, toMain); render();
+  try {
+    S = await call("/move", {name, to: toMain ? "main" : "bench"});
+    pending.delete(name); render();
+    if (!silent) toast(`${name} → ${toMain ? "new alliance" : "bench"}`, () => move(name, !toMain, true));
+  } catch (e) {
+    pending.delete(name); render();
+    toast(`Couldn't move ${name}: ${e.message}`, null, true);
+  }
+}
+
+async function approve(){
+  if (!me.who || !me.side) return askWho();
+  try { S = await call("/approve", {}); render(); toast(`Approved for ${me.side}`); }
+  catch (e) { toast(`Couldn't approve: ${e.message}`, null, true); }
+}
+
+async function comment(){
+  const text = $("ctext").value.trim();
+  if (!text) return;
+  if (!me.who || !me.side) return askWho();
+  try { S = await call("/comment", {text}); $("ctext").value = ""; render(); }
+  catch (e) { toast(`Couldn't post: ${e.message}`, null, true); }
+}
+
+function openSheet(name){
+  const p = S.players.find(p => p.name === name); if (!p) return;
+  selected = name; render();
+  const inMain = isMain(p);
+  $("s-name").textContent = p.name + (p.lead ? " ★" : "");
+  $("s-det").textContent = `${p.side} · ${p.rank||""} · ${pw(p)} · last online: ${actText(p)}`;
+  $("s-go").textContent = inMain ? "Move to bench" : "Move to new alliance";
+  $("s-go").onclick = () => { closeSheet(); move(name, !inMain); };
+  $("sheet").classList.add("on");
+}
+function closeSheet(){ $("sheet").classList.remove("on"); selected = null; render(); }
+
+function askWho(){
+  $("i-name").value = me.who;
+  let side = me.side;
+  const seg = $("i-side");
+  const paint = () => [...seg.children].forEach(b => b.classList.toggle("on", b.dataset.s === side));
+  [...seg.children].forEach(b => b.onclick = () => { side = b.dataset.s; paint(); });
+  paint();
+  $("i-go").onclick = () => {
+    const who = $("i-name").value.trim();
+    if (!who || !side) return $("i-name").focus();
+    me = {who, side}; ls.set("mb_who", who); ls.set("mb_side", side);
+    $("modal").classList.remove("on"); showMe(); render();
+  };
+  $("modal").classList.add("on");
+}
+function showMe(){
+  $("me").innerHTML = me.who ? `Editing as <b>${esc(me.who)}</b> (${esc(me.side)}) · <a id="chg">change</a>` : "";
+  if (me.who) $("chg").onclick = askWho;
+}
+
+// desktop drag and drop
+document.addEventListener("dragstart", e => {
+  const el = e.target.closest?.(".p"); if (!el) return;
+  e.dataTransfer.setData("text/plain", el.dataset.n); e.dataTransfer.effectAllowed = "move";
+});
+document.querySelectorAll(".col").forEach(col => {
+  col.addEventListener("dragover", e => { e.preventDefault(); col.classList.add("drop"); });
+  col.addEventListener("dragleave", e => { if (!col.contains(e.relatedTarget)) col.classList.remove("drop"); });
+  col.addEventListener("drop", e => {
+    e.preventDefault(); col.classList.remove("drop");
+    const name = e.dataTransfer.getData("text/plain");
+    const p = S.players.find(p => p.name === name); if (!p) return;
+    const z = col.dataset.zone;
+    if (z === "main") move(name, true);
+    else if (z === p.side) move(name, false);
+    else toast(`${name} is ${p.side}; drop on the ${p.side} bench`, null, true);
+  });
+});
+// tap (phones) / click (desktop) opens the move sheet
+document.addEventListener("click", e => {
+  const el = e.target.closest(".p"); if (el) openSheet(el.dataset.n);
+});
+$("s-cancel").onclick = closeSheet;
+$("t-undo").onclick = () => { const u = undoMove; $("toast").className = "toast"; if (u) u(); };
+$("q").oninput = render; $("sort").onchange = render;
+$("csend").onclick = comment; $("ctext").onkeydown = e => { if (e.key === "Enter") comment(); };
+$("tabs").onclick = e => {
+  const b = e.target.closest("button"); if (!b) return;
+  tab = b.dataset.t;
+  [...$("tabs").children].forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".col").forEach(c => c.classList.toggle("show", c.dataset.zone === tab));
+};
+
+async function refresh(){
+  if (pending.size) return;
+  try { S = await call("/state"); render(); $("app").style.display = ""; $("msg").style.display = "none"; }
+  catch (e) {
+    if (!S) { $("msg").textContent = /code/.test(e.message) ? "This board needs the access link. Ask your alliance leadership for it." : "Couldn't load the board: " + e.message; }
+  }
+}
+(async () => {
+  if (!code) { $("msg").textContent = "This board needs the access link. Ask your alliance leadership for it."; return; }
+  showMe();
+  await refresh();
+  if (S && (!me.who || !me.side)) askWho();
+  setInterval(refresh, 10000);
+})();
+</script>
+</body>
+</html>
