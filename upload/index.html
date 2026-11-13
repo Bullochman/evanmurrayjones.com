@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Upload — Evan Jones</title>
+<style>
+:root{
+  color-scheme: light dark;
+  --page:#f4f4f1; --surface:#ffffff; --ink:#12110f; --ink-2:#55534e;
+  --hair:#e5e3db; --accent:#2a78d6; --good:#0a8f0a; --crit:#d03b3b;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --page:#121210; --surface:#1c1c19; --ink:#f1f0ea; --ink-2:#b0aea5; --hair:#33322d; --accent:#5b9cf0; --good:#4cc04c; --crit:#f07070; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:520px;margin:0 auto;padding:32px 16px 48px}
+h1{font-size:26px;margin:0 0 6px}
+p.lead{color:var(--ink-2);margin:0 0 22px}
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:18px}
+label{display:block;font-weight:600;font-size:14px;margin:0 0 6px}
+input[type=text]{width:100%;padding:11px 12px;border:1px solid var(--hair);border-radius:10px;background:var(--page);color:var(--ink);font:inherit;margin-bottom:16px}
+.drop{display:block;border:2px dashed var(--hair);border-radius:12px;padding:26px 12px;text-align:center;cursor:pointer;margin-bottom:16px}
+.drop b{color:var(--accent)}
+.drop input{display:none}
+button{width:100%;padding:13px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:600 16px/1 inherit;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+ul{list-style:none;padding:0;margin:16px 0 0;font-size:14px}
+li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--hair)}
+li span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ok{color:var(--good)}.err{color:var(--crit)}
+.small{color:var(--ink-2);font-size:13px;margin-top:14px}
+</style>
+</head>
+<body>
+<main>
+<h1>Send screenshots or a video</h1>
+<p class="lead">Members list screenshots (all ranks, showing "Online / Xh ago") or one screen recording scrolling through it. No login needed.</p>
+<form class="card" id="f">
+  <label for="who">Your in-game name</label>
+  <input type="text" id="who" maxlength="40" placeholder="e.g. LAFJr" autocomplete="off">
+  <label class="drop" for="files"><b>Tap to choose files</b><br><span id="pick">Photos or videos, up to 95 MB each</span>
+    <input type="file" id="files" accept="image/*,video/*" multiple></label>
+  <button id="go" disabled>Upload</button>
+  <ul id="list"></ul>
+  <p class="small">Files go privately to Evan (EMJ) only. They aren't public.</p>
+</form>
+</main>
+<script>
+const API = "https://emj-upload.bullochman.workers.dev/upload";
+const $ = id => document.getElementById(id);
+$("files").onchange = () => {
+  const n = $("files").files.length;
+  $("pick").textContent = n ? n + " file" + (n > 1 ? "s" : "") + " selected" : "Photos or videos, up to 95 MB each";
+  $("go").disabled = !n;
+};
+$("f").onsubmit = async e => {
+  e.preventDefault();
+  $("go").disabled = true;
+  const files = [...$("files").files];
+  let good = 0;
+  for (const file of files) {
+    const li = document.createElement("li");
+    li.innerHTML = "<span></span><span>Uploading…</span>";
+    li.firstChild.textContent = file.name;
+    $("list").appendChild(li);
+    const status = li.lastChild;
+    if (file.size > 95 * 1024 * 1024) { status.textContent = "Too big"; status.className = "err"; continue; }
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("name", $("who").value.trim());
+    try {
+      const r = await fetch(API, { method: "POST", body: fd });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error || r.status);
+      status.textContent = "Done"; status.className = "ok"; good++;
+    } catch (err) {
+      status.textContent = "Failed: " + err.message; status.className = "err";
+    }
+  }
+  $("go").textContent = good === files.length ? "All sent, thank you!" : "Upload";
+  $("go").disabled = good === files.length;
+};
+</script>
+</body>
+</html>
