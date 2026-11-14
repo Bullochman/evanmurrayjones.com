@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Jones;Evan;Murray;;
+FN:Evan Murray Jones
+ORG:Medical Resources\, Inc.
+TEL;TYPE=WORK,VOICE:+12055217337
+EMAIL;TYPE=INTERNET,WORK:EvanJones@mdr.net
+URL:https://evanmurrayjones.com
+URL;TYPE=WORK:https://www.mdr.net
+END:VCARD

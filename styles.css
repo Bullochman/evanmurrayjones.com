@@ -392,3 +392,15 @@ h2 {
   .section { padding: 4rem 1.25rem; }
   .btn { flex: 1 1 auto; justify-content: center; }
 }
+
+/* ---- Contact vCard block (add-me-to-contacts QR) ---- */
+.vcard-block { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; margin-top: 32px; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+.vcard-text { flex: 1 1 260px; min-width: 0; }
+.vcard-text h3 { margin: 0 0 6px; font-family: var(--serif); font-size: 1.3rem; }
+.vcard-text > p { margin: 0 0 14px; color: var(--text-soft); }
+.vcard-detail { font-size: .9rem; color: var(--text-soft); }
+.btn-save { display: inline-block; background: var(--accent); color: #fff; font-weight: 600; text-decoration: none; padding: 11px 20px; border-radius: 10px; transition: filter .15s; }
+.btn-save:hover { filter: brightness(1.06); }
+.vcard-qr { margin: 0; flex: 0 0 auto; background: #fff; padding: 12px; border-radius: 14px; border: 1px solid var(--border); }
+.vcard-qr img { display: block; width: 200px; height: 200px; }
+@media (max-width: 560px) { .vcard-block { flex-direction: column; text-align: center; } .vcard-qr { align-self: center; } }
