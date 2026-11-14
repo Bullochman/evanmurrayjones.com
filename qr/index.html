@@ -23,7 +23,7 @@
     .login-box .mark { font-size: 2.4rem; }
     .field { text-align: left; display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
     .field label { font-size: .82rem; font-weight: 600; color: var(--text-soft); letter-spacing: .02em; }
-    input[type=text], input[type=password], textarea, select {
+    input[type=text], input[type=password], input[type=tel], input[type=email], input[type=number], input[type=url], input[type=datetime-local], textarea, select {
       font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--border);
       border-radius: 10px; padding: 11px 13px; width: 100%;
     }
@@ -130,10 +130,88 @@
 
       <div class="gen-grid">
         <div class="controls">
-          <div class="field" id="data-field" style="margin-top:0;">
-            <label for="data" id="data-label">Where should it go? (link or text)</label>
+          <!-- QR-only: which kind of QR code -->
+          <div class="field" id="qr-type-field" style="margin-top:0;">
+            <label for="qr-type">What kind of QR code?</label>
+            <select id="qr-type">
+              <option value="link">Website / Link</option>
+              <option value="text">Plain text / message</option>
+              <option value="wifi">Wi-Fi network</option>
+              <option value="email">Email</option>
+              <option value="tel">Phone call</option>
+              <option value="sms">Text message (SMS)</option>
+              <option value="geo">Map location</option>
+              <option value="event">Calendar event</option>
+            </select>
+          </div>
+
+          <!-- link (also reused as the Barcode value field) -->
+          <div class="field qr-panel" data-qr="link" id="data-field" style="margin-top:0;">
+            <label for="data" id="data-label">Where should it go?</label>
             <input id="data" type="text" placeholder="https://your-shop.etsy.com" />
-            <span class="hint" id="data-hint">Paste a website, or type any text.</span>
+            <span class="hint" id="data-hint">Paste a website link.</span>
+          </div>
+
+          <!-- plain text -->
+          <div class="qr-panel" data-qr="text" hidden>
+            <div class="field" style="margin-top:0;">
+              <label for="qt-text">Your text or message</label>
+              <textarea id="qt-text" placeholder="Anything you want the code to show when scanned…"></textarea>
+            </div>
+          </div>
+
+          <!-- wifi -->
+          <div class="qr-panel" data-qr="wifi" hidden style="display:flex;flex-direction:column;gap:12px;">
+            <div class="field" style="margin-top:0;"><label for="wifi-ssid">Network name (SSID)</label><input id="wifi-ssid" type="text" placeholder="MyHomeWiFi" autocapitalize="none" spellcheck="false" /></div>
+            <div class="field" style="margin-top:0;"><label for="wifi-pass">Password</label><input id="wifi-pass" type="text" placeholder="network password" autocapitalize="none" spellcheck="false" /></div>
+            <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;">
+              <div class="field" style="margin-top:0;"><label for="wifi-enc">Security</label>
+                <select id="wifi-enc"><option value="WPA">WPA / WPA2 (most common)</option><option value="WEP">WEP (older)</option><option value="nopass">No password</option></select>
+              </div>
+              <label style="display:flex;align-items:center;gap:7px;font-size:.85rem;color:var(--text-soft);padding-bottom:11px;white-space:nowrap;"><input id="wifi-hidden" type="checkbox" style="width:auto;" /> Hidden network</label>
+            </div>
+            <span class="hint">Scan &rarr; the phone offers to join the Wi-Fi. Great for house guests.</span>
+          </div>
+
+          <!-- email -->
+          <div class="qr-panel" data-qr="email" hidden style="display:flex;flex-direction:column;gap:12px;">
+            <div class="field" style="margin-top:0;"><label for="em-to">Send to (email)</label><input id="em-to" type="email" placeholder="name@example.com" autocapitalize="none" spellcheck="false" /></div>
+            <div class="field" style="margin-top:0;"><label for="em-subj">Subject <span class="hint">(optional)</span></label><input id="em-subj" type="text" /></div>
+            <div class="field" style="margin-top:0;"><label for="em-body">Message <span class="hint">(optional)</span></label><textarea id="em-body"></textarea></div>
+            <span class="hint">Scan &rarr; a pre-filled email opens, ready to send.</span>
+          </div>
+
+          <!-- tel -->
+          <div class="qr-panel" data-qr="tel" hidden>
+            <div class="field" style="margin-top:0;"><label for="tel-num">Phone number</label><input id="tel-num" type="tel" placeholder="(205) 555-1234" /><span class="hint">Scan &rarr; the phone is ready to call this number.</span></div>
+          </div>
+
+          <!-- sms -->
+          <div class="qr-panel" data-qr="sms" hidden style="display:flex;flex-direction:column;gap:12px;">
+            <div class="field" style="margin-top:0;"><label for="sms-num">Phone number</label><input id="sms-num" type="tel" placeholder="(205) 555-1234" /></div>
+            <div class="field" style="margin-top:0;"><label for="sms-msg">Message <span class="hint">(optional)</span></label><textarea id="sms-msg" placeholder="Pre-filled text…"></textarea></div>
+            <span class="hint">Scan &rarr; a text message opens, already addressed to this number.</span>
+          </div>
+
+          <!-- geo -->
+          <div class="qr-panel" data-qr="geo" hidden style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div class="field" style="margin-top:0;"><label for="geo-lat">Latitude</label><input id="geo-lat" type="text" placeholder="33.5186" inputmode="decimal" /></div>
+              <div class="field" style="margin-top:0;"><label for="geo-lng">Longitude</label><input id="geo-lng" type="text" placeholder="-86.8104" inputmode="decimal" /></div>
+            </div>
+            <span class="hint">Scan &rarr; opens this spot in maps. (In Google Maps, right-click a spot and the two numbers at the top are the latitude, longitude.) For a named place, use &ldquo;Website / Link&rdquo; with the Google Maps share link instead.</span>
+          </div>
+
+          <!-- event -->
+          <div class="qr-panel" data-qr="event" hidden style="display:flex;flex-direction:column;gap:12px;">
+            <div class="field" style="margin-top:0;"><label for="ev-title">Event name</label><input id="ev-title" type="text" placeholder="Birthday party" /></div>
+            <div class="field" style="margin-top:0;"><label for="ev-loc">Location <span class="hint">(optional)</span></label><input id="ev-loc" type="text" /></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div class="field" style="margin-top:0;"><label for="ev-start">Starts</label><input id="ev-start" type="datetime-local" /></div>
+              <div class="field" style="margin-top:0;"><label for="ev-end">Ends</label><input id="ev-end" type="datetime-local" /></div>
+            </div>
+            <div class="field" style="margin-top:0;"><label for="ev-notes">Notes <span class="hint">(optional)</span></label><textarea id="ev-notes"></textarea></div>
+            <span class="hint">Scan &rarr; the phone offers to add it to the calendar.</span>
           </div>
 
           <!-- Contact-card-only: vCard fields -->
@@ -267,9 +345,14 @@
     });
 
     // ---------- generator ----------
-    var mode = "qr";            // 'qr' | 'bc'
+    var mode = "qr";            // 'qr' | 'contact' | 'bc'
+    var qrType = "link";        // which QR content type (link|text|wifi|email|tel|sms|geo|event)
     var qrColor = "#000000";
     var lastPNG = null;
+
+    function hideAllQRPanels() {
+      Array.prototype.forEach.call(document.querySelectorAll(".qr-panel"), function (el) { el.hidden = true; });
+    }
 
     function setMode(m) {
       mode = m;
@@ -277,20 +360,39 @@
       $("#tab-qr").setAttribute("aria-pressed", isQ);
       $("#tab-bc").setAttribute("aria-pressed", isB);
       $("#tab-vc").setAttribute("aria-pressed", isC);
-      $("#data-field").hidden = isC;
       $("#vc-fields").hidden = !isC;
       $("#bc-format-field").hidden = !isB;
       $("#qr-color-field").hidden = isB;   // color applies to QR + contact (both are QR codes), not barcodes
-      if (!isC) {
-        $("#data-label").textContent = isQ ? "Where should it go? (link or text)" : "Barcode value";
-        $("#data-hint").textContent = isQ ? "Paste a website, or type any text." : "Numbers or text, depending on the barcode type.";
-        $("#data").placeholder = isQ ? "https://your-shop.etsy.com" : "012345678905";
+      $("#qr-type-field").hidden = !isQ;   // the "what kind of QR" picker is QR-only
+      hideAllQRPanels();
+      if (isQ) {
+        setQRType(qrType);
+      } else if (isB) {
+        // barcode reuses the link panel's text input as the "value" field
+        $("#data-field").hidden = false;
+        $("#data-label").textContent = "Barcode value";
+        $("#data-hint").textContent = "Numbers or text, depending on the barcode type.";
+        $("#data").placeholder = "012345678905";
       }
       resetPreview();
     }
+
+    function setQRType(t) {
+      qrType = t;
+      hideAllQRPanels();
+      var panel = document.querySelector('.qr-panel[data-qr="' + t + '"]');
+      if (panel) panel.hidden = false;
+      if (t === "link") {
+        $("#data-label").textContent = "Where should it go?";
+        $("#data-hint").textContent = "Paste a website link.";
+        $("#data").placeholder = "https://your-shop.etsy.com";
+      }
+    }
+
     $("#tab-qr").addEventListener("click", function(){ setMode("qr"); });
     $("#tab-vc").addEventListener("click", function(){ setMode("contact"); });
     $("#tab-bc").addEventListener("click", function(){ setMode("bc"); });
+    $("#qr-type").addEventListener("change", function(){ setQRType(this.value); resetPreview(); });
 
     // vCard (contact card) assembly
     function vcEsc(s) { return String(s || "").replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\n/g, "\\n"); }
@@ -311,6 +413,76 @@
       if (url) lines.push("URL:" + vcEsc(url));
       lines.push("END:VCARD");
       return { text: lines.join("\n"), hasData: !!(fn || phone || email) };
+    }
+
+    // ---------- QR content-type payload builders ----------
+    function val(id) { var el = document.getElementById(id); return el ? (el.value || "").trim() : ""; }
+    function uenc(s) { return encodeURIComponent(s || ""); }
+    function wifiEsc(s) { return String(s || "").replace(/([\\;,:"])/g, "\\$1"); }
+    function icalEsc(s) { return String(s || "").replace(/([\\;,])/g, "\\$1").replace(/\n/g, "\\n"); }
+    function dtLocal(v) { // "2026-11-20T18:00" -> "20261120T180000"
+      var m = (v || "").match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+      return m ? (m[1] + m[2] + m[3] + "T" + m[4] + m[5] + "00") : "";
+    }
+
+    // Returns { text, ec } on success, or { err } with a friendly message.
+    function buildQRPayload() {
+      switch (qrType) {
+        case "text":
+          return { text: val("qt-text"), ec: "M" };
+        case "wifi": {
+          var ssid = val("wifi-ssid");
+          if (!ssid) return { err: "Add the Wi-Fi network name." };
+          var enc = document.getElementById("wifi-enc").value;
+          var str = "WIFI:T:" + enc + ";S:" + wifiEsc(ssid) + ";";
+          if (enc !== "nopass") str += "P:" + wifiEsc(val("wifi-pass")) + ";";
+          if (document.getElementById("wifi-hidden").checked) str += "H:true;";
+          return { text: str + ";", ec: "M" };
+        }
+        case "email": {
+          var to = val("em-to");
+          if (!to) return { err: "Add the email address." };
+          var q = [], subj = val("em-subj"), body = val("em-body");
+          if (subj) q.push("subject=" + uenc(subj));
+          if (body) q.push("body=" + uenc(body));
+          return { text: "mailto:" + to + (q.length ? "?" + q.join("&") : ""), ec: "M" };
+        }
+        case "tel": {
+          var n = val("tel-num").replace(/[^\d+]/g, "");
+          if (!n) return { err: "Add a phone number." };
+          return { text: "tel:" + n, ec: "H" };
+        }
+        case "sms": {
+          var sn = val("sms-num").replace(/[^\d+]/g, "");
+          if (!sn) return { err: "Add a phone number." };
+          var msg = val("sms-msg");
+          return { text: "SMSTO:" + sn + (msg ? ":" + msg : ""), ec: "M" };
+        }
+        case "geo": {
+          var la = val("geo-lat"), lo = val("geo-lng");
+          if (!la || !lo) return { err: "Add both the latitude and the longitude." };
+          return { text: "geo:" + la + "," + lo, ec: "H" };
+        }
+        case "event": {
+          var title = val("ev-title");
+          if (!title) return { err: "Add an event name." };
+          var lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "BEGIN:VEVENT", "SUMMARY:" + icalEsc(title)];
+          var loc = val("ev-loc"), ds = dtLocal(val("ev-start")), de = dtLocal(val("ev-end")), notes = val("ev-notes");
+          if (loc) lines.push("LOCATION:" + icalEsc(loc));
+          if (ds) lines.push("DTSTART:" + ds);
+          if (de) lines.push("DTEND:" + de);
+          if (notes) lines.push("DESCRIPTION:" + icalEsc(notes));
+          lines.push("END:VEVENT", "END:VCALENDAR");
+          return { text: lines.join("\n"), ec: "M" };
+        }
+        case "link":
+        default: {
+          var d = val("data");
+          if (!d) return { err: "Paste a link first." };
+          if (!/^[a-z][a-z0-9+.\-]*:/i.test(d) && /\./.test(d)) d = "https://" + d; // bare domain -> https://
+          return { text: d, ec: "H" };
+        }
+      }
     }
 
     // color swatches
@@ -358,15 +530,29 @@
         Promise.resolve(CodeGen.toPNG(cnode)).then(function (url) { lastPNG = url; $("#dl-btn").disabled = false; }).catch(function () { $("#dl-btn").disabled = true; });
         return;
       }
+      // QR mode: assemble the payload for whichever content type is selected
+      if (mode === "qr") {
+        var pay = buildQRPayload();
+        if (pay.err) { err.textContent = pay.err; return; }
+        if (!pay.text) { err.textContent = "Type something first."; return; }
+        p.innerHTML = "";
+        try {
+          CodeGen.renderQR(p, pay.text, { size: 512, dark: qrColor, light: "#ffffff", ecLevel: pay.ec || "H" });
+        } catch (exq) {
+          resetPreview();
+          err.textContent = "That's a lot for one code — try shortening it (fewer words, drop optional fields).";
+          return;
+        }
+        var qnode = p.querySelector("canvas") || p.querySelector("svg") || p.querySelector("img");
+        Promise.resolve(CodeGen.toPNG(qnode)).then(function (url) { lastPNG = url; $("#dl-btn").disabled = false; }).catch(function () { $("#dl-btn").disabled = true; });
+        return;
+      }
+      // Barcode mode
       var data = ($("#data").value || "").trim();
       if (!data) { err.textContent = "Type something first."; return; }
       p.innerHTML = "";
       try {
-        if (mode === "qr") {
-          CodeGen.renderQR(p, data, { size: 512, dark: qrColor, light: "#ffffff", ecLevel: "H" });
-        } else {
-          CodeGen.renderBarcode(p, data, { format: $("#bc-format").value, lineColor: "#000000", background: "#ffffff", displayValue: true });
-        }
+        CodeGen.renderBarcode(p, data, { format: $("#bc-format").value, lineColor: "#000000", background: "#ffffff", displayValue: true });
       } catch (ex) {
         resetPreview();
         err.textContent = (ex && ex.message) ? ex.message : "Couldn’t make that code — check the value.";
@@ -382,7 +568,7 @@
     $("#data").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); generate(); } });
     $("#dl-btn").addEventListener("click", function () {
       if (!lastPNG) return;
-      var base = (mode === "qr" ? "qr" : mode === "contact" ? "contact-card" : "barcode");
+      var base = (mode === "qr" ? "qr-" + qrType : mode === "contact" ? "contact-card" : "barcode");
       CodeGen.download(lastPNG, base + "-" + Date.now() + ".png");
     });
 
