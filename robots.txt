@@ -2,3 +2,4 @@ User-agent: *
 Disallow: /finances/
 Disallow: /upload/
 Disallow: /alliance-merger/
+Disallow: /lw-dashboard/
