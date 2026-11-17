@@ -477,7 +477,9 @@ async function getJSON(path){
 async function load(){
   if (!code) return gate("");
   if (!S) { try { const k = JSON.parse(ls.get("lwd_cache") || "null"); if (k && k.code === code && k.S) { S = k.S; C = k.C; R = k.R || []; render(); } } catch {} }
-  const [s, c, r] = await Promise.allSettled([getJSON("/state"), getJSON("/comms"), getJSON("/inbox")]);
+  const [s, c, r, cal] = await Promise.allSettled([getJSON("/state"), getJSON("/comms"), getJSON("/inbox"),
+    fetch("/alliance-calendar/events.json", {cache:"no-store"}).then(x => x.ok ? x.json() : null)]);
+  if (cal.status === "fulfilled" && cal.value) try { setCalendar(cal.value); } catch {}
   if (s.status !== "fulfilled") {
     if (s.reason?.status === 403) { S = null; ls.set("lwd_cache", ""); return gate("That access code didn't work."); }
     if (S) return toast("Showing saved data. Couldn't refresh.");
@@ -867,15 +869,33 @@ function spendCard(){
 }
 
 /* ---------- events ---------- */
-const EVENTS = [
-  {key:"mg", name:"Marshall's Guard", at:"2026-11-17T19:00:00-06:00", ic:"shield", note:"Start rallies with a weak squad, join with your strongest"},
-  {key:"zs", name:"Zombie Siege", at:"2026-11-17T19:45:00-06:00", ic:"people", note:"Defend the base with the alliance"},
+/* Source: the public alliance calendar (/alliance-calendar/events.json, same feed members subscribe to).
+   The list below is only the fallback until that loads. Desert Storm Team A keeps key "ds" for the storm page. */
+let EVENTS = [
+  {key:"mg-20261117", name:"Marshall's Guard (tentative)", at:"2026-11-17T17:00:00-06:00", ic:"shield", note:"Start rallies with a weak squad, join with your strongest"},
+  {key:"zs-20261117", name:"Zombie Siege (tentative)", at:"2026-11-17T17:45:00-06:00", ic:"people", note:"Defend the base with the alliance"},
   {key:"ds", name:"Desert Storm", at:"2026-11-20T19:00:00-06:00", end:"2026-11-20T19:30:00-06:00", ic:"flag", note:"Team A · you're enlisted", href:"#storm"},
 ];
+const CAL_MAP = {"ds-team-a": {key:"ds", name:"Desert Storm", note:"Team A · you're enlisted", href:"#storm"}, "ds-team-b": {skip:true}};
+function setCalendar(d){
+  const now = Date.now(), to = now + 21 * DAY, out = [];
+  (d?.events || []).forEach(e => {
+    if (e.low_priority || CAL_MAP[e.id]?.skip) return;   // daily reset is computed locally below; Team B isn't yours
+    const s = Date.parse(e.start), step = (e.every_days || 0) * DAY, stop = e.until ? Date.parse(e.until) : Infinity, dur = (e.duration_min || 30) * 6e4;
+    let t = s; if (step && t + dur < now) t += Math.ceil((now - dur - t) / step) * step;
+    for (; t <= to && t <= stop; t += step || Infinity) {
+      if (t + dur < now) continue;
+      out.push({key: e.id, name: e.title + (e.tentative ? " (tentative)" : ""), at: isoT(t), end: isoT(t + dur), ic: e.icon || "cal", note: e.notes, ...(CAL_MAP[e.id] || {})});
+    }
+  });
+  if (!out.length) return;
+  if (!out.some(e => e.key === "ds")) out.push(EVENTS.find(e => e.key === "ds"));
+  EVENTS = out;
+}
 function upcoming(a){
   const t = a.timers || {}, ev = [];
   const ex = a.extra?.events; (Array.isArray(ex) ? ex : ex?.events || []).forEach(e => e && e.at && ev.push({ic:"cal", ...e}));
-  EVENTS.forEach(e => { if (!ev.some(x => x.key === e.key && x.at === e.at)) ev.push(e); });
+  EVENTS.forEach(e => { if (t.season_end && e.key === "s3-end") return; if (!ev.some(x => x.key === e.key && x.at === e.at)) ev.push(e); });
   const ds = a.extra?.desert_storm?.next; if (ds?.start) { const i = ev.findIndex(e => e.key === "ds"); if (i >= 0) ev[i] = {...ev[i], at: ds.start, end: ds.end || ev[i].end}; }
   if (t.season_end) ev.push({name:"Season 3 ends", at:t.season_end, ic:"flag", note:"From the in-game season timer"});
   const s = srv(); ev.push({name:"Daily reset · VS " + VSW[(s.dow + 1) % 7].t, at:isoT(s.start + DAY), ic:"refresh", note:"New VS day and Arms Race start"});
