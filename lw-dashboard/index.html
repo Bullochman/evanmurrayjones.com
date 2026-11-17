@@ -237,6 +237,36 @@ th{color:var(--ink-3);font-weight:600}
 .actl{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-2)}
 .actl .sbar{flex:1;max-width:160px;min-width:80px}
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--card-3);border:1px solid var(--hair-2);padding:10px 16px;border-radius:12px;font-size:14px;z-index:50;display:none;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.rk-hero{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.rk-hero .big{font-size:46px;font-weight:800;line-height:1;letter-spacing:-1px}
+.rk-hero .big small{font-size:16px;color:var(--ink-2);font-weight:600;letter-spacing:0;margin-left:6px}
+.rk-gaps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:14px}
+.rk-gaps .mt .n{font-size:20px}
+.rkt tr.me td{background:var(--accent-soft)}
+.rkt tr.me td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.rkt td.al{text-align:left;font-weight:600;max-width:230px;overflow:hidden;text-overflow:ellipsis}
+.rkt td.al .tg{display:inline-block;min-width:44px;color:var(--ink-2);font-weight:700}
+.rkt .sw{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:7px}
+@media (max-width:620px){.rkt .hide-s{display:none}}
+.rkmini{list-style:none;margin:12px 0 0;padding:0}
+.rkmini li{display:flex;gap:10px;align-items:center;padding:7px 8px;border-radius:9px;font-size:13.5px}
+.rkmini li.me{background:var(--accent-soft)}
+.rkmini .r{width:22px;color:var(--ink-3);font-weight:700}
+.rkmini .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pchart{position:relative;margin-top:6px}
+.pchart svg{display:block;width:100%;overflow:visible}
+.pchart .gl{stroke:var(--hair);stroke-width:1}
+.pchart .ax{font-size:10.5px;fill:var(--ink-3)}
+.pchart .lb{font-size:11px;font-weight:700;fill:var(--ink-2)}
+.pchart .lb.me{fill:var(--ink)}
+.pchart .cross{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:3 3}
+.schips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.schip{display:inline-flex;align-items:center;gap:6px;background:var(--card-2);border:1px solid var(--hair);color:var(--ink-3);border-radius:999px;padding:4px 11px;font-size:12px;font-weight:700;cursor:pointer}
+.schip i{width:10px;height:3px;border-radius:2px;display:inline-block;opacity:.35}
+.schip.on{color:var(--ink);border-color:var(--hair-2)}
+.schip.on i{opacity:1}
+.legend-note{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-3);margin-top:8px;align-items:center}
+.legend-note svg{width:30px;height:10px;vertical-align:-1px;margin-right:4px}
 </style>
 </head>
 <body>
@@ -349,7 +379,7 @@ function gate(msg){
   document.getElementById("code").onkeydown = e => { if (e.key === "Enter") go(); };
 }
 
-const PAGES = [["overview","Overview","home"],["accounts","Accounts","user"],["friends","Friends","users"],["inbox","Inbox","inbox"],["merger","Merger","merge"],["alliance","Alliance","people"],["activity","Activity","pulse"]];
+const PAGES = [["overview","Overview","home"],["accounts","Accounts","user"],["friends","Friends","users"],["inbox","Inbox","inbox"],["merger","Merger","merge"],["alliance","Alliance","people"],["rankings","Server rankings","trophy"],["activity","Activity","pulse"]];
 const page = () => { const h = location.hash.replace("#",""); return PAGES.some(p => p[0] === h) ? h : "overview"; };
 window.addEventListener("hashchange", () => { if (S) { render(); window.scrollTo(0, 0); } });
 const acct = () => (S.accounts || [])[0] || {};
@@ -360,14 +390,14 @@ function render(){
   const badge = {inbox: needCount() || null};
   const nav = PAGES.map(([id, label, ic]) => `<a class="nav ${pg === id ? "on" : ""}" href="#${id}">${I(ic)}${label}${badge[id] ? `<span class="badge">${badge[id]}</span>` : ""}</a>`).join("");
   const titles = {overview:["Overview","Your account at a glance"], accounts:["Accounts","History and today's routine"], friends:["Friends","Everyone you talk with, and what you know about them"],
-    inbox:["Inbox","Every channel in one place"], merger:["Merger","DDI into [12AM] MidNight"], alliance:["Alliance activity","Who in [12AM] has been online lately"], activity:["Activity","What got done, one line per action"]};
-  const body = {overview, accounts: accountsPage, friends, inbox, merger: mergerPage, alliance: alliancePage, activity}[pg]();
+    inbox:["Inbox","Every channel in one place"], merger:["Merger","DDI into [12AM] MidNight"], alliance:["Alliance activity","Who in [12AM] has been online lately"], rankings:["Server rankings","Top alliances on server #2013 and how their power has moved"], activity:["Activity","What got done, one line per action"]};
+  const body = {overview, accounts: accountsPage, friends, inbox, merger: mergerPage, alliance: alliancePage, rankings: rankingsPage, activity}[pg]();
   app.innerHTML = `<div class="shell"><nav class="side"><div class="brand"><span class="mk">${I("bolt")}</span>LW<em>HUB</em></div>${nav}
     <div class="foot">Account data ${ago(S.generated_at)}${C ? `<br>Messages ${ago(C.generated_at)}` : ""}</div></nav>
     <main><div class="top"><div><h1>${titles[pg][0]}</h1><div class="sub">${titles[pg][1]}</div></div>
       <button class="iconbtn" id="reload">${I("refresh")}Refresh</button></div>${body}</main></div>`;
   document.getElementById("reload").onclick = () => { toast("Refreshing…"); load(); };
-  ({overview: wireOverview, accounts: wireAccounts, friends: wireFriends, inbox: wireInbox, alliance: wireAlliance, activity: wireActivity}[pg] || (() => {}))();
+  ({overview: wireOverview, accounts: wireAccounts, friends: wireFriends, inbox: wireInbox, alliance: wireAlliance, rankings: wireRankings, activity: wireActivity}[pg] || (() => {}))();
   const cv = document.querySelector(".convo"); if (cv) cv.scrollTop = cv.scrollHeight;
 }
 
@@ -546,7 +576,7 @@ function overview(){
     ${last24Card(a)}
     <div class="grid g2">${routineCard(a)}${ongoingCard(a, 8)}</div>
     <div class="grid g2">${accountsStrip()}${commsSnap()}</div>
-    ${allianceSnap()}
+    ${rankSnap() && allianceSnap() ? `<div class="grid g2">${rankSnap()}${allianceSnap()}</div>` : rankSnap() + allianceSnap()}
     ${statGrid(a)}`;
 }
 function wireOverview(){
@@ -805,6 +835,121 @@ function wireAlliance(){
   const q = document.getElementById("mq");
   if (q) q.oninput = () => { UI.mq = q.value; document.getElementById("mtbl").innerHTML = allianceTable(allianceRows(AD())); wireSort(); };
   wireSort();
+}
+
+/* ---------- server rankings ---------- */
+const RK = () => acct().extra?.alliance_rankings || null;
+// colour follows the alliance, never its rank; 12AM wears the page accent
+const SCOL = {"12AM":"var(--accent)", RGBB:"#c98500", PNXX:"#199e70", DOc:"#9085e9", WW26:"#3987e5", StWb:"#d55181", "0FNA":"#2fa52f", Bkd:"#9aa3af", Ddi:"#6b7480"};
+const scol = t => SCOL[t] || "#6b7480";
+const SRC = {game:"in-game alliance screen", map:"map tracker alliance export", report:"daily server report"};
+const rkOwn = K => (K.top || []).find(r => r.tag === K.own_tag);
+function rkGaps(K){
+  const top = K.top || [], i = top.findIndex(r => r.tag === K.own_tag);
+  if (i < 0) return {};
+  return {me: top[i], above: top[i-1] || null, below: top[i+1] || null};
+}
+function rkGrowth(K, tag){
+  const s = K.series?.[tag]; if (!s) return null;
+  const pts = s.pts.filter(p => !p.est); if (pts.length < 2) return null;
+  return {d: pts[pts.length-1].p - pts[0].p, since: pts[0].t};
+}
+function rankSnap(){
+  const K = RK(); if (!K || !(K.top || []).length) return "";
+  const {me, above, below} = rkGaps(K);
+  const top5 = K.top.slice(0, 5), inTop = top5.some(r => r.tag === K.own_tag);
+  const li = r => `<li class="${r.tag === K.own_tag ? "me" : ""}"><span class="r">${r.rank}</span><span class="sw" style="width:9px;height:9px;border-radius:3px;background:${scol(r.tag)}"></span><span class="t"><b>[${esc(r.tag)}]</b> <span class="muted">${esc(r.name || "")}</span></span><b class="num">${abbr(r.power)}</b></li>`;
+  return `<section class="card"><div class="ch-h"><h2>${I("trophy")}Server rankings</h2><a class="link" href="#rankings">Full rankings ›</a></div>
+    ${me ? `<div class="rk-hero"><div class="big num">#${me.rank}<small>on #${esc(K.server)}</small></div><div class="small muted" style="padding-bottom:4px">[${esc(me.tag)}] ${abbr(me.power)} total power</div></div>
+    <div class="small" style="margin-top:8px">${above ? `<span class="down">${abbr(above.power - me.power)}</span> behind #${above.rank} [${esc(above.tag)}]` : "Top of the server"}${below ? ` · <span class="up">${abbr(me.power - below.power)}</span> ahead of #${below.rank} [${esc(below.tag)}]` : ""}</div>` : ""}
+    <ul class="rkmini">${top5.map(li).join("")}${!inTop && me ? li(me) : ""}</ul>
+    <div class="small dim" style="margin-top:8px">Leaderboard read ${K.as_of ? ago(K.as_of) : "—"}</div></section>`;
+}
+function rankingsPage(){
+  const K = RK();
+  if (!K || !(K.top || []).length) return `<section class="card empty">No leaderboard readings yet.</section>`;
+  const {me, above, below} = rkGaps(K), g = me && rkGrowth(K, me.tag);
+  const tags = Object.keys(K.series || {});
+  if (!UI.rkOn) UI.rkOn = K.top.slice(0, 6).map(r => r.tag).concat(K.top.slice(0, 8).some(r => r.tag === K.own_tag) ? [] : [K.own_tag]);
+  const chipTags = [...new Set(K.top.slice(0, 8).map(r => r.tag).concat([K.own_tag], tags.includes("Ddi") ? ["Ddi"] : []))].filter(t => K.series?.[t]);
+  const first = Object.values(K.series || {}).map(s => s.first).sort()[0];
+  const rows = K.top.map((r, i) => { const up = K.top[i-1], dn = K.top[i+1], gr = rkGrowth(K, r.tag);
+    return `<tr class="${r.tag === K.own_tag ? "me" : ""}"><td>${r.rank}</td><td class="al" title="${esc(r.name || "")}"><span class="sw" style="background:${scol(r.tag)}"></span><span class="tg">[${esc(r.tag)}]</span> ${esc(r.name || "")}</td>
+      <td>${full(r.power)}</td><td>${up ? `<span class="down">−${abbr(up.power - r.power)}</span>` : "–"}</td><td class="hide-s">${dn ? `<span class="up">+${abbr(r.power - dn.power)}</span>` : "–"}</td>
+      <td class="hide-s">${gr ? `${dlt(gr.d)} <span class="dim">since ${esc(fmtD(gr.since.slice(0, 10)))}</span>` : `<span class="dim">–</span>`}</td>
+      <td class="hide-s">${r.members != null ? `${r.members}/${r.cap || 100}` : "–"}</td><td class="hide-s" style="text-align:left">${esc(r.leader || "–")}</td></tr>`; }).join("");
+  return `<section class="card hot"><div class="ch-h"><span class="lbl">Our place on server #${esc(K.server)}</span><span class="small dim">Leaderboard read ${K.as_of ? `${fmtT(K.as_of)} (${ago(K.as_of)})` : "—"}</span></div>
+      ${me ? `<div class="rk-hero"><div class="big num">#${me.rank}<small>of ${K.top.length}+ alliances</small></div><div style="padding-bottom:4px"><b>[${esc(me.tag)}] ${esc(me.name || "")}</b><div class="small muted num">${full(me.power)} total power</div></div></div>
+      <div class="rk-gaps"><div class="mt"><div class="lbl">Gap to #${above ? above.rank : "–"} ${above ? "[" + esc(above.tag) + "]" : ""}</div><div class="n num ${above ? "down" : ""}">${above ? "−" + abbr(above.power - me.power) : "Top"}</div></div>
+        <div class="mt"><div class="lbl">Lead over #${below ? below.rank : "–"} ${below ? "[" + esc(below.tag) + "]" : ""}</div><div class="n num ${below ? "up" : ""}">${below ? "+" + abbr(me.power - below.power) : "–"}</div></div>
+        <div class="mt"><div class="lbl">Growth since ${g ? esc(fmtD(g.since.slice(0, 10))) : "first reading"}</div><div class="n num">${g ? dlt(g.d) : "–"}</div></div></div>` : ""}</section>
+    <section class="card"><div class="ch-h"><h2>${I("pulse")}Total power over time</h2><span class="small dim">Tap a line's name to show or hide it</span></div>
+      <div class="schips">${chipTags.map(t => `<button class="schip ${UI.rkOn.includes(t) ? "on" : ""}" data-rk="${esc(t)}"><i style="background:${scol(t)}"></i>${esc(t)}${t === "Ddi" ? " (old)" : ""}</button>`).join("")}</div>
+      <div class="pchart" id="rkchart"></div>
+      <div class="legend-note"><span><svg viewBox="0 0 30 10"><line x1="0" y1="5" x2="30" y2="5" stroke="currentColor" stroke-width="2"/><circle cx="15" cy="5" r="3.5" fill="currentColor"/></svg>reading</span>
+        <span><svg viewBox="0 0 30 10"><circle cx="15" cy="5" r="3.5" fill="var(--card)" stroke="currentColor" stroke-width="1.6"/></svg>rounded estimate</span></div>
+      <p class="small muted" style="margin:10px 0 0">Daily leaderboard tracking began ${K.tracking_since ? esc(fmtD(K.tracking_since.slice(0, 10))) : "recently"}. Earlier points${first ? ` (back to ${esc(fmtD(first.slice(0, 10)))})` : ""} come from saved alliance screens and a map tracker's alliance export, so they're sparse and some alliances have only one or two. Lines just join readings; they don't show what happened in between.</p></section>
+    <section class="card"><div class="ch-h"><h2>${I("trophy")}Top alliances</h2><span class="small dim">Alliance Power leaderboard</span></div>
+      <div class="tbl"><table class="rkt"><tr><th>#</th><th style="text-align:left">Alliance</th><th>Power</th><th>To rank above</th><th class="hide-s">Over rank below</th><th class="hide-s">Growth</th><th class="hide-s">Members</th><th class="hide-s" style="text-align:left">Leader</th></tr>${rows}</table></div>
+      <div class="small dim" style="margin-top:8px">Members and leader are read for the top 8. The game notes its leaderboard updates with a delay.</div></section>`;
+}
+function rkChart(el, K){
+  const on = UI.rkOn.filter(t => K.series?.[t]);
+  const W = Math.max(300, el.clientWidth), H = W < 520 ? 240 : 300, L = 30, R = 44, T = 14, B = 24;
+  const ser = on.map(t => ({t, pts: K.series[t].pts.map(p => ({...p, d: pd(p.t)})).filter(p => p.d)}));
+  const all = ser.flatMap(s => s.pts);
+  if (!all.length) { el.innerHTML = `<div class="empty">Pick an alliance above.</div>`; return; }
+  let x0 = Math.min(...all.map(p => +p.d)), x1 = Math.max(...all.map(p => +p.d));
+  if (x1 - x0 < 864e5) { x0 -= 432e5; x1 += 432e5; }
+  let lo = Math.min(...all.map(p => p.p)), hi = Math.max(...all.map(p => p.p));
+  const pad = (hi - lo) * 0.08 || hi * 0.05; lo = Math.max(0, lo - pad); hi += pad;
+  const X = d => L + (d - x0) / (x1 - x0) * (W - L - R), Y = v => T + (hi - v) / (hi - lo) * (H - T - B);
+  const step = [1e9, 2e9, 5e9, 1e10].find(s => (hi - lo) / s <= 5) || 2e10;
+  const ticks = []; for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) ticks.push(v);
+  const days = []; for (let d = new Date(x0); d <= x1; d = new Date(+d + 864e5)) { const m = new Date(d); m.setHours(0, 0, 0, 0); if (+m >= x0) days.push(m); }
+  const every = Math.ceil(days.length / (W < 520 ? 4 : 8));
+  const lines = ser.map(s => { const c = scol(s.t), me = s.t === K.own_tag; let out = "";
+    const real = s.pts.filter(p => !p.est);   // the line joins real readings only; rounded estimates stay loose dots
+    if (real.length > 1) out += `<polyline points="${real.map(p => `${X(p.d).toFixed(1)},${Y(p.p).toFixed(1)}`).join(" ")}" fill="none" stroke="${c}" stroke-width="${me ? 3 : 2}" stroke-linejoin="round" stroke-linecap="round"/>`;
+    out += s.pts.map(p => `<circle cx="${X(p.d)}" cy="${Y(p.p)}" r="${me ? 4.5 : 4}" fill="${p.est ? "var(--card)" : c}" stroke="${p.est ? c : "var(--card)"}" stroke-width="${p.est ? 1.8 : 2}"/>`).join("");
+    return out; }).join("");
+  // end labels, nudged apart so they don't collide
+  const labs = ser.filter(s => s.pts.length).map(s => { const p = s.pts[s.pts.length-1]; return {t: s.t, x: X(p.d), y: Y(p.p)}; }).sort((a, b) => a.y - b.y);
+  for (let i = 1; i < labs.length; i++) if (labs[i].y - labs[i-1].y < 13) labs[i].y = labs[i-1].y + 13;
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Total alliance power over time">
+    ${ticks.map(v => `<line class="gl" x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}"/><text class="ax" x="0" y="${Y(v) - 4}">${abbr(v)}</text>`).join("")}
+    ${days.filter((_, i) => i % every === 0).map(d => `<text class="ax" x="${X(+d)}" y="${H - 6}" text-anchor="middle">${d.toLocaleDateString([], {month:"short", day:"numeric"})}</text>`).join("")}
+    <line class="cross" y1="${T}" y2="${H - B}" style="display:none"/>
+    ${lines}
+    ${labs.map(l => `<text class="lb ${l.t === K.own_tag ? "me" : ""}" x="${Math.min(l.x + 7, W - R + 4)}" y="${l.y + 4}">${esc(l.t)}</text>`).join("")}
+    <rect x="0" y="0" width="${W}" height="${H}" fill="transparent" class="hit"/></svg><div class="tip"></div>`;
+  const svg = el.querySelector("svg"), tip = el.querySelector(".tip"), cross = el.querySelector(".cross");
+  const flat = ser.flatMap(s => s.pts.map(p => ({...p, tag: s.t, x: X(p.d), y: Y(p.p)})));
+  const move = e => {
+    const r = svg.getBoundingClientRect(), ev = e.touches ? e.touches[0] : e;
+    const mx = (ev.clientX - r.left) * W / r.width, my = (ev.clientY - r.top) * H / r.height;
+    const p = flat.reduce((b, q) => { const d = Math.hypot(q.x - mx, (q.y - my) * 0.6); return d < b.d ? {d, q} : b; }, {d: 1e9}).q;
+    if (!p) return;
+    cross.setAttribute("x1", p.x); cross.setAttribute("x2", p.x); cross.style.display = "";
+    const nm = K.series[p.tag]?.name || "";
+    tip.innerHTML = `<b>[${esc(p.tag)}]</b> ${esc(nm)}<br><b class="num">${p.est ? "≈ " + abbr(p.p) : full(p.p)}</b>${p.m ? ` · ${p.m} members` : ""}<br><span class="dim">${esc(fmtDay(p.d))} ${p.d.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"})} · ${esc(SRC[p.src] || "")}${p.est ? " (rounded)" : ""}</span>`;
+    tip.style.display = "block";
+    const px = p.x / W * r.width;
+    tip.style.left = Math.min(Math.max(px - tip.offsetWidth / 2, 0), el.clientWidth - tip.offsetWidth) + "px";
+    tip.style.top = Math.max(0, p.y / H * r.height - tip.offsetHeight - 12) + "px";
+  };
+  const out = () => { tip.style.display = "none"; cross.style.display = "none"; };
+  svg.addEventListener("mousemove", move); svg.addEventListener("touchstart", move, {passive:true});
+  svg.addEventListener("touchmove", move, {passive:true}); svg.addEventListener("mouseleave", out);
+}
+function wireRankings(){
+  const K = RK(), el = document.getElementById("rkchart"); if (!K || !el) return;
+  rkChart(el, K);
+  document.querySelectorAll("[data-rk]").forEach(b => b.onclick = () => {
+    const t = b.dataset.rk; UI.rkOn = UI.rkOn.includes(t) ? UI.rkOn.filter(x => x !== t) : UI.rkOn.concat(t);
+    b.classList.toggle("on"); rkChart(el, K); });
+  clearTimeout(wireRankings.t);
+  window.onresize = () => { clearTimeout(wireRankings.t); wireRankings.t = setTimeout(() => { const e = document.getElementById("rkchart"); if (e) rkChart(e, RK()); }, 150); };
 }
 
 /* ---------- activity ---------- */
