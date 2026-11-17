@@ -93,22 +93,22 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:s3-end@evanmurrayjones.com
-DTSTAMP:20261117T184720Z
-LAST-MODIFIED:20261117T184720Z
-SEQUENCE:0
-DTSTART:20261123T013400Z
-DTEND:20261123T014900Z
-SUMMARY:🏁 Season 3 ends
-DESCRIPTION:Approximate\, from the in-game season countdown (read Nov 17). 
- It may line up with the daily reset a few minutes later.\n\nServer time 23
- :34 (UTC-2).\n\nTimes show in your local time automatically\, on any devic
- e.
+DTSTAMP:20261117T193507Z
+LAST-MODIFIED:20261117T193507Z
+SEQUENCE:1
+DTSTART:20261123T020000Z
+DTEND:20261123T021500Z
+SUMMARY:🏁 Season 3 begins
+DESCRIPTION:Season 3 (Golden Kingdom) starts at server reset (Sun 11-22 8 P
+ M CT). In-game timer 11-17 read 'Season: III — 5d 06:40'.\n\nServer time
+  00:00 (UTC-2).\n\nTimes show in your local time automatically\, on any de
+ vice.
 URL:https://evanmurrayjones.com/alliance-calendar/
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Season 3 ends in 10 minutes
+DESCRIPTION:Season 3 begins in 10 minutes
 TRIGGER:-PT10M
 END:VALARM
 END:VEVENT
