@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a0c0f">
 <title>LW Hub</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23f26b4f%22/%3E%3Cpath d=%22M18 5L8 18h7l-1 9 10-13h-7z%22 fill=%22%23160805%22/%3E%3C/svg%3E">
 <style>
 :root{
   color-scheme: dark;
@@ -267,6 +268,112 @@ th{color:var(--ink-3);font-weight:600}
 .schip.on i{opacity:1}
 .legend-note{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-3);margin-top:8px;align-items:center}
 .legend-note svg{width:30px;height:10px;vertical-align:-1px;margin-right:4px}
+.sq{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:1100px){.sq{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.sq{grid-template-columns:minmax(0,1fr)}}
+.sqc{background:var(--card-2);border:1px solid var(--hair);border-radius:13px;padding:13px;min-width:0;display:flex;flex-direction:column;gap:9px}
+.sqc.main{border-color:rgba(242,107,79,.45)}
+.sqc .hd{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sqc .nm{font-weight:800;font-size:14.5px}
+.sqc .pw{font-size:22px;font-weight:800;line-height:1.1;display:flex;align-items:center;gap:6px}
+.sqc .pw svg{width:16px;height:16px;color:var(--accent)}
+.sqc .trk{height:7px;background:var(--card-3);border-radius:999px;overflow:hidden}
+.sqc .trk i{display:block;height:100%;border-radius:999px;background:var(--accent)}
+.sqc .vs{font-size:12px;color:var(--ink-3)}
+.tt{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.tt svg{width:13px;height:13px}
+.tt.tank{background:var(--warn-soft);color:var(--warn)} .tt.aircraft{background:rgba(88,166,255,.13);color:var(--blue)} .tt.missile{background:var(--bad-soft);color:var(--bad)}
+.tt.mixed{background:var(--card-3);color:var(--ink-2)}
+.hl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.hl li{display:flex;align-items:center;gap:9px;min-width:0}
+.hl .pt{width:34px;height:34px;border-radius:9px;flex:none;object-fit:cover;border:1px solid var(--hair-2);background:var(--card-3);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+.hl .rt b{font-size:13.5px}
+.hl .st{color:var(--gold);font-size:11px;letter-spacing:-1px}
+.hl .hp{font-size:12.5px;font-weight:700;white-space:nowrap;text-align:right}
+.hl .sl{font-size:10px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
+.stamp{font-size:11.5px;color:var(--ink-3);font-weight:500;white-space:nowrap}
+.soon{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(88,166,255,.12);color:var(--blue);letter-spacing:.02em;white-space:nowrap}
+.ph-box{border:1px dashed var(--hair-2);border-radius:12px;padding:14px;color:var(--ink-3);font-size:13px;background:repeating-linear-gradient(135deg,transparent 0 10px,rgba(255,255,255,.015) 10px 20px)}
+.todo li .ri{background:var(--accent-soft);color:var(--accent)}
+.todo li.warn .ri{background:var(--warn-soft);color:var(--warn)}
+.todo li.hint .ri{background:var(--teal-soft);color:var(--teal)}
+.todo li.ok .ri{background:var(--good-soft);color:var(--good)}
+.todo li a{color:inherit;text-decoration:none}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+@media (max-width:1100px){.week{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:620px){.week{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.wd{background:var(--card-2);border:1px solid var(--hair);border-radius:12px;padding:10px 11px;min-width:0}
+.wd.now{border-color:rgba(242,107,79,.6);box-shadow:var(--glow)}
+.wd .dn{font-weight:800;font-size:13px;display:flex;justify-content:space-between;gap:6px;align-items:center}
+.wd .tn{font-weight:700;font-size:13.5px;margin:4px 0 6px}
+.wd .sp{font-size:12px;color:#cfd5dd}
+.wd .ho{font-size:11.5px;color:var(--ink-3);margin-top:5px}
+.wd .win{font-size:11px;color:var(--ink-3);margin-top:6px}
+.ar-tl{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+@media (max-width:620px){.ar-tl{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.arp{background:var(--card-2);border:1px solid var(--hair);border-radius:11px;padding:9px 10px;min-width:0;position:relative}
+.arp .tm{font-size:11px;color:var(--ink-3);font-weight:600}
+.arp .an{font-weight:700;font-size:13px;margin-top:3px}
+.arp.past{opacity:.45}
+.arp.cur{border-color:var(--accent);background:linear-gradient(180deg,rgba(242,107,79,.18),rgba(242,107,79,.04))}
+.arp .sx{position:absolute;top:7px;right:8px;color:var(--warn);font-size:12px;font-weight:800}
+.arp .pr{height:3px;background:var(--card-3);border-radius:2px;margin-top:7px;overflow:hidden}
+.arp .pr i{display:block;height:100%;background:var(--accent)}
+.donut{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.donut svg{width:170px;height:170px;flex:none}
+.donut .lg{flex:1;min-width:210px;display:flex;flex-direction:column;gap:8px}
+.donut .lg div{display:flex;align-items:center;gap:9px;font-size:13.5px}
+.donut .lg i{width:10px;height:10px;border-radius:3px;flex:none}
+.donut .lg .n{margin-left:auto;font-weight:700}
+.donut .lg .p{width:46px;text-align:right;color:var(--ink-3);font-size:12px}
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px}
+@media (max-width:480px){.hgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}
+.hcard{background:var(--card-2);border:1px solid var(--hair);border-radius:13px;padding:11px;display:flex;gap:11px;min-width:0;align-items:center}
+.hpt{width:50px;height:60px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:21px;color:#fff;position:relative;overflow:hidden;padding-bottom:10px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.hpt.UR{background:linear-gradient(160deg,#ffb347,#b4400b)} .hpt.SSR{background:linear-gradient(160deg,#b794f6,#5b21b6)} .hpt.SR{background:linear-gradient(160deg,#60a5fa,#1e40af)} .hpt.x{background:linear-gradient(160deg,#6b7480,#2d3440)}
+.hpt em{position:absolute;top:4px;left:5px;font-style:normal;font-size:9px;font-weight:800;letter-spacing:.04em}
+.hpt b{position:absolute;bottom:0;left:0;right:0;font-size:10px;font-weight:800;text-align:center;background:rgba(0,0,0,.35);padding:1px 0}
+.hcard .hb{min-width:0;flex:1}
+.hcard .hn{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hcard .hr{font-size:11.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stars{color:var(--gold);font-size:11.5px;letter-spacing:1px}
+.stars .off{color:#353c48}
+.hcard .hpw{font-weight:800;font-size:14px;margin-top:2px;display:flex;justify-content:space-between;gap:6px}
+.gear{display:flex;gap:3px;margin-top:6px}
+.gear i{flex:1;height:4px;border-radius:2px;background:var(--card-3);position:relative;overflow:hidden}
+.gear i b{position:absolute;left:0;top:0;bottom:0;background:var(--teal)}
+@media (max-width:480px){.hcard{flex-direction:column;align-items:stretch}.hpt{width:100%;height:46px}}
+.rbar{display:grid;grid-template-columns:170px minmax(0,1fr) 48px;gap:12px;align-items:center;padding:7px 0}
+@media (max-width:520px){.rbar{grid-template-columns:118px minmax(0,1fr) 42px;gap:8px}}
+.rbar .rn{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rbar .rk{height:10px;background:var(--card-3);border-radius:999px;overflow:hidden}
+.rbar .rk i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#c9482f,var(--accent))}
+.rbar .rk i.full{background:var(--good)}
+.rbar b{text-align:right;font-size:13px}
+.slotrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:520px){.slotrow{grid-template-columns:minmax(0,1fr)}}
+.rslot{border-radius:12px;padding:12px;background:var(--card-2);border:1px solid var(--hair)}
+.rslot.idle{border-color:rgba(227,160,8,.55);background:var(--warn-soft)}
+.rslot .n{font-weight:800;font-size:16px;margin-top:3px}
+.mrow{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--hair);font-size:13.5px}
+.mrow:last-child{border-bottom:0}
+.mrow .r{text-align:right}
+.mrow .m{text-align:center;color:var(--ink-3);font-size:11px;font-weight:700}
+.tagchips{display:flex;flex-wrap:wrap;gap:8px}
+.tagc{border-radius:10px;padding:8px 12px;font-weight:800;letter-spacing:.06em;font-size:14px;border:1px solid var(--hair);background:var(--card-2)}
+.tagc small{display:block;font-size:10.5px;letter-spacing:0;font-weight:600;margin-top:2px}
+.tagc.free{border-color:rgba(63,185,80,.45);color:#9be3a8} .tagc.free small{color:var(--good)}
+.tagc.taken{border-color:rgba(248,81,73,.45);color:#ffb0aa} .tagc.taken small{color:var(--bad)}
+.tagc.unclear small{color:var(--ink-3)}
+.ko{font-size:13.5px;color:#cfd5dd;margin-top:3px}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.kpi .mt .n{font-size:22px}
+.kpi .mt .s{font-size:12px;color:var(--ink-3)}
+.hero-ds{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.hero-ds .big{font-size:30px;font-weight:800;letter-spacing:-.5px}
+.lead{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.lead .lr{display:flex;gap:10px;align-items:center;background:var(--card-2);border:1px solid var(--hair);border-radius:11px;padding:9px 10px;min-width:0}
+.lead .lr .rt b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style>
 </head>
 <body>
@@ -311,6 +418,10 @@ const P = {
   radar:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6-6"/>',
   mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
   people:'<circle cx="12" cy="7" r="3"/><path d="M6.5 20c.6-3.3 2.8-5 5.5-5s4.9 1.7 5.5 5"/><circle cx="4.5" cy="10" r="2"/><circle cx="19.5" cy="10" r="2"/><path d="M1.5 18c.3-1.8 1.4-3 3-3.2M22.5 18c-.3-1.8-1.4-3-3-3.2"/>',
+  tank:'<rect x="3" y="12" width="18" height="6" rx="3"/><path d="M7 12V9h7l2 3M14 10.5h7"/><circle cx="7.5" cy="15" r="1"/><circle cx="12" cy="15" r="1"/><circle cx="16.5" cy="15" r="1"/>',
+  plane:'<path d="M12 2.5c.9 0 1.5.8 1.5 2V9l7.5 4.5v2l-7.5-2.3V18l2 1.5V21L12 20l-3.5 1v-1.5l2-1.5v-4.8L3 15.5v-2L10.5 9V4.5c0-1.2.6-2 1.5-2z"/>',
+  missile:'<path d="M20 4l-1.5 6L10 18.5 5.5 14 14 5.5z"/><path d="M7 16l-3.5 4.5M5.5 14L3 13l2-2 3 .5M10 18.5l1 2.5 2-2-.5-3"/>',
+  flask:'<path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3"/><path d="M7 15h10"/>',
   gift:'<rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 13h18M12 9v12M12 9c-2 0-5-1-5-3.5S10 4 12 9zm0 0c2 0 5-1 5-3.5S14 4 12 9z"/>',
 };
 const I = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ""}</svg>`;
@@ -326,7 +437,7 @@ function abbr(n){
 const full = n => n == null ? "–" : Number(n).toLocaleString();
 // tolerant date parse: "2026-11-15 23:42", "2026-11-16 18:3x", ISO with or without offset
 const pd = s => { if (!s) return null; const m = String(s).replace(/x/g,"0").match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2}):(\d{2}))?(.*)$/);
-  if (!m) return null; const tz = (m[6] || "").match(/^(?::\d\d)?([+-]\d\d:\d\d|Z)/);
+  if (!m) return null; const tz = (m[6] || "").match(/^(?::\d\d(?:\.\d+)?)?([+-]\d\d:?\d\d|Z)/);
   const d = new Date(`${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}T${(m[4] || "12").padStart(2,"0")}:${m[5] || "00"}:00${tz ? tz[1] : ""}`);
   return isNaN(d) ? null : d; };
 const fmtT = iso => { const d = pd(iso); return d ? d.toLocaleString([], {weekday:"short", hour:"numeric", minute:"2-digit"}) : ""; };
@@ -362,12 +473,18 @@ async function getJSON(path){
 }
 async function load(){
   if (!code) return gate("");
-  try { S = await getJSON("/state"); }
-  catch (e) { return gate(e.status === 403 ? "That access code didn't work." : "Couldn't reach the server. Try again."); }
-  const [c, r] = await Promise.allSettled([getJSON("/comms"), getJSON("/inbox")]);
-  C = c.status === "fulfilled" ? c.value : null;
-  R = r.status === "fulfilled" ? (r.value.requests || []) : [];
-  render();
+  if (!S) { try { const k = JSON.parse(ls.get("lwd_cache") || "null"); if (k && k.code === code && k.S) { S = k.S; C = k.C; R = k.R || []; render(); } } catch {} }
+  const [s, c, r] = await Promise.allSettled([getJSON("/state"), getJSON("/comms"), getJSON("/inbox")]);
+  if (s.status !== "fulfilled") {
+    if (s.reason?.status === 403) { S = null; ls.set("lwd_cache", ""); return gate("That access code didn't work."); }
+    if (S) return toast("Showing saved data. Couldn't refresh.");
+    return gate("Couldn't reach the server. Try again.");
+  }
+  S = s.value;
+  if (c.status === "fulfilled") C = c.value;
+  if (r.status === "fulfilled") R = r.value.requests || [];
+  const y = window.scrollY; render(); window.scrollTo(0, y);
+  try { ls.set("lwd_cache", JSON.stringify({code, S, C, R})); } catch {}
 }
 function gate(msg){
   app.innerHTML = `<div class="gate card"><div class="brand" style="justify-content:center;margin:0 0 6px"><span class="mk">${I("bolt")}</span>LW<em>HUB</em></div>
@@ -379,7 +496,7 @@ function gate(msg){
   document.getElementById("code").onkeydown = e => { if (e.key === "Enter") go(); };
 }
 
-const PAGES = [["overview","Overview","home"],["accounts","Accounts","user"],["friends","Friends","users"],["inbox","Inbox","inbox"],["merger","Merger","merge"],["alliance","Alliance","people"],["rankings","Server rankings","trophy"],["activity","Activity","pulse"]];
+const PAGES = [["overview","Overview","home"],["today","Today","cal"],["accounts","Account","user"],["heroes","Heroes & squads","star"],["research","Research","flask"],["storm","Desert Storm","flag"],["alliance","Alliance","people"],["rankings","Server rankings","trophy"],["merger","Merger","merge"],["friends","Friends","users"],["inbox","Inbox","inbox"],["activity","Activity","pulse"]];
 const page = () => { const h = location.hash.replace("#",""); return PAGES.some(p => p[0] === h) ? h : "overview"; };
 window.addEventListener("hashchange", () => { if (S) { render(); window.scrollTo(0, 0); } });
 const acct = () => (S.accounts || [])[0] || {};
@@ -387,17 +504,18 @@ const needCount = () => (C?.inbox || []).filter(t => t.needs_reply).length;
 
 function render(){
   const pg = page();
-  const badge = {inbox: needCount() || null};
+  const rsIdle = acct().extra?.research?.idle_slots;
+  const badge = {inbox: needCount() || null, research: rsIdle || null};
   const nav = PAGES.map(([id, label, ic]) => `<a class="nav ${pg === id ? "on" : ""}" href="#${id}">${I(ic)}${label}${badge[id] ? `<span class="badge">${badge[id]}</span>` : ""}</a>`).join("");
-  const titles = {overview:["Overview","Your account at a glance"], accounts:["Accounts","History and today's routine"], friends:["Friends","Everyone you talk with, and what you know about them"],
-    inbox:["Inbox","Every channel in one place"], merger:["Merger","DDI into [12AM] MidNight"], alliance:["Alliance activity","Who in [12AM] has been online lately"], rankings:["Server rankings","Top alliances on server #2013 and how their power has moved"], activity:["Activity","What got done, one line per action"]};
-  const body = {overview, accounts: accountsPage, friends, inbox, merger: mergerPage, alliance: alliancePage, rankings: rankingsPage, activity}[pg]();
+  const titles = {overview:["Overview","Your account at a glance"], accounts:["Account","Power, resources and history"], today:["Today","Your to-do, events, VS and Arms Race"], heroes:["Heroes & squads","Roster, lineups and tips"], research:["Research","Every tree and the research queue"], storm:["Desert Storm","Friday's battle: assignment, matchups and log"], friends:["Friends","Everyone you talk with, and what you know about them"],
+    inbox:["Inbox","Every channel in one place"], merger:["Merger","DDI into [12AM] MidNight"], alliance:["Alliance","[12AM] MidNight: leadership, the name vote and who's active"], rankings:["Server rankings","Top alliances on server #2013 and how their power has moved"], activity:["Activity","What got done, one line per action"]};
+  const body = {overview, today: todayPage, heroes: heroesPage, research: researchPage, storm: stormPage, accounts: accountsPage, friends, inbox, merger: mergerPage, alliance: alliancePage, rankings: rankingsPage, activity}[pg]();
   app.innerHTML = `<div class="shell"><nav class="side"><div class="brand"><span class="mk">${I("bolt")}</span>LW<em>HUB</em></div>${nav}
     <div class="foot">Account data ${ago(S.generated_at)}${C ? `<br>Messages ${ago(C.generated_at)}` : ""}</div></nav>
     <main><div class="top"><div><h1>${titles[pg][0]}</h1><div class="sub">${titles[pg][1]}</div></div>
       <button class="iconbtn" id="reload">${I("refresh")}Refresh</button></div>${body}</main></div>`;
   document.getElementById("reload").onclick = () => { toast("Refreshing…"); load(); };
-  ({overview: wireOverview, accounts: wireAccounts, friends: wireFriends, inbox: wireInbox, alliance: wireAlliance, rankings: wireRankings, activity: wireActivity}[pg] || (() => {}))();
+  ({overview: wireOverview, today: wireOverview, heroes: wireHeroes, accounts: wireAccounts, friends: wireFriends, inbox: wireInbox, alliance: wireAlliance, rankings: wireRankings, activity: wireActivity}[pg] || (() => {}))();
   const cv = document.querySelector(".convo"); if (cv) cv.scrollTop = cv.scrollHeight;
 }
 
@@ -420,7 +538,7 @@ function baseline(a, key, range){
 function powerCard(a){
   const c = a.current || {}, ex = a.extra || {};
   const base = baseline(a, "power", UI.range);
-  const vipRaw = ex.profile?.vip ?? ex.vip?.level ?? ex.vip;
+  const vipRaw = a.hub?.vip ?? ex.profile?.vip ?? ex.vip?.level ?? ex.vip;
   const vip = vipRaw != null && typeof vipRaw !== "object" ? vipRaw : null;
   return `<section class="card hot power">
     <div class="ch-h"><span class="lbl">Total power</span>
@@ -448,6 +566,14 @@ function liveOverview(a){
 }
 function armsCard(a){
   const ar = a.arms;
+  if (!ar || (ar.ends_at && pd(ar.ends_at) < Date.now())) {
+    const s = srv(), i = Math.min(5, Math.floor(s.h / 4)), [n, star] = ARW[s.dow][i], end = isoT(s.start + (i + 1) * 4 * HOUR);
+    return `<section class="card hot"><div class="ch-h"><h2>${I("trophy")}Arms Race</h2><span class="pill p-teal">${I("clock")}<span data-until="${end}">${until(end)}</span> left</span></div>
+      <div class="lbl">Phase ${i + 1} of 6 · from the weekly calendar</div><div class="phase">${esc(n)}${star ? ` <span class="pill p-warn">${star > 1 ? "★★" : "★"} counts for VS too</span>` : ""}</div>
+      <div class="slots">${Array.from({length: 6}, (_, k) => `<i class="${k < i ? "past" : k === i ? "cur" : ""}"></i>`).join("")}</div>
+      <div class="small muted" style="margin-top:14px">No score read for this phase yet.${ar ? ` Last read: ${esc(ar.phase)} ${ar.score != null ? full(ar.score) + " pts" : ""}${ar.rank ? ", rank " + ar.rank : ""}, ${(ar.claimed || []).length}/${(ar.milestones || []).length} chests.` : ""}</div>
+      <a class="link" href="#today" style="display:block;margin-top:10px">Full timeline ›</a></section>`;
+  }
   if (!ar) return `<section class="card"><div class="ch-h"><h2>${I("trophy")}Arms Race</h2></div><div class="empty">No Arms Race reading yet today.</div></section>`;
   const ms = ar.milestones || [], got = new Set(ar.claimed || []), mx = ms[ms.length-1] || 1, sc = ar.score;
   const fill = sc != null ? Math.min(100, sc / mx * 100) : (got.size ? Math.max(...got) / mx * 100 : 0);
@@ -535,13 +661,15 @@ function statGrid(a){
   const pick = (...ks) => { for (const k of ks) { const v = k.split(".").reduce((o, p) => o?.[p], ex); if (v != null && typeof v !== "object") return v; } return null; };
   const wounded = ((a.last24 || []).find(x => x.key === "healed")?.sub || "").match(/[\d,]+/)?.[0];
   const heroes = Array.isArray(ex.heroes) ? ex.heroes.length : Array.isArray(ex.heroes?.heroes) ? ex.heroes.heroes.length : pick("profile.heroes", "heroes.count");
+  const sec = a.hub?.power_sections || {};
   const rows = [
-    ["sword","Kills", pick("profile.kills","kills.total","kills")],
-    ["shield","Troop power", pick("profile.troop_power","troops.power","power_breakdown.troops","profile.power_breakdown.troops")],
-    ["star","Hero power", pick("profile.hero_power","heroes.power","power_breakdown.heroes","profile.power_breakdown.heroes")],
-    ["build","Building power", pick("profile.building_power","power_breakdown.buildings","profile.power_breakdown.buildings")],
-    ["flag","Tech power", pick("profile.tech_power","research.power","power_breakdown.tech","profile.power_breakdown.tech","power_breakdown.research")],
-    ["users","Troops", pick("troops.total","profile.troops")],
+    ["sword","Kills", a.hub?.kills ?? pick("profile.kills","kills.total","kills")],
+    ["shield","Troop power", sec["Unit Power"] ?? pick("profile.troop_power","troops.power","power_breakdown.troops","profile.power_breakdown.troops")],
+    ["star","Hero power", sec["Hero Power"] ?? pick("profile.hero_power","heroes.power","power_breakdown.heroes","profile.power_breakdown.heroes")],
+    ["build","Building power", sec["Building Power"] ?? pick("profile.building_power","power_breakdown.buildings","profile.power_breakdown.buildings")],
+    ["flag","Tech power", sec["Tech Power"] ?? pick("profile.tech_power","research.power","power_breakdown.tech","profile.power_breakdown.tech","power_breakdown.research")],
+    ["radar","Drone power", sec["Drone Power"] ?? null],
+    ["gift","Gold Bricks", a.hub?.gold_bricks ?? pick("status.gold_bricks","profile.gold_bricks")],
     ["star","Heroes", heroes],
     ["heart","Wounded", pick("profile.wounded","troops.wounded") ?? wounded ?? null],
   ];
@@ -549,9 +677,30 @@ function statGrid(a){
     <div class="stats">${rows.map(([ic, l, v]) => `<div class="stat ${v == null ? "ph" : ""}"><span class="ri">${I(ic)}</span><div><div class="v num">${v == null ? "—" : typeof v === "number" ? abbr(v) : esc(v)}</div><div class="small dim">${l}</div></div></div>`).join("")}</div>
     ${extraBlocks(ex)}</section>`;
 }
+const TT = {tank:["tank","Tank"], aircraft:["plane","Aircraft"], missile:["missile","Missile"]};
+function squadsCard(a){
+  const sq = a.extra?.squads, L = (Array.isArray(sq) ? sq : sq?.squads || []).filter(s => s && s.squad);
+  if (!L.length) return `<section class="card"><div class="ch-h"><h2>${I("people")}Squads</h2></div><div class="empty">Squads fill in after the next profile read.</div></section>`;
+  const s1 = L.find(s => s.squad === 1)?.power, mx = Math.max(...L.map(s => s.power || 0), 1);
+  const tot = L.reduce((t, s) => t + (s.power || 0), 0);
+  return `<section class="card"><div class="ch-h"><h2>${I("people")}Squads</h2><span class="small dim">${full(tot)} across ${L.length} squads${sq?.at ? ` · read ${ago(sq.at)}` : ""}</span></div>
+    <div class="sq">${L.map(s => {
+      const t = TT[String(s.troop_type || "").toLowerCase()], H = (s.heroes || []).filter(h => h && h.name);
+      const vs = s.squad === 1 || !s1 || !s.power ? (s.squad === 1 ? "main squad" : "") : `${Math.round(s.power / s1 * 100)}% of Squad 1 · ${dlt(s.power - s1)}`;
+      return `<div class="sqc ${s.squad === 1 ? "main" : ""}">
+        <div class="hd"><span class="nm">Squad ${esc(s.squad)}</span>${t ? `<span class="tt ${s.troop_type.toLowerCase()}">${I(t[0])}${t[1]}</span>` : s.troop_type ? `<span class="tt mixed">${esc(s.troop_type)}</span>` : ""}</div>
+        <div class="pw num">${I("bolt")}${s.power ? abbr(s.power) : "–"}</div>
+        <div class="trk"><i style="width:${(s.power || 0) / mx * 100}%"></i></div>
+        <div class="vs num">${s.power ? full(s.power) : ""}${vs ? ` · ${vs}` : ""}</div>
+        <ul class="hl">${H.map(h => `<li>${h.portrait ? `<img class="pt" src="${esc(h.portrait)}" alt="">` : `<span class="pt" style="background:hsl(${hue(h.name)} 45% 20%);color:hsl(${hue(h.name)} 80% 78%)">${esc([...h.name][0])}</span>`}
+          <span class="rt"><b>${esc(h.name)}</b><div class="small dim">${h.slot ? `<span class="sl">${esc(h.slot)}</span> · ` : ""}${h.level ? `Lv ${esc(h.level)}` : ""}${h.stars != null ? ` <span class="st">${"★".repeat(Math.max(0, Math.min(5, h.stars)))}</span>` : ""}</div></span>
+          <span class="hp num">${h.power ? abbr(h.power) : ""}</span></li>`).join("") || `<li class="small dim">No heroes read</li>`}</ul></div>`;
+    }).join("")}</div></section>`;
+}
 function extraBlocks(ex){
   const out = [];
   for (const [name, v] of Object.entries(ex)) {
+    if (["heroes","activity","alliance_rankings","research","squads","desert_storm","status","profile","events"].includes(name)) continue;
     const rows = Array.isArray(v) ? v : Array.isArray(v?.items) ? v.items : Array.isArray(v?.heroes) ? v.heroes : null;
     if (rows && rows.length && rows[0] && typeof rows[0] === "object") {
       const cols = Object.keys(rows[0]).filter(k => typeof rows[0][k] !== "object").slice(0, 6);
@@ -572,11 +721,14 @@ function commsSnap(){
 function overview(){
   const a = acct();
   return `<div class="grid g-power">${powerCard(a)}${liveOverview(a)}</div>
+    <div class="grid g2">${todoCard(a, 6)}${eventsCard(a, 5)}</div>
     <div class="grid g2">${armsCard(a)}${vsCard(a)}</div>
     ${last24Card(a)}
     <div class="grid g2">${routineCard(a)}${ongoingCard(a, 8)}</div>
+    <div class="grid g2">${researchCard(a, true)}${powerBreakdownCard(a)}</div>
     <div class="grid g2">${accountsStrip()}${commsSnap()}</div>
     ${rankSnap() && allianceSnap() ? `<div class="grid g2">${rankSnap()}${allianceSnap()}</div>` : rankSnap() + allianceSnap()}
+    ${squadsCard(a)}
     ${statGrid(a)}`;
 }
 function wireOverview(){
@@ -626,7 +778,7 @@ function wireCharts(root, hist){
 function accountsPage(){
   return (S.accounts || []).map((a, ai) => {
     const h = a.history || [], items = a.today?.items || [];
-    return `<section class="card" data-acct="${ai}"><div class="idrow">${avatar(a)}<div style="min-width:0"><div style="font-weight:800;font-size:19px">${esc(a.name)}</div>
+    return `${ai === 0 ? `<div class="grid g2">${powerBreakdownCard(a)}${wealthCard(a)}</div>` : ""}<section class="card" data-acct="${ai}"><div class="idrow">${avatar(a)}<div style="min-width:0"><div style="font-weight:800;font-size:19px">${esc(a.name)}</div>
         <div class="small muted">#${esc(a.warzone)} · ${esc(a.alliance)} · HQ ${a.level ?? "–"} · ${esc(a.rank?.rank || "")}</div>
         <div class="small" style="margin-top:3px"><span class="dot ${a.updated_at && (Date.now() - pd(a.updated_at)) < 3*3.6e6 ? "good" : "warn"}"></span> Read ${a.updated_at ? ago(a.updated_at) : "—"}${a.last_signin ? ` · last sign-in ${fmtT(a.last_signin)}` : ""}</div></div></div>
       <div class="grid g2" style="margin:0 0 6px"><div><div class="lbl" style="margin-bottom:6px">Today's routine · ${items.filter(i => i.status === "done").length}/${items.length}</div>
@@ -637,10 +789,293 @@ function accountsPage(){
       <details class="more" style="margin-top:12px"><summary>Table view</summary><div class="tbl"><table>
         <tr><th>Date</th>${CHARTS.map(([, l]) => `<th>${l}</th>`).join("")}</tr>
         ${h.slice().reverse().map(r => `<tr><td>${fmtD(r.date)}</td>${CHARTS.map(([k]) => `<td>${k === "power" || k === "diamonds" || k === "stamina" ? full(r[k]) : abbr(r[k])}</td>`).join("")}</tr>`).join("")}
-      </table></div></details></section>${statGrid(a)}`;
+      </table></div></details></section>${squadsCard(a)}${statGrid(a)}`;
   }).join("");
 }
 function wireAccounts(){ document.querySelectorAll("[data-acct]").forEach(el => wireCharts(el, (S.accounts[+el.dataset.acct] || {}).history || [])); }
+
+/* ---------- calendar: server clock, VS week, Arms Race ---------- */
+const CTZ = "America/Chicago", SRV_OFF = 2 * 3600e3, HOUR = 3600e3, DAY = 864e5;
+const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const srv = (t = Date.now()) => { const s = new Date(t - SRV_OFF); return {dow: s.getUTCDay(), h: s.getUTCHours(), start: Date.UTC(s.getUTCFullYear(), s.getUTCMonth(), s.getUTCDate()) + SRV_OFF}; };
+const isoT = t => new Date(t).toISOString().replace(/\.\d+Z$/, "Z");
+const ct = (t, o) => new Date(t).toLocaleString("en-US", {timeZone: CTZ, ...o});
+const ctT = t => ct(t, {hour:"numeric", minute:"2-digit"}).replace(":00", "");
+const ctDT = t => ct(t, {weekday:"short", hour:"numeric", minute:"2-digit"}).replace(":00", "");
+const stamp = iso => iso && pd(iso) ? `<span class="stamp" title="${esc(fmtT(iso))}">updated ${ago(iso)}</span>` : "";
+const soon = (t = "coming soon") => `<span class="soon">${esc(t)}</span>`;
+const VSW = {
+  1:{t:"Radar Training", sp:"Radar missions, stamina, drone chip chests, gathering", ho:"Everything else"},
+  2:{t:"Base Expansion", sp:"Construction speedups, building upgrades, legendary trucks + secret tasks, survivor recruits", ho:"Research, training, heroes"},
+  3:{t:"Age of Science", sp:"Research speedups, tech, valor badges, drone component chests", ho:"Heroes, training"},
+  4:{t:"Train Heroes", sp:"Hero EXP, elite recruits, hero shards, skill medals, exclusive-weapon shards", ho:"Training speedups"},
+  5:{t:"Total Mobilization", sp:"Training speedups (promote up the tiers), troop training", ho:"Shield up Friday evening"},
+  6:{t:"Enemy Buster", sp:"Kills vs the rival alliance, trucks, secret tasks", ho:"Shield up before reset; pull the wall garrison"},
+  0:{t:"Rest day", sp:"Free stuff only. Stage builds and research for Monday", ho:"Save everything"},
+};
+// Arms Race phases per server day: [phase, scores-the-VS-theme-too]. Phase n starts 8 PM + 4n hours CT.
+const B = "City Building", U = "Unit Progression", T = "Tech Research", D = "Drone Boost", H = "Hero Advancement";
+const ARW = {
+  1:[[B],[U],[H,1],[T],[D,1],[H,1]], 2:[[U],[T],[B,1],[D],[H],[B,1]], 3:[[D,1],[H],[T,1],[B],[U],[T,1]],
+  4:[[B],[U],[H,1],[T],[D],[H,1]], 5:[[T,1],[D,1],[U,2],[H],[B,1],[U,2]], 6:[[U],[T],[B],[D],[H],[B]], 0:[[D],[H],[T],[B],[U],[T]],
+};
+const SPEND = [
+  ["Construction speedups", "build", [[2,2],[2,5]], "Tue City Building phases (VS Base Expansion)"],
+  ["Research speedups + valor badges", "flask", [[3,2],[3,5]], "Wed Tech Research phases (VS Age of Science)"],
+  ["Hero EXP, recruits, shards", "star", [[4,2],[4,5]], "Thu Hero phases (VS Train Heroes). Hold until then"],
+  ["Training speedups", "sword", [[5,2],[5,5]], "Fri Unit Progression phases (VS Total Mobilization, counts double)"],
+  ["Stamina + radar", "radar", [[1,4],[3,0],[5,1]], "Drone Boost phases on Mon, Wed and Fri"],
+];
+function phaseStart(dow, ph, from = Date.now()){
+  const s = srv(from);
+  for (let k = 0; k < 8; k++) { const st = s.start + k * DAY, d = (s.dow + k) % 7, t = st + ph * 4 * HOUR; if (d === dow && t + 4 * HOUR > from) return t; }
+  return null;
+}
+function vsWeekCard(){
+  const s = srv(), order = [1,2,3,4,5,6,0];
+  return `<section class="card"><div class="ch-h"><h2>${I("cal")}VS week</h2><span class="small dim">Each day runs 8 PM → 8 PM Central (server reset)</span></div>
+    <div class="week">${order.map(d => { const v = VSW[d], now = d === s.dow;
+      const st = s.start + ((d - s.dow + 7) % 7) * DAY;
+      return `<div class="wd ${now ? "now" : ""}"><div class="dn"><span>${DOW[d]}</span>${now ? `<span class="pill p-acc">today</span>` : ""}</div>
+        <div class="tn">${esc(v.t)}</div><div class="sp">${esc(v.sp)}</div><div class="ho">Hold: ${esc(v.ho)}</div>
+        <div class="win">${ctDT(st)} → ${ctDT(st + DAY)}</div></div>`; }).join("")}</div></section>`;
+}
+function arDay(dow, start, label){
+  const now = Date.now();
+  return `<div class="lbl" style="margin:4px 0 8px">${label} · ${DOW[dow]} · VS ${esc(VSW[dow].t)}</div><div class="ar-tl">${ARW[dow].map(([n, star], i) => {
+    const t0 = start + i * 4 * HOUR, t1 = t0 + 4 * HOUR, cur = now >= t0 && now < t1, past = now >= t1;
+    return `<div class="arp ${cur ? "cur" : past ? "past" : ""}">${star ? `<span class="sx" title="Also scores today's VS theme">${star > 1 ? "★★" : "★"}</span>` : ""}
+      <div class="tm">${ctT(t0)}${cur ? ` · <span data-until="${isoT(t1)}">${until(isoT(t1))}</span> left` : ""}</div><div class="an">${esc(n)}</div>
+      ${cur ? `<div class="pr"><i style="width:${(now - t0) / (t1 - t0) * 100}%"></i></div>` : ""}</div>`; }).join("")}</div>`;
+}
+function arTimelineCard(){
+  const s = srv();
+  return `<section class="card"><div class="ch-h"><h2>${I("trophy")}Arms Race timeline</h2><span class="small dim">★ = the phase also scores the VS theme</span></div>
+    ${arDay(s.dow, s.start, "Today")}<div style="height:14px"></div>${arDay((s.dow + 1) % 7, s.start + DAY, "Next server day")}
+    <div class="small dim" style="margin-top:12px">Phases follow the in-game calendar read Nov 9. The first 5 minutes after reset don't score.</div></section>`;
+}
+function spendCard(){
+  const rows = SPEND.map(([what, ic, wins, why]) => { const t = Math.min(...wins.map(([d, p]) => phaseStart(d, p) || Infinity)); return {what, ic, t, why}; }).sort((a, b) => a.t - b.t);
+  return `<section class="card"><div class="ch-h"><h2>${I("clock")}Best time to spend</h2><span class="small dim">next window where one spend counts twice</span></div>
+    <ul class="rows">${rows.map(r => { const iso = isoT(r.t), live = r.t <= Date.now();
+      return `<li><span class="ri">${I(r.ic)}</span><span class="rt"><b>${esc(r.what)}</b><div class="s">${esc(r.why)}</div></span>
+      <span class="cd num">${live ? `<span class="pill p-good">open now</span>` : `<span data-until="${iso}">${until(iso)}</span>`}<span class="at">${ctDT(r.t)}</span></span></li>`; }).join("")}</ul>
+    <div class="small dim" style="margin-top:8px">Diamonds: never. Hidden Treasure digs: wait for 10 tips.</div></section>`;
+}
+
+/* ---------- events ---------- */
+const EVENTS = [
+  {key:"mg", name:"Marshall's Guard", at:"2026-11-17T19:00:00-06:00", ic:"shield", note:"Start rallies with a weak squad, join with your strongest"},
+  {key:"zs", name:"Zombie Siege", at:"2026-11-17T19:45:00-06:00", ic:"people", note:"Defend the base with the alliance"},
+  {key:"ds", name:"Desert Storm", at:"2026-11-20T19:00:00-06:00", end:"2026-11-20T19:30:00-06:00", ic:"flag", note:"Team A · you're enlisted", href:"#storm"},
+];
+function upcoming(a){
+  const t = a.timers || {}, ev = [];
+  const ex = a.extra?.events; (Array.isArray(ex) ? ex : ex?.events || []).forEach(e => e && e.at && ev.push({ic:"cal", ...e}));
+  EVENTS.forEach(e => { if (!ev.some(x => x.key === e.key && x.at === e.at)) ev.push(e); });
+  const ds = a.extra?.desert_storm?.next; if (ds?.start) { const i = ev.findIndex(e => e.key === "ds"); if (i >= 0) ev[i] = {...ev[i], at: ds.start, end: ds.end || ev[i].end}; }
+  if (t.season_end) ev.push({name:"Season 3 ends", at:t.season_end, ic:"flag", note:"From the in-game season timer"});
+  const s = srv(); ev.push({name:"Daily reset · VS " + VSW[(s.dow + 1) % 7].t, at:isoT(s.start + DAY), ic:"refresh", note:"New VS day and Arms Race start"});
+  return ev.filter(e => pd(e.end || e.at) > Date.now() - 60e3).sort((x, y) => pd(x.at) - pd(y.at));
+}
+function eventsCard(a, n){
+  const ev = upcoming(a).slice(0, n || 99);
+  return `<section class="card"><div class="ch-h"><h2>${I("cal")}Upcoming events</h2><span class="small dim">Central time</span></div>
+    <ul class="rows">${ev.map(e => { const live = pd(e.at) <= Date.now(); return `<li ${e.href ? `onclick="location.hash='${e.href.slice(1)}'" style="cursor:pointer"` : ""}><span class="ri">${I(e.ic || "cal")}</span><span class="rt"><b>${esc(e.name)}</b><div class="s">${esc(e.note || "")}</div></span>
+      <span class="cd num">${live ? `<span class="pill p-good">live now</span>` : `<span data-until="${esc(e.at)}">${until(e.at)}</span>`}<span class="at">${ctDT(pd(e.at))}${e.end ? "–" + ctT(pd(e.end)) : ""}</span></span></li>`; }).join("") || `<li class="empty">Nothing scheduled.</li>`}</ul>
+    <div class="small dim" style="margin-top:8px">Event times are set by leadership and may shift this week.</div></section>`;
+}
+
+/* ---------- today's to-do (things only Evan can do) ---------- */
+function heroList(a){ const h = a.extra?.heroes; return Array.isArray(h) ? h : h?.heroes || []; }
+function squadList(a){ const q = a.extra?.squads; return (Array.isArray(q) ? q : q?.squads || []).filter(s => s && s.squad); }
+function todos(a){
+  const L = [], c = a.current || {}, rs = a.extra?.research, s = srv(), hub = a.hub || {};
+  if (rs && rs.idle_slots) L.push({c:"warn", ic:"flask", t:`${rs.idle_slots} research slot${rs.idle_slots > 1 ? "s" : ""} idle`, s:"Start research. On long timers, ask the Secretary of Science for the speed buff first", href:"#research", at:rs.at});
+  if (c.builders && c.builders[0] < c.builders[1]) L.push({c:"warn", ic:"build", t:`${c.builders[1] - c.builders[0]} builder${c.builders[1] - c.builders[0] > 1 ? "s" : ""} idle`, s:s.dow === 2 ? "It's Base Expansion day: building now scores VS" : "Queue an upgrade (Cooperative Construction helps on long ones)", at:a.updated_at});
+  const nr = (C?.inbox || []).filter(t => t.needs_reply).length;
+  if (nr) L.push({c:"", ic:"inbox", t:`${nr} conversation${nr > 1 ? "s" : ""} waiting on you`, s:"Groups and DMs where someone else spoke last", href:"#inbox"});
+  const H = heroList(a), sq = squadList(a), s1 = sq.find(x => x.squad === 1);
+  const stetIn = s1 ? (s1.heroes || []).some(h => /^stet/i.test(h?.name || "")) : null;
+  if (stetIn !== true) L.push({c:"hint", ic:"star", t:"Put Stetmann in Squad 1", s:`Celraphina's tip: Stet for damage in the main squad; keep Mason for wanted-boss hits${stetIn === null ? " (squad lineup not read yet)" : ""}`, href:"#heroes"});
+  const sc = H.find(h => /^scarlett/i.test(h.name || ""));
+  if (sc) L.push({c:"hint", ic:"star", t:sc.stars >= 5 && sc.level >= 150 ? "Scarlett: max her skills next" : "Keep building Scarlett", s:`${sc.stars}★ Lv ${sc.level} now. Celraphina: 5★, max level and maxed skills before UR promotion; she's set to replace Williams`, href:"#heroes"});
+  L.push({c:"hint", ic:"gift", t:"Train rides: tap the green Gift Contract button", s:"That's the thank-you for the conductor"});
+  const nv = hub.name_vote;
+  if (nv && nv.stage !== "Poll open") { const free = (hub.tag_checks?.tags || []).filter(x => x.status === "free").map(x => x.tag);
+    L.push({c:"", ic:"flag", t:"Comment a new tag + name idea", s:`On AG's announcement.${free.length ? " Free tags: " + free.join(", ") : ""}`, href:"#alliance"}); }
+  const ds = pd(EVENTS.find(e => e.key === "ds").at); const dsd = ds - Date.now();
+  if (dsd > 0 && dsd < 4 * DAY) L.push({c:"", ic:"flag", t:"Desert Storm Friday 7 PM", s:"Team A, enlisted. Be online by 6:50 PM", href:"#storm"});
+  L.push({c:"ok", ic:"cal", t:`Today is ${VSW[s.dow].t}`, s:"Spend: " + VSW[s.dow].sp, href:"#today"});
+  if (s.dow === 3) L.push({c:"hint", ic:"star", t:"Hero day starts at 8 PM tonight", s:"Hero EXP, recruits and shards only from Wed 8 PM to Thu 8 PM"});
+  return L;
+}
+function todoCard(a, n){
+  const L = todos(a), show = L.slice(0, n || 99);
+  return `<section class="card hot"><div class="ch-h"><h2>${I("check")}Your to-do today</h2><span class="pill p-acc">${L.filter(x => x.c !== "ok").length} items</span></div>
+    <ul class="rows todo">${show.map(x => `<li class="${x.c}" ${x.href ? `onclick="location.hash='${x.href.slice(1)}'" style="cursor:pointer"` : ""}><span class="ri">${I(x.ic)}</span><span class="rt"><b>${esc(x.t)}</b><div class="s">${esc(x.s)}</div></span>${x.href ? `<span class="dim">›</span>` : ""}</li>`).join("")}</ul>
+    ${L.length > show.length ? `<a class="link" href="#today" style="display:block;margin-top:8px">${L.length - show.length} more ›</a>` : ""}</section>`;
+}
+function todayPage(){
+  const a = acct();
+  return `<div class="grid g2">${todoCard(a)}${eventsCard(a)}</div>
+    <div class="grid g2">${armsCard(a)}${vsCard(a)}</div>
+    ${arTimelineCard()}
+    <div class="grid g2">${spendCard()}${routineCard(a)}</div>
+    ${vsWeekCard()}`;
+}
+
+/* ---------- power breakdown ---------- */
+const SECS = [["Hero Power","Heroes","#f26b4f"],["Unit Power","Troops","#58a6ff"],["Building Power","Buildings","#d9a521"],["Drone Power","Drone","#2dd4bf"],["Tech Power","Tech","#8b7cf6"],["Overlord","Overlord","#9aa3af"]];
+function powerBreakdownCard(a){
+  const sec = a.hub?.power_sections;
+  if (!sec || !Object.keys(sec).length) return `<section class="card"><div class="ch-h"><h2>${I("bolt")}Power breakdown</h2>${soon()}</div><div class="ph-box">Appears after the next profile read.</div></section>`;
+  const rows = SECS.map(([k, l, col]) => ({l, col, v: sec[k] || 0})).filter(r => r.v), tot = rows.reduce((s, r) => s + r.v, 0);
+  let acc = 0; const R = 15.915, arcs = rows.map(r => { const f = r.v / tot * 100, o = 25 - acc; acc += f; return `<circle r="${R}" cx="21" cy="21" fill="none" stroke="${r.col}" stroke-width="5.2" stroke-dasharray="${Math.max(f - .6, .1)} ${100 - Math.max(f - .6, .1)}" stroke-dashoffset="${o}"><title>${esc(r.l)} ${full(r.v)}</title></circle>`; }).join("");
+  return `<section class="card"><div class="ch-h"><h2>${I("bolt")}Power breakdown</h2>${stamp(a.hub.sections_at)}</div>
+    <div class="donut"><svg viewBox="0 0 42 42" role="img" aria-label="Power by source"><circle r="${R}" cx="21" cy="21" fill="none" stroke="var(--card-3)" stroke-width="5.2"/>${arcs}
+      <text x="21" y="20.5" text-anchor="middle" style="font-size:5.6px;font-weight:800;fill:var(--ink)">${abbr(tot)}</text><text x="21" y="26" text-anchor="middle" style="font-size:2.8px;fill:var(--ink-3)">total power</text></svg>
+      <div class="lg">${rows.map(r => `<div><i style="background:${r.col}"></i>${esc(r.l)}<span class="n num">${abbr(r.v)}</span><span class="p num">${(r.v / tot * 100).toFixed(1)}%</span></div>`).join("")}</div></div></section>`;
+}
+function wealthCard(a){
+  const hub = a.hub || {}, st = a.extra?.status || {}, c = a.current || {};
+  const tiles = [
+    ["Gold Bricks", hub.gold_bricks != null ? full(hub.gold_bricks) : null, "store milestones"],
+    ["Diamonds", c.diamonds != null ? full(c.diamonds) : null, "top bar"],
+    ["Kills", hub.kills != null ? abbr(hub.kills) : null, "lifetime"],
+    ["VIP", hub.vip, ""],
+    ["Profession", hub.profession_level != null ? "Lv " + hub.profession_level : null, ""],
+    ["Radar", st.radar_level != null ? "Lv " + st.radar_level : null, st.radar_tasks_available != null ? `${st.radar_tasks_available} task${st.radar_tasks_available === 1 ? "" : "s"} ready · ${st.radar_tasks_restoring || 0} restoring` : ""],
+  ];
+  const ph = (hub.profile_history || []).filter(r => r.gold_bricks != null);
+  return `<section class="card"><div class="ch-h"><h2>${I("gift")}Bricks, diamonds & profile</h2>${stamp(st.at || a.updated_at)}</div>
+    <div class="kpi">${tiles.map(([l, v, s]) => `<div class="mt"><div class="lbl">${l}</div><div class="n num">${v ?? "–"}</div><div class="s">${esc(s || "")}</div></div>`).join("")}</div>
+    <div class="small dim" style="margin-top:10px">${ph.length > 1 ? "" : "Gold Bricks history builds up with each profile read (one reading so far). "}Diamond history is in the charts below.</div></section>`;
+}
+
+/* ---------- heroes ---------- */
+const HS = {power:["Power", h => h.power || 0], level:["Level", h => h.level * 10 + (h.stars || 0)], stars:["Stars", h => (h.stars || 0) * 1000 + (h.level || 0)], rarity:["Rarity", h => ({UR:3, SSR:2, SR:1}[h.rarity] || 0) * 1e9 + (h.power || 0)], name:["Name", h => h.name]};
+const stars = n => `<span class="stars">${"★".repeat(Math.max(0, Math.min(5, n || 0)))}<span class="off">${"★".repeat(5 - Math.max(0, Math.min(5, n || 0)))}</span></span>`;
+function heroCard(h){
+  const r = ["UR","SSR","SR"].includes(h.rarity) ? h.rarity : "x", g = h.gear_levels || [];
+  return `<div class="hcard"><div class="hpt ${r}"><em>${esc(h.rarity || "")}</em>${esc([...(h.name || "?")][0])}<b>${h.level ?? ""}</b></div>
+    <div class="hb"><div class="hn">${esc(h.name)}</div><div class="hr">${esc(h.role || "")}</div>${stars(h.stars)}
+      <div class="hpw num"><span>${h.power ? abbr(h.power) : `<span class="dim" title="Reading unclear">–</span>`}</span><span class="small dim">Lv ${h.level ?? "–"}</span></div>
+      ${g.length ? `<div class="gear" title="Gear levels ${g.join(" / ")}">${g.map(x => `<i><b style="width:${Math.min(100, x / 40 * 100)}%"></b></i>`).join("")}</div>` : `<div class="gear" title="No gear"><i></i><i></i><i></i><i></i></div>`}</div></div>`;
+}
+function heroesPage(){
+  const a = acct(), hx = a.extra?.heroes, H = heroList(a).slice();
+  const [, key] = HS[UI.hsort] || HS.power, dir = UI.hsort === "name" ? 1 : -1;
+  const F = UI.hrar || "all", L = H.filter(h => F === "all" || (F === "other" ? !["UR","SSR","SR"].includes(h.rarity) : h.rarity === F));
+  L.sort((x, y) => { const p = key(x), q = key(y); return typeof p === "string" ? dir * p.localeCompare(q) : dir * (p - q); });
+  const tot = H.reduce((s, h) => s + (h.power || 0), 0), maxed = H.filter(h => h.level >= 150).length, five = H.filter(h => h.stars >= 5).length;
+  const tips = `<section class="card"><div class="ch-h"><h2>${I("star")}Hero tips</h2><span class="small dim">from Celraphina [RGBB]</span></div><ul class="rows todo">
+    ${todos(a).filter(x => x.ic === "star" && x.c === "hint").map(x => `<li class="hint"><span class="ri">${I("star")}</span><span class="rt"><b>${esc(x.t)}</b><div class="s">${esc(x.s)}</div></span></li>`).join("")}
+    <li class="hint"><span class="ri">${I("cal")}</span><span class="rt"><b>Hero spending: Thursday only</b><div class="s">Wed 8 PM → Thu 8 PM Central. The 4 AM and 4 PM Hero phases count twice</div></span></li></ul></section>`;
+  return `<section class="card hot"><div class="mtiles">
+      <div class="mt"><div class="lbl">Heroes</div><div class="n num">${H.length || "–"}</div></div>
+      <div class="mt"><div class="lbl">Hero power</div><div class="n num">${abbr(a.hub?.power_sections?.["Hero Power"] || tot)}</div></div>
+      <div class="mt"><div class="lbl">Level 150</div><div class="n num">${maxed}</div></div>
+      <div class="mt"><div class="lbl">5 stars</div><div class="n num">${five}</div></div></div>
+      <div class="small dim" style="margin-top:10px">${hx?.at ? "Hero list " + ago(hx.at) : ""}</div></section>
+    ${typeof squadsCard === "function" ? squadsCard(a) : ""}
+    ${tips}
+    <section class="card"><div class="ch-h"><h2>${I("star")}Roster</h2><span class="small dim">${L.length} of ${H.length}</span></div>
+      <div class="toolbar"><div class="seg">${Object.entries(HS).map(([k, [l]]) => `<button class="${(UI.hsort || "power") === k ? "on" : ""}" data-hs="${k}">${l.toUpperCase()}</button>`).join("")}</div>
+        <div class="chips">${["all","UR","SSR","SR"].map(k => `<button class="chip ${F === k ? "on" : ""}" data-hr="${k}">${k === "all" ? "All" : k}</button>`).join("")}</div></div>
+      ${L.length ? `<div class="hgrid">${L.map(heroCard).join("")}</div>` : `<div class="ph-box">The hero list fills in after the next hero read.</div>`}
+      <div class="small dim" style="margin-top:10px">Bars under each hero are its four gear pieces (full = Lv 40). Power gains per hero ${soon()}</div></section>`;
+}
+function wireHeroes(){
+  document.querySelectorAll("[data-hs]").forEach(b => b.onclick = () => { UI.hsort = b.dataset.hs; render(); });
+  document.querySelectorAll("[data-hr]").forEach(b => b.onclick = () => { UI.hrar = b.dataset.hr; render(); });
+}
+
+/* ---------- research ---------- */
+function researchQueue(rs){
+  const at = pd(rs.at);
+  return (rs.research_queue || []).map((q, i) => { const m = String(q).match(/(?:(\d+)d\s*)?(\d{1,2}):(\d{2}):(\d{2})/);
+    if (m && at) { const sec = ((+(m[1] || 0) * 24 + +m[2]) * 60 + +m[3]) * 60 + +m[4]; return {i, busy:true, done:isoT(+at + sec * 1000)}; }
+    return {i, busy: !/idle/i.test(q), done:null}; });
+}
+function researchCard(a, compact){
+  const rs = a.extra?.research;
+  if (!rs) return `<section class="card"><div class="ch-h"><h2>${I("flask")}Research</h2>${soon()}</div><div class="ph-box">Appears after the next research read.</div></section>`;
+  const T = Object.entries(rs.trees || {}).sort((x, y) => compact ? y[1] - x[1] : 0), Q = researchQueue(rs);
+  const avg = T.length ? T.reduce((s, [, v]) => s + v, 0) / T.length : 0, done = T.filter(([, v]) => v >= 100).length;
+  return `<section class="card ${rs.idle_slots ? "hot" : ""}"><div class="ch-h"><h2>${I("flask")}Research</h2><span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${rs.idle_slots ? `<span class="pill p-warn">${rs.idle_slots} slot${rs.idle_slots > 1 ? "s" : ""} idle</span>` : `<span class="pill p-good">all slots busy</span>`}${stamp(rs.at)}</span></div>
+    <div class="slotrow">${Q.map(q => `<div class="rslot ${q.busy ? "" : "idle"}"><div class="lbl">Slot ${q.i + 1}</div><div class="n">${q.busy ? (q.done ? `<span data-until="${q.done}">${until(q.done)}</span>` : "Busy") : "Idle"}</div><div class="small dim">${q.busy ? (q.done ? "done " + fmtT(q.done) : "researching") : "start something"}</div></div>`).join("")}</div>
+    ${compact ? "" : `<div class="kpi" style="margin-top:12px"><div class="mt"><div class="lbl">Trees</div><div class="n num">${T.length}</div></div><div class="mt"><div class="lbl">Complete</div><div class="n num">${done}</div></div><div class="mt"><div class="lbl">Average</div><div class="n num">${Math.round(avg)}%</div></div></div>`}
+    <div style="margin-top:10px">${(compact ? T.slice(0, 6) : T).map(([n, v]) => `<div class="rbar"><span class="rn">${esc(n)}</span><div class="rk"><i class="${v >= 100 ? "full" : ""}" style="width:${Math.max(2, Math.min(100, v))}%"></i></div><b class="num">${v}%</b></div>`).join("")}</div>
+    ${compact ? `<a class="link" href="#research" style="display:block;margin-top:6px">All ${T.length} trees ›</a>` : ""}</section>`;
+}
+function researchPage(){
+  const a = acct();
+  return `${researchCard(a)}
+    <section class="card"><div class="ch-h"><h2>${I("clock")}Before a long research timer</h2></div><ul class="rows todo">
+      <li class="hint"><span class="ri">${I("people")}</span><span class="rt"><b>Ask for the Secretary of Science buff</b><div class="s">Research speed boost from the capitol; worth it on anything over a few hours</div></span></li>
+      <li class="hint"><span class="ri">${I("flask")}</span><span class="rt"><b>Cooperative Research</b><div class="s">Alliance boost; check it's active before starting</div></span></li>
+      <li class="hint"><span class="ri">${I("cal")}</span><span class="rt"><b>Speedups on Wednesday</b><div class="s">Age of Science + Tech Research phase (4 AM and 4 PM Central) counts twice</div></span></li></ul></section>`;
+}
+
+/* ---------- Desert Storm ---------- */
+function kvList(o){
+  if (o == null) return "";
+  if (typeof o !== "object") return `<div>${esc(o)}</div>`;
+  return `<ul class="rows">${Object.entries(o).filter(([, v]) => v != null && v !== "").map(([k, v]) => `<li><span class="rt"><b>${esc(k.replace(/_/g, " "))}</b><div class="s">${esc(typeof v === "object" ? (Array.isArray(v) ? v.map(x => typeof x === "object" ? Object.values(x).join(" · ") : x).join(", ") : Object.entries(v).map(([a, b]) => a + ": " + b).join(" · ")) : v)}</div></span></li>`).join("")}</ul>`;
+}
+function stormPage(){
+  const a = acct(), D = a.extra?.desert_storm || null, nx = D?.next || {};
+  const ev = EVENTS.find(e => e.key === "ds"), st = nx.start || ev.at, en = nx.end || ev.end;
+  const sq = squadList(a), en_ = D?.enemies || D?.scouted || [];
+  const ours = (D?.our_squads || sq).map(s => ({name: s.name || (s.squad ? "Squad " + s.squad : "Squad"), power: s.power}));
+  const theirs = (Array.isArray(en_) ? en_ : []).map(e => ({name: e.name || e.player || "Enemy", power: e.power, note: e.alliance || e.tag || ""}));
+  const n = Math.max(ours.length, theirs.length, 4);
+  const assign = D?.assignment;
+  const log = D?.log || [];
+  return `<section class="card hot"><div class="ch-h"><h2>${I("flag")}Next battle</h2>${D?.at ? stamp(D.at) : soon("battle data coming soon")}</div>
+      <div class="hero-ds"><div><div class="lbl">Desert Storm</div><div class="big">${ctDT(pd(st))}–${ctT(pd(en))}</div><div class="small muted">Central time · ${esc(nx.team || "Team A")} · ${esc(nx.status || "enlisted")}</div></div>
+        <div style="margin-left:auto;text-align:right"><div class="lbl">Starts in</div><div class="big num" style="color:var(--teal)"><span data-until="${esc(st)}">${until(st)}</span></div></div></div>
+      ${nx.opponent ? `<div class="small" style="margin-top:10px">Opponent: <b>${esc(nx.opponent)}</b></div>` : ""}</section>
+    <div class="grid g2"><section class="card"><div class="ch-h"><h2>${I("user")}Your assignment</h2></div>
+        ${assign ? (typeof assign === "object" ? kvList(assign) : `<div style="font-size:15px">${esc(assign)}</div>`) : `<div class="ph-box">Your building / lane assignment shows here once leadership posts it. ${soon()}</div>`}
+        <ul class="rows todo" style="margin-top:8px"><li class="hint"><span class="ri">${I("clock")}</span><span class="rt"><b>Be online by 6:50 PM</b><div class="s">Heal troops and set squads before it opens</div></span></li></ul></section>
+      <section class="card"><div class="ch-h"><h2>${I("sword")}Scouted enemies vs our squads</h2>${theirs.length ? "" : soon()}</div>
+        <div class="mrow"><span class="lbl">Ours</span><span class="m"></span><span class="lbl r">Theirs</span></div>
+        ${Array.from({length: n}, (_, i) => { const o = ours[i], t = theirs[i], win = o?.power && t?.power ? (o.power >= t.power ? "up" : "down") : "";
+          return `<div class="mrow"><span>${o ? `<b>${esc(o.name)}</b> <span class="num ${win}">${o.power ? abbr(o.power) : "–"}</span>` : `<span class="dim">–</span>`}</span><span class="m">vs</span>
+            <span class="r">${t ? `<span class="num">${t.power ? abbr(t.power) : "–"}</span> <b>${esc(t.name)}</b>${t.note ? `<div class="small dim">${esc(t.note)}</div>` : ""}` : `<span class="dim">not scouted</span>`}</span></div>`; }).join("")}</section></div>
+    <section class="card"><div class="ch-h"><h2>${I("pulse")}Battle log</h2></div>
+      ${log.length ? `<ul class="rows">${log.slice().reverse().map(l => `<li><span class="rt"><b>${esc(l.text || l.event || l.what || "")}</b>${l.detail ? `<div class="s">${esc(l.detail)}</div>` : ""}</span><span class="small dim">${l.at ? fmtT(l.at) : ""}</span></li>`).join("")}</ul>` : `<div class="ph-box">Moves and results from the battle land here. ${soon()}</div>`}</section>
+    ${D ? `<details class="more card"><summary>All Desert Storm data</summary>${kvList(Object.fromEntries(Object.entries(D).filter(([k]) => !["next","assignment","enemies","scouted","log","our_squads"].includes(k))))}</details>` : ""}`;
+}
+
+/* ---------- alliance: leadership, name vote, Korean digest ---------- */
+function leadershipCard(){
+  const D = AD(); const M = (D?.members || []).filter(m => /R[45]/.test(m.rank || "") || m.role);
+  if (!M.length) return "";
+  M.sort((x, y) => (y.rank || "").localeCompare(x.rank || "") || (y.power || 0) - (x.power || 0));
+  return `<section class="card"><div class="ch-h"><h2>${I("shield")}Leadership & roles</h2>${stamp(D.generated_at)}</div>
+    <div class="lead">${M.map(m => `<div class="lr">${initials(m.name, true)}<span class="rt" style="min-width:0"><b>${esc(m.name)}</b><div class="s"><span class="pill ${m.rank === "R5" ? "p-acc" : "p-mute"}" style="padding:1px 7px">${esc(m.rank)}</span> ${m.role && m.role !== m.rank ? esc(m.role) : ""}${m.power ? ` · ${abbr(m.power)}` : ""}</div></span></div>`).join("")}</div>
+    <div class="small dim" style="margin-top:10px">You: ${esc(acct().rank?.rank || "R3")} · Secretary roles on the server rotate; titles here are alliance roles.</div></section>`;
+}
+function voteCard(){
+  const hub = acct().hub || {}, v = hub.name_vote, tc = hub.tag_checks;
+  if (!v && !tc) return "";
+  const TG = (tc?.tags || []).slice().sort((x, y) => ({free:0, unclear:1, taken:2}[x.status] - {free:0, unclear:1, taken:2}[y.status]));
+  return `<section class="card hot"><div class="ch-h"><h2>${I("flag")}New tag & name vote</h2>${v ? `<span class="pill ${v.stage === "Poll open" ? "p-good" : "p-warn"}">${esc(v.stage)}</span>` : ""}</div>
+    ${v ? `<div class="last"><div class="w">${esc(v.author)} · ${fmtT(v.posted)} (${ago(v.posted)})</div>${esc(v.text)}</div>
+      ${(v.ideas || []).length ? `<div class="small muted" style="margin-top:8px">Ideas in the comments so far: <b>${v.ideas.map(esc).join(", ")}</b></div>` : ""}` : ""}
+    ${TG.length ? `<div class="lbl" style="margin:14px 0 8px">Tags checked on the server · ${esc(fmtD(tc.checked_on))}</div>
+      <div class="tagchips">${TG.map(t => `<div class="tagc ${t.status}">${esc(t.tag)}<small>${t.status === "free" ? "free" : t.status === "taken" ? "taken" + (t.by ? " · " + esc(t.by) : "") : "check again"}</small></div>`).join("")}</div>` : ""}
+    ${(v?.history || []).length > 1 ? `<details class="more" style="margin-top:12px"><summary>Earlier announcements (${v.history.length - 1})</summary><ul class="rows">${v.history.slice(1).map(h => `<li><span class="rt"><b>${esc(h.author)}</b><div class="s">${esc(h.text)}</div></span><span class="small dim">${esc(fmtD(String(h.posted).slice(0, 10)))}</span></li>`).join("")}</ul></details>` : ""}</section>`;
+}
+function digestCard(){
+  const K = acct().hub?.korean_digest || [];
+  return `<section class="card"><div class="ch-h"><h2>${I("send")}Korean digest</h2><span class="small dim">${K.length ? `${K.length} sent · to AG's 3 Korean players` : ""}</span></div>
+    ${K.length ? `<ul class="rows">${K.map(k => `<li style="align-items:flex-start"><span class="ri">${I("send")}</span><span class="rt"><b>${esc((k.en || "").replace(/^Digest:\s*/, ""))}</b><div class="ko">${esc(k.ko || "")}</div></span><span class="small dim" style="white-space:nowrap">${fmtT(k.at)}</span></li>`).join("")}</ul>`
+      : `<div class="ph-box">No digests sent yet.</div>`}</section>`;
+}
 
 /* ---------- friends ---------- */
 const GROUPS = ["12AM leadership","12AM members","Korean players","Old DDI","Other alliances"];
@@ -813,6 +1248,9 @@ const allianceTable = rows => `<table class="atbl"><tr>${MCOLS.map(([k, l]) => `
   ${rows.map(m => `<tr><td class="nm" title="${esc(m.name)}">${esc(m.name)}</td><td class="hide-s">${esc(m.rank || "–")}</td><td class="hide-s">${abbr(m.power)}</td>
     <td class="sc">${sbar(m.activity_score)}</td><td><span style="color:${{active:"var(--ink)", quiet:"var(--warn)", inactive:"var(--bad)"}[bucket(m)] || "var(--ink-3)"}">${esc(seenTxt(m))}</span></td></tr>`).join("") || `<tr><td colspan="5" class="empty">No one matches.</td></tr>`}</table>`;
 function alliancePage(){
+  return voteCard() + `<div class="grid g2">${leadershipCard() || ""}${digestCard()}</div>` + allianceActivityPage();
+}
+function allianceActivityPage(){
   const D = AD();
   if (!D || !(D.members || []).length) return `<section class="card empty">No member list readings yet.</section>`;
   const k = allianceCounts(D);
