@@ -690,7 +690,8 @@ function squadsCard(a){
   const tot = L.reduce((t, s) => t + (s.power || 0), 0);
   return `<section class="card"><div class="ch-h"><h2>${I("people")}Squads</h2><span class="small dim">${full(tot)} across ${L.length} squads${sq?.at ? ` · read ${ago(sq.at)}` : ""}</span></div>
     <div class="sq">${L.map(s => {
-      const t = TT[String(s.troop_type || "").toLowerCase()], H = (s.heroes || []).filter(h => h && h.name);
+      const t = TT[String(s.troop_type || "").toLowerCase()];
+      const H = (s.heroes || []).filter(h => h && h.name).sort((x, y) => /front/i.test(y.slot || "") - /front/i.test(x.slot || "") || String(x.slot).localeCompare(String(y.slot)));
       const vs = s.squad === 1 || !s1 || !s.power ? (s.squad === 1 ? "main squad" : "") : `${Math.round(s.power / s1 * 100)}% of Squad 1 · ${dlt(s.power - s1)}`;
       return `<div class="sqc ${s.squad === 1 ? "main" : ""}">
         <div class="hd"><span class="nm">Squad ${esc(s.squad)}</span>${t ? `<span class="tt ${s.troop_type.toLowerCase()}">${I(t[0])}${t[1]}</span>` : s.troop_type ? `<span class="tt mixed">${esc(s.troop_type)}</span>` : ""}</div>
@@ -698,7 +699,7 @@ function squadsCard(a){
         <div class="trk"><i style="width:${(s.power || 0) / mx * 100}%"></i></div>
         <div class="vs num">${s.power ? full(s.power) : ""}${vs ? ` · ${vs}` : ""}</div>
         <ul class="hl">${H.map(h => `<li>${h.portrait ? `<img class="pt" src="${esc(h.portrait)}" alt="">` : `<span class="pt" style="background:hsl(${hue(h.name)} 45% 20%);color:hsl(${hue(h.name)} 80% 78%)">${esc([...h.name][0])}</span>`}
-          <span class="rt"><b>${esc(h.name)}</b><div class="small dim">${h.slot ? `<span class="sl">${esc(h.slot)}</span> · ` : ""}${h.level ? `Lv ${esc(h.level)}` : ""}${h.stars != null ? ` <span class="st">${"★".repeat(Math.max(0, Math.min(5, h.stars)))}</span>` : ""}</div></span>
+          <span class="rt"><b>${esc(h.name)}</b><div class="small dim">${h.slot ? `<span class="sl">${esc(h.slot)}</span> · ` : ""}${h.level ? `Lv ${esc(h.level)}` : ""}${h.stars != null ? ` <span class="st" title="${h.star_tier ? `${h.stars} stars, ${h.star_tier} tiers toward the next` : `${h.stars} stars`}">${"★".repeat(Math.max(0, Math.min(5, h.stars)))}</span>${h.star_tier ? `<span class="dim">+${esc(h.star_tier)}</span>` : ""}` : ""}${h.type && t && h.type !== t[1] ? ` · ${esc(h.type)}` : ""}</div></span>
           <span class="hp num">${h.power ? abbr(h.power) : ""}</span></li>`).join("") || `<li class="small dim">No heroes read</li>`}</ul></div>`;
     }).join("")}</div></section>`;
 }
