@@ -225,6 +225,17 @@ th{color:var(--ink-3);font-weight:600}
 .gate input:focus{border-color:var(--accent)}
 .err{color:var(--bad);font-size:13px;min-height:18px}
 .empty{color:var(--ink-3);font-size:13px;padding:10px 0}
+.sbar{display:flex;align-items:center;gap:8px;min-width:120px}
+.sbar .trk{flex:1;height:8px;background:var(--card-3);border-radius:999px;overflow:hidden;min-width:60px}
+.sbar .fill{height:100%;border-radius:999px}
+.sbar b{width:28px;text-align:right;font-size:13px}
+.atbl th{cursor:pointer;user-select:none}
+.atbl th.on{color:var(--ink)}
+.atbl td.nm{font-weight:600;max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.atbl td.sc{width:38%}
+@media (max-width:620px){.atbl .hide-s{display:none} .atbl td.sc{width:auto}}
+.actl{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-2)}
+.actl .sbar{flex:1;max-width:160px;min-width:80px}
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--card-3);border:1px solid var(--hair-2);padding:10px 16px;border-radius:12px;font-size:14px;z-index:50;display:none;box-shadow:0 10px 30px rgba(0,0,0,.5)}
 </style>
 </head>
@@ -240,7 +251,7 @@ const url = new URL(location.href);
 let code = url.searchParams.get("c") || ls.get("lwd_code") || "";
 if (url.searchParams.get("c")) { ls.set("lwd_code", code); history.replaceState(null, "", location.pathname + location.hash); }
 let S = null, C = null, R = [];
-const UI = { range: ls.get("lwd_range") || "24H", fq: "", fgroup: "All", ifilter: "all", thread: null, afilter: "all", acat: "all", draft: "", draftTo: "" };
+const UI = { range: ls.get("lwd_range") || "24H", fq: "", fgroup: "All", ifilter: "all", thread: null, afilter: "all", acat: "all", draft: "", draftTo: "", mfilter: "all", mq: "", msort: "score", mdir: -1 };
 const app = document.getElementById("app");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -269,6 +280,7 @@ const P = {
   star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
   radar:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6-6"/>',
   mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  people:'<circle cx="12" cy="7" r="3"/><path d="M6.5 20c.6-3.3 2.8-5 5.5-5s4.9 1.7 5.5 5"/><circle cx="4.5" cy="10" r="2"/><circle cx="19.5" cy="10" r="2"/><path d="M1.5 18c.3-1.8 1.4-3 3-3.2M22.5 18c-.3-1.8-1.4-3-3-3.2"/>',
   gift:'<rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 13h18M12 9v12M12 9c-2 0-5-1-5-3.5S10 4 12 9zm0 0c2 0 5-1 5-3.5S14 4 12 9z"/>',
 };
 const I = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ""}</svg>`;
@@ -337,7 +349,7 @@ function gate(msg){
   document.getElementById("code").onkeydown = e => { if (e.key === "Enter") go(); };
 }
 
-const PAGES = [["overview","Overview","home"],["accounts","Accounts","user"],["friends","Friends","users"],["inbox","Inbox","inbox"],["merger","Merger","merge"],["activity","Activity","pulse"]];
+const PAGES = [["overview","Overview","home"],["accounts","Accounts","user"],["friends","Friends","users"],["inbox","Inbox","inbox"],["merger","Merger","merge"],["alliance","Alliance","people"],["activity","Activity","pulse"]];
 const page = () => { const h = location.hash.replace("#",""); return PAGES.some(p => p[0] === h) ? h : "overview"; };
 window.addEventListener("hashchange", () => { if (S) { render(); window.scrollTo(0, 0); } });
 const acct = () => (S.accounts || [])[0] || {};
@@ -348,14 +360,14 @@ function render(){
   const badge = {inbox: needCount() || null};
   const nav = PAGES.map(([id, label, ic]) => `<a class="nav ${pg === id ? "on" : ""}" href="#${id}">${I(ic)}${label}${badge[id] ? `<span class="badge">${badge[id]}</span>` : ""}</a>`).join("");
   const titles = {overview:["Overview","Your account at a glance"], accounts:["Accounts","History and today's routine"], friends:["Friends","Everyone you talk with, and what you know about them"],
-    inbox:["Inbox","Every channel in one place"], merger:["Merger","DDI into [12AM] MidNight"], activity:["Activity","What got done, one line per action"]};
-  const body = {overview, accounts: accountsPage, friends, inbox, merger: mergerPage, activity}[pg]();
+    inbox:["Inbox","Every channel in one place"], merger:["Merger","DDI into [12AM] MidNight"], alliance:["Alliance activity","Who in [12AM] has been online lately"], activity:["Activity","What got done, one line per action"]};
+  const body = {overview, accounts: accountsPage, friends, inbox, merger: mergerPage, alliance: alliancePage, activity}[pg]();
   app.innerHTML = `<div class="shell"><nav class="side"><div class="brand"><span class="mk">${I("bolt")}</span>LW<em>HUB</em></div>${nav}
     <div class="foot">Account data ${ago(S.generated_at)}${C ? `<br>Messages ${ago(C.generated_at)}` : ""}</div></nav>
     <main><div class="top"><div><h1>${titles[pg][0]}</h1><div class="sub">${titles[pg][1]}</div></div>
       <button class="iconbtn" id="reload">${I("refresh")}Refresh</button></div>${body}</main></div>`;
   document.getElementById("reload").onclick = () => { toast("Refreshing…"); load(); };
-  ({overview: wireOverview, accounts: wireAccounts, friends: wireFriends, inbox: wireInbox, activity: wireActivity}[pg] || (() => {}))();
+  ({overview: wireOverview, accounts: wireAccounts, friends: wireFriends, inbox: wireInbox, alliance: wireAlliance, activity: wireActivity}[pg] || (() => {}))();
   const cv = document.querySelector(".convo"); if (cv) cv.scrollTop = cv.scrollHeight;
 }
 
@@ -534,6 +546,7 @@ function overview(){
     ${last24Card(a)}
     <div class="grid g2">${routineCard(a)}${ongoingCard(a, 8)}</div>
     <div class="grid g2">${accountsStrip()}${commsSnap()}</div>
+    ${allianceSnap()}
     ${statGrid(a)}`;
 }
 function wireOverview(){
@@ -612,6 +625,7 @@ function friendCard(f){
       ${f.vip ? `<span class="tag">VIP ${esc(f.vip)}</span>` : ""}${f.language ? `<span class="tag">${esc(f.language)}</span>` : ""}${f.location ? `<span class="tag">${esc(f.location)}</span>` : ""}</div></div></div>
     ${f.role ? `<div class="small muted">${esc(f.role)}</div>` : ""}
     <div class="sum">${esc(f.summary)}</div>
+    ${actLine(f.activity)}
     ${f.merger ? `<div class="small"><span class="lbl">Merger</span> <span class="muted">${esc(f.merger)}</span></div>` : ""}
     ${L ? `<div class="last"><div class="w">Last interaction · ${esc(L.from || "")} · ${ld ? fmtDay(ld) : esc(L.at || "")}</div>${esc(L.text || "")}${L.en ? `<div class="en">${esc(L.en)}</div>` : ""}</div>` : ""}
     ${f.starters?.length ? `<details class="more"><summary>Conversation starters (${f.starters.length})</summary><ul class="starters">${f.starters.map(s => `<li>${esc(s)}</li>`).join("")}</ul></details>` : ""}
@@ -726,6 +740,71 @@ function mergerPage(){
       <div class="mlist">${(M.groups[key] || []).map(p => `<div><b>${esc(p.name)}</b> <span class="dim small">${esc(p.rank || "")}${p.power ? " · " + abbr(p.power) : ""}</span><div class="small muted">${esc(p.note || "")}</div></div>`).join("") || `<div class="empty">None</div>`}</div></section>`).join("")}</div>
     <section class="card"><div class="ch-h"><h2>${I("pulse")}Board changes</h2></div><ul class="rows">${(M.log || []).map(e => `<li><span class="rt"><b>${esc(e.name || "")}</b> <span class="muted">${esc(e.to || "")}</span><div class="s">by ${esc(e.who || "")}</div></span><span class="small dim" style="white-space:nowrap">${ago(e.at)}</span></li>`).join("")}</ul>
     ${(M.comments || []).length ? `<div class="lbl" style="margin:14px 0 6px">Board comments</div>${M.comments.map(c => `<div class="req"><div class="tx"><b>${esc(c.who)}</b> <span class="small dim">${ago(c.at)}</span><div class="small muted">${esc(c.text)}</div></div></div>`).join("")}` : ""}</section>`;
+}
+
+/* ---------- alliance activity ---------- */
+const AD = () => acct().extra?.activity || null;
+const scoreCol = v => v == null ? "var(--ink-3)" : v >= 70 ? "var(--good)" : v >= 40 ? "var(--warn)" : "var(--bad)";
+const sbar = v => `<span class="sbar"><span class="trk"><span class="fill" style="display:block;width:${v == null ? 0 : Math.max(3, v)}%;background:${scoreCol(v)}"></span></span><b class="num" style="color:${scoreCol(v)}">${v ?? "–"}</b></span>`;
+const bucket = m => m.days_since_seen == null ? "unknown" : m.inactive_3d || m.days_since_seen >= 3 ? "inactive" : m.days_since_seen >= 1 ? "quiet" : "active";
+const seenTxt = m => m.last_seen_at ? ago(m.last_seen_at) : (m.last_seen || "–");
+function actLine(x){
+  if (!x) return "";
+  const b = bucket(x), pill = {active:["Active","p-good"], quiet:["Quiet 1–3 days","p-warn"], inactive:["Inactive 3+ days","p-bad"], unknown:["No reading","p-mute"]}[b];
+  return `<div class="actl"><span class="lbl">Activity</span>${sbar(x.activity_score)}<span>last seen ${esc(seenTxt(x))}</span>
+    ${b !== "active" ? `<span class="pill ${pill[1]}">${pill[0]}</span>` : ""}</div>
+    ${x.current === false && x.as_of ? `<div class="small dim" style="margin-top:-6px">from the old alliance list, ${esc(fmtT(x.as_of))}</div>` : ""}`;
+}
+function allianceCounts(D){
+  const ms = D.members || [];
+  return {all: ms.length, active: ms.filter(m => bucket(m) === "active").length, quiet: ms.filter(m => bucket(m) === "quiet").length,
+    inactive: ms.filter(m => bucket(m) === "inactive").length};
+}
+function allianceSnap(){
+  const D = AD(); if (!D || !(D.members || []).length) return "";
+  const k = allianceCounts(D), low = (D.members || []).filter(m => m.activity_score != null).slice().sort((x, y) => x.activity_score - y.activity_score).slice(0, 5);
+  return `<section class="card"><div class="ch-h"><h2>${I("people")}Alliance activity</h2><a class="link" href="#alliance">All ${k.all} members ›</a></div>
+    <div class="mtiles" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="mt"><div class="lbl">Active 24h</div><div class="n num" style="color:var(--good)">${k.active}</div></div>
+      <div class="mt"><div class="lbl">Quiet 1–3 days</div><div class="n num" style="color:var(--warn)">${k.quiet}</div></div>
+      <div class="mt"><div class="lbl">Inactive 3+ days</div><div class="n num" style="color:var(--bad)">${k.inactive}</div></div></div>
+    ${low.length ? `<div class="lbl" style="margin:14px 0 4px">Least active</div><ul class="rows">${low.map(m => `<li><span class="rt"><b>${esc(m.name)}</b> <span class="small dim">${esc(m.rank || "")}</span><div class="s">last seen ${esc(seenTxt(m))}</div></span>${sbar(m.activity_score)}</li>`).join("")}</ul>` : ""}
+  </section>`;
+}
+const MCOLS = [["name","Name"],["rank","Rank"],["power","Power"],["score","Activity"],["seen","Last seen"]];
+function allianceRows(D){
+  const q = UI.mq.toLowerCase();
+  const val = (m, k) => k === "name" ? m.name.toLowerCase() : k === "rank" ? (m.rank || "R0") : k === "power" ? (m.power || 0)
+    : k === "score" ? (m.activity_score ?? -1) : (m.last_seen_at || "");
+  return (D.members || []).filter(m => (UI.mfilter === "all" || bucket(m) === UI.mfilter) && (!q || m.name.toLowerCase().includes(q)))
+    .sort((x, y) => { const a = val(x, UI.msort), b = val(y, UI.msort); return (a < b ? -1 : a > b ? 1 : 0) * UI.mdir || x.name.localeCompare(y.name); });
+}
+const allianceTable = rows => `<table class="atbl"><tr>${MCOLS.map(([k, l]) => `<th data-ms="${k}" class="${UI.msort === k ? "on" : ""} ${k === "rank" || k === "power" ? "hide-s" : ""}">${l}${UI.msort === k ? (UI.mdir > 0 ? " ▴" : " ▾") : ""}</th>`).join("")}</tr>
+  ${rows.map(m => `<tr><td class="nm" title="${esc(m.name)}">${esc(m.name)}</td><td class="hide-s">${esc(m.rank || "–")}</td><td class="hide-s">${abbr(m.power)}</td>
+    <td class="sc">${sbar(m.activity_score)}</td><td><span style="color:${{active:"var(--ink)", quiet:"var(--warn)", inactive:"var(--bad)"}[bucket(m)] || "var(--ink-3)"}">${esc(seenTxt(m))}</span></td></tr>`).join("") || `<tr><td colspan="5" class="empty">No one matches.</td></tr>`}</table>`;
+function alliancePage(){
+  const D = AD();
+  if (!D || !(D.members || []).length) return `<section class="card empty">No member list readings yet.</section>`;
+  const k = allianceCounts(D);
+  const F = [["all","All",k.all],["active","Active 24h",k.active],["quiet","Quiet 1–3 days",k.quiet],["inactive","Inactive 3+ days",k.inactive]];
+  return `<section class="card hot"><div class="mtiles">
+      <div class="mt"><div class="lbl">Members</div><div class="n num">${k.all}</div></div>
+      <div class="mt"><div class="lbl">Active 24h</div><div class="n num" style="color:var(--good)">${k.active}</div></div>
+      <div class="mt"><div class="lbl">Quiet 1–3 days</div><div class="n num" style="color:var(--warn)">${k.quiet}</div></div>
+      <div class="mt"><div class="lbl">Inactive 3+ days</div><div class="n num" style="color:var(--bad)">${k.inactive}</div></div></div>
+    <div class="small muted" style="margin-top:12px">Member list last read ${D.last_check ? `${fmtT(D.last_check)} (${ago(D.last_check)})` : "—"} · score uses the last ${D.window_checks || "?"} readings: online or seen within 1h counts most, then 6h, then 24h.</div></section>
+    <section class="card"><div class="toolbar"><input class="search" id="mq" type="search" placeholder="Find a member…" value="${esc(UI.mq)}"></div>
+      <div class="chips" style="margin-bottom:6px">${F.map(([v, l, n]) => `<button class="chip ${UI.mfilter === v ? "on" : ""}" data-mf="${v}">${l} <span class="dim">${n}</span></button>`).join("")}</div>
+      <div class="tbl" id="mtbl">${allianceTable(allianceRows(D))}</div></section>`;
+}
+function wireAlliance(){
+  const wireSort = () => document.querySelectorAll("[data-ms]").forEach(th => th.onclick = () => {
+    const k = th.dataset.ms; if (UI.msort === k) UI.mdir = -UI.mdir; else { UI.msort = k; UI.mdir = k === "name" ? 1 : -1; }
+    document.getElementById("mtbl").innerHTML = allianceTable(allianceRows(AD())); wireSort(); });
+  document.querySelectorAll("[data-mf]").forEach(b => b.onclick = () => { UI.mfilter = b.dataset.mf; render(); });
+  const q = document.getElementById("mq");
+  if (q) q.oninput = () => { UI.mq = q.value; document.getElementById("mtbl").innerHTML = allianceTable(allianceRows(AD())); wireSort(); };
+  wireSort();
 }
 
 /* ---------- activity ---------- */
