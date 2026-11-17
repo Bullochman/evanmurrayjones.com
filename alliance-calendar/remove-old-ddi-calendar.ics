@@ -1,0 +1,57 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//evanmurrayjones.com//Alliance Events//EN
+CALSCALE:GREGORIAN
+METHOD:CANCEL
+X-WR-CALNAME:DDI Alliance Events (Last War)
+BEGIN:VEVENT
+UID:ddi-mg@r5tools
+DTSTAMP:20261117T120000Z
+DTSTART:20261116T020000Z
+SEQUENCE:100
+STATUS:CANCELLED
+SUMMARY:Cancelled: Marshal's Guard (MG)
+DESCRIPTION:Replaced by the auto-updating calendar at https://evanmurrayjon
+ es.com/alliance-calendar/
+END:VEVENT
+BEGIN:VEVENT
+UID:ddi-zs@r5tools
+DTSTAMP:20261117T120000Z
+DTSTART:20261108T013000Z
+SEQUENCE:100
+STATUS:CANCELLED
+SUMMARY:Cancelled: Zombie Siege
+DESCRIPTION:Replaced by the auto-updating calendar at https://evanmurrayjon
+ es.com/alliance-calendar/
+END:VEVENT
+BEGIN:VEVENT
+UID:ddi-dsb@r5tools
+DTSTAMP:20261117T120000Z
+DTSTART:20261113T110000Z
+SEQUENCE:100
+STATUS:CANCELLED
+SUMMARY:Cancelled: Desert Storm — Team B
+DESCRIPTION:Replaced by the auto-updating calendar at https://evanmurrayjon
+ es.com/alliance-calendar/
+END:VEVENT
+BEGIN:VEVENT
+UID:ddi-dsa@r5tools
+DTSTAMP:20261117T120000Z
+DTSTART:20261114T010000Z
+SEQUENCE:100
+STATUS:CANCELLED
+SUMMARY:Cancelled: Desert Storm — Team A
+DESCRIPTION:Replaced by the auto-updating calendar at https://evanmurrayjon
+ es.com/alliance-calendar/
+END:VEVENT
+BEGIN:VEVENT
+UID:ddi-met-20261107@r5tools
+DTSTAMP:20261117T120000Z
+DTSTART:20261107T143000Z
+SEQUENCE:100
+STATUS:CANCELLED
+SUMMARY:Cancelled: Meteorite Iron War
+DESCRIPTION:Replaced by the auto-updating calendar at https://evanmurrayjon
+ es.com/alliance-calendar/
+END:VEVENT
+END:VCALENDAR

@@ -1,0 +1,132 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//evanmurrayjones.com//Alliance Events//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Alliance Events (Last War)
+X-WR-CALDESC:Alliance event schedule. Times show in your local time automat
+ ically.
+REFRESH-INTERVAL;VALUE=DURATION:PT1H
+X-PUBLISHED-TTL:PT1H
+BEGIN:VEVENT
+UID:mg-20261117@evanmurrayjones.com
+DTSTAMP:20261117T184720Z
+LAST-MODIFIED:20261117T184720Z
+SEQUENCE:0
+DTSTART:20261117T230000Z
+DTEND:20261117T233000Z
+SUMMARY:⚔️ Marshall's Guard (tentative)
+DESCRIPTION:TENTATIVE: leaders are testing times. This event will update he
+ re if it moves.\n\nAlliance Exercise. Start rallies with a weak squad\, jo
+ in with your strongest.\n\nServer time 21:00 (UTC-2).\n\nTimes show in you
+ r local time automatically\, on any device.
+URL:https://evanmurrayjones.com/alliance-calendar/
+STATUS:TENTATIVE
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Marshall's Guard in 10 minutes
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:zs-20261117@evanmurrayjones.com
+DTSTAMP:20261117T184720Z
+LAST-MODIFIED:20261117T184720Z
+SEQUENCE:0
+DTSTART:20261117T234500Z
+DTEND:20261118T001500Z
+SUMMARY:🧟 Zombie Siege (tentative)
+DESCRIPTION:TENTATIVE: leaders are testing times. This event will update he
+ re if it moves.\n\nDefend the base with the alliance.\n\nServer time 21:45
+  (UTC-2).\n\nTimes show in your local time automatically\, on any device.
+URL:https://evanmurrayjones.com/alliance-calendar/
+STATUS:TENTATIVE
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Zombie Siege in 10 minutes
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:ds-team-a@evanmurrayjones.com
+DTSTAMP:20261117T184720Z
+LAST-MODIFIED:20261117T184720Z
+SEQUENCE:0
+DTSTART:20261121T010000Z
+DTEND:20261121T013000Z
+SUMMARY:🌪️ Desert Storm\, Team A
+DESCRIPTION:Team A battle\, Fridays 23:00 server time. Be online 10 minutes
+  early.\n\nServer time 23:00 (UTC-2)\, every Friday.\n\nTimes show in your
+  local time automatically\, on any device.
+URL:https://evanmurrayjones.com/alliance-calendar/
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+RRULE:FREQ=WEEKLY;UNTIL=20270529T015959Z
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Desert Storm\, Team A in 10 minutes
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:ds-team-b@evanmurrayjones.com
+DTSTAMP:20261117T184720Z
+LAST-MODIFIED:20261117T184720Z
+SEQUENCE:0
+DTSTART:20261120T110000Z
+DTEND:20261120T113000Z
+SUMMARY:🌪️ Desert Storm\, Team B
+DESCRIPTION:Team B battle\, Fridays 09:00 server time. Be online 10 minutes
+  early.\n\nServer time 09:00 (UTC-2)\, every Friday.\n\nTimes show in your
+  local time automatically\, on any device.
+URL:https://evanmurrayjones.com/alliance-calendar/
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+RRULE:FREQ=WEEKLY;UNTIL=20270529T015959Z
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Desert Storm\, Team B in 10 minutes
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:s3-end@evanmurrayjones.com
+DTSTAMP:20261117T184720Z
+LAST-MODIFIED:20261117T184720Z
+SEQUENCE:0
+DTSTART:20261123T013400Z
+DTEND:20261123T014900Z
+SUMMARY:🏁 Season 3 ends
+DESCRIPTION:Approximate\, from the in-game season countdown (read Nov 17). 
+ It may line up with the daily reset a few minutes later.\n\nServer time 23
+ :34 (UTC-2).\n\nTimes show in your local time automatically\, on any devic
+ e.
+URL:https://evanmurrayjones.com/alliance-calendar/
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Season 3 ends in 10 minutes
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:daily-reset@evanmurrayjones.com
+DTSTAMP:20261117T184720Z
+LAST-MODIFIED:20261117T184720Z
+SEQUENCE:0
+DTSTART:20261118T020000Z
+DTEND:20261118T020500Z
+SUMMARY:🔄 Daily reset
+DESCRIPTION:New VS day and Arms Race start. Low priority\, no reminder.\n\n
+ Server time 00:00 (UTC-2)\, every day.\n\nTimes show in your local time au
+ tomatically\, on any device.
+URL:https://evanmurrayjones.com/alliance-calendar/
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+PRIORITY:9
+RRULE:FREQ=DAILY;UNTIL=20270601T015959Z
+END:VEVENT
+END:VCALENDAR

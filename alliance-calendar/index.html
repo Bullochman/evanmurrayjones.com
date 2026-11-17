@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Alliance Events Calendar</title>
+<meta name="description" content="Subscribe once to the alliance event schedule. Changes show up in your calendar by themselves.">
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#14171c;--mut:#5b6472;--hair:#e3e6eb;--acc:#d9482b;--acc-ink:#fff;--soft:#fdf0ec}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1116;--card:#171b22;--ink:#e8ebf0;--mut:#9aa3b2;--hair:#262c36;--acc:#f26b4f;--acc-ink:#140b08;--soft:#2a1a16}}
+:root[data-theme="dark"]{--bg:#0e1116;--card:#171b22;--ink:#e8ebf0;--mut:#9aa3b2;--hair:#262c36;--acc:#f26b4f;--acc-ink:#140b08;--soft:#2a1a16}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:28px 16px 48px}
+h1{font-size:28px;line-height:1.2;margin:0 0 6px}h2{font-size:18px;margin:0 0 10px}
+p{margin:0 0 12px}.mut{color:var(--mut)}.small{font-size:14px}
+.card{background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:18px;margin:16px 0}
+.btn{display:block;text-align:center;text-decoration:none;font-weight:650;font-size:17px;padding:14px 16px;border-radius:12px;margin:10px 0;border:1px solid var(--hair);color:var(--ink);background:var(--card)}
+.btn.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+.copy{display:flex;gap:8px;margin-top:6px}.copy input{flex:1;min-width:0;font:14px ui-monospace,Menlo,monospace;padding:10px;border-radius:10px;border:1px solid var(--hair);background:var(--bg);color:var(--ink)}
+.copy button{font:inherit;font-size:14px;padding:10px 14px;border-radius:10px;border:1px solid var(--hair);background:var(--card);color:var(--ink);cursor:pointer}
+ul.ev{list-style:none;margin:0;padding:0}ul.ev li{display:flex;gap:12px;padding:10px 0;border-top:1px solid var(--hair)}ul.ev li:first-child{border-top:0}
+.em{font-size:22px;width:30px;text-align:center}.ev b{display:block}.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px;background:var(--soft);color:var(--acc);margin-left:6px;font-weight:600}
+ol{padding-left:20px;margin:0}ol li{margin:6px 0}
+</style></head>
+<body><main>
+<h1>Alliance Events (Last War)</h1>
+<p class="mut">Subscribe once. When leaders change a time or add an event, it updates in your calendar by itself. Times show in your own time zone automatically.</p>
+
+<section class="card">
+<a class="btn pri" id="apple" href="webcal://evanmurrayjones.com/alliance-calendar/events.ics">Add to Apple Calendar (iPhone, iPad, Mac)</a>
+<a class="btn" id="google" href="https://calendar.google.com/calendar/render?cid=webcal%3A%2F%2Fevanmurrayjones.com%2Falliance-calendar%2Fevents.ics" target="_blank" rel="noopener">Add to Google Calendar</a>
+<a class="btn" id="outlook" href="https://outlook.live.com/calendar/0/addfromweb?url=https%3A%2F%2Fevanmurrayjones.com%2Falliance-calendar%2Fevents.ics&amp;name=Alliance%20Events%20%28Last%20War%29" target="_blank" rel="noopener">Add to Outlook.com</a>
+<a class="btn" href="https://outlook.office.com/calendar/0/addfromweb?url=https%3A%2F%2Fevanmurrayjones.com%2Falliance-calendar%2Fevents.ics&amp;name=Alliance%20Events%20%28Last%20War%29" target="_blank" rel="noopener">Add to Outlook (work or school)</a>
+<p class="small mut" style="margin-top:12px">Other apps: subscribe by URL with this link.</p>
+<div class="copy"><input id="url" readonly value="https://evanmurrayjones.com/alliance-calendar/events.ics"><button id="cp">Copy</button></div>
+<p class="small mut" style="margin-top:10px">Google Calendar on a phone: open the Google button in a browser (not the app) once, then the calendar shows up in the app. Google refreshes subscribed calendars less often than Apple or Outlook, sometimes up to a day.</p>
+</section>
+
+<section class="card">
+<h2>Coming up <span class="small mut" id="tz"></span></h2>
+<ul class="ev" id="list"><li class="mut">Loading…</li></ul>
+<p class="small mut" style="margin-top:10px">Server time is UTC-2.</p>
+</section>
+
+<section class="card">
+<h2>Already imported the old DDI calendar?</h2>
+<p>That was a one-time file, so it can't update and its times are now wrong. Remove it one of two ways:</p>
+<ol>
+<li><b>Import the removal file:</b> <a href="remove-old-ddi-calendar.ics">remove-old-ddi-calendar.ics</a>. Open it on the device where you imported the old file and add it to the same calendar. In Apple Calendar and Outlook this cancels the old events.</li>
+<li><b>Or delete them by hand:</b> find any old event (Marshal's Guard, Zombie Siege, Desert Storm Team A or B, Meteorite Iron War) and delete it, choosing "Delete all future events" when asked. If you imported the old file into its own calendar, just delete that whole calendar.</li>
+</ol>
+<p class="small mut" style="margin-top:10px">Then subscribe above. Google Calendar ignores removal files, so on Google delete the old events by hand.</p>
+</section>
+</main>
+<script>
+const SRC = "events.json";
+document.getElementById("cp").onclick = async () => { const i = document.getElementById("url"); try { await navigator.clipboard.writeText(i.value); } catch { i.select(); document.execCommand("copy"); } document.getElementById("cp").textContent = "Copied"; };
+const tz = Intl.DateTimeFormat().resolvedOptions().timeZone; document.getElementById("tz").textContent = tz ? "· your time (" + tz + ")" : "· your time";
+function occurrences(e, from, to){
+  const out = [], s = Date.parse(e.start), step = e.every_days * 864e5, end = e.until ? Date.parse(e.until) : Infinity, dur = e.duration_min * 6e4;
+  if (!step) { if (s + dur >= from && s <= to) out.push(s); return out; }
+  let t = s; if (t + dur < from) t += Math.ceil((from - dur - t) / step) * step;
+  for (; t <= to && t <= end; t += step) out.push(t);
+  return out;
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+fetch(SRC, {cache: "no-store"}).then(r => r.json()).then(d => {
+  const now = Date.now(), to = now + 14 * 864e5, rows = [];
+  d.events.filter(e => !e.low_priority).forEach(e => occurrences(e, now, to).forEach(t => rows.push({e, t})));
+  rows.sort((a, b) => a.t - b.t);
+  const day = new Intl.DateTimeFormat(undefined, {weekday: "short", month: "short", day: "numeric"});
+  const tm = new Intl.DateTimeFormat(undefined, {hour: "numeric", minute: "2-digit"});
+  document.getElementById("list").innerHTML = rows.slice(0, 20).map(({e, t}) => `<li><span class="em">${esc(e.emoji)}</span><span><b>${esc(e.title)}${e.tentative ? '<span class="tag">tentative</span>' : ""}</b>
+    <span>${day.format(t)} · ${tm.format(t)}–${tm.format(t + e.duration_min * 6e4)}</span><div class="small mut">${esc(e.notes)}</div></span></li>`).join("") || '<li class="mut">Nothing in the next two weeks.</li>';
+}).catch(() => { document.getElementById("list").innerHTML = '<li class="mut">Couldn\'t load the schedule. Subscribe above and it will show in your calendar.</li>'; });
+</script>
+</body></html>
