@@ -1270,7 +1270,7 @@ function allianceRows(D){
 }
 const allianceTable = rows => `<table class="atbl"><tr>${MCOLS.map(([k, l]) => `<th data-ms="${k}" class="${UI.msort === k ? "on" : ""} ${k === "rank" || k === "power" ? "hide-s" : ""}">${l}${UI.msort === k ? (UI.mdir > 0 ? " ▴" : " ▾") : ""}</th>`).join("")}</tr>
   ${rows.map(m => `<tr><td class="nm" title="${esc(m.name)}">${esc(m.name)}</td><td class="hide-s">${esc(m.rank || "–")}</td><td class="hide-s">${abbr(m.power)}</td>
-    <td class="sc">${sbar(m.activity_score)}</td><td><span style="color:${{active:"var(--ink)", quiet:"var(--warn)", inactive:"var(--bad)"}[bucket(m)] || "var(--ink-3)"}">${esc(seenTxt(m))}</span></td></tr>`).join("") || `<tr><td colspan="5" class="empty">No one matches.</td></tr>`}</table>`;
+    <td class="sc">${sbar(m.activity_score)}${(m.power && m.power < 100e6 && (m.activity_score ?? 100) < 50) ? ` <span class="pill p-bad" title="under 100M power and activity under 50">replace?</span>` : ""}</td><td><span style="color:${{active:"var(--ink)", quiet:"var(--warn)", inactive:"var(--bad)"}[bucket(m)] || "var(--ink-3)"}">${esc(seenTxt(m))}</span></td></tr>`).join("") || `<tr><td colspan="5" class="empty">No one matches.</td></tr>`}</table>`;
 function alliancePage(){
   return voteCard() + `<div class="grid g2">${leadershipCard() || ""}${digestCard()}</div>` + allianceActivityPage();
 }
