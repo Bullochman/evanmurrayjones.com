@@ -91,6 +91,36 @@
    "tentative": false,
    "low_priority": true,
    "updated": "20261117T184720Z"
+  },
+  {
+   "id": "mg-1119",
+   "title": "Marshall's Guard",
+   "emoji": "🛡️",
+   "icon": "shield",
+   "start": "2026-11-19T02:30:00Z",
+   "duration_min": 30,
+   "every_days": 0,
+   "until": null,
+   "server_time": "00:30",
+   "notes": "LJ announcement 11-18: MG 30 min after reset. Rally the Marshal; join everyone's rallies.",
+   "tentative": false,
+   "low_priority": false,
+   "updated": "20261118T185442Z"
+  },
+  {
+   "id": "glacierdon-1119",
+   "title": "Glacierdon",
+   "emoji": "🧊",
+   "icon": "flag",
+   "start": "2026-11-19T03:00:00Z",
+   "duration_min": 30,
+   "every_days": 0,
+   "until": null,
+   "server_time": "01:00",
+   "notes": "LJ announcement 11-18: right after Marshall's Guard.",
+   "tentative": false,
+   "low_priority": false,
+   "updated": "20261118T185442Z"
   }
  ]
 }

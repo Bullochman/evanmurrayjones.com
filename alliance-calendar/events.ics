@@ -129,4 +129,44 @@ TRANSP:TRANSPARENT
 PRIORITY:9
 RRULE:FREQ=DAILY;UNTIL=20270601T015959Z
 END:VEVENT
+BEGIN:VEVENT
+UID:mg-1119@evanmurrayjones.com
+DTSTAMP:20261118T185442Z
+LAST-MODIFIED:20261118T185442Z
+SEQUENCE:0
+DTSTART:20261119T023000Z
+DTEND:20261119T030000Z
+SUMMARY:🛡️ Marshall's Guard
+DESCRIPTION:LJ announcement 11-18: MG 30 min after reset. Rally the Marshal
+ \; join everyone's rallies.\n\nServer time 00:30 (UTC-2).\n\nTimes show in
+  your local time automatically\, on any device.
+URL:https://evanmurrayjones.com/alliance-calendar/
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Marshall's Guard in 10 minutes
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:glacierdon-1119@evanmurrayjones.com
+DTSTAMP:20261118T185442Z
+LAST-MODIFIED:20261118T185442Z
+SEQUENCE:0
+DTSTART:20261119T030000Z
+DTEND:20261119T033000Z
+SUMMARY:🧊 Glacierdon
+DESCRIPTION:LJ announcement 11-18: right after Marshall's Guard.\n\nServer 
+ time 01:00 (UTC-2).\n\nTimes show in your local time automatically\, on an
+ y device.
+URL:https://evanmurrayjones.com/alliance-calendar/
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Glacierdon in 10 minutes
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
 END:VCALENDAR
