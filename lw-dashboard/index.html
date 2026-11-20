@@ -1061,6 +1061,12 @@ function stormPage(){
       <div class="hero-ds"><div><div class="lbl">Desert Storm</div><div class="big">${ctDT(pd(st))}–${ctT(pd(en))}</div><div class="small muted">Central time · ${esc(nx.team || "Team A")} · ${esc(nx.status || "enlisted")}</div></div>
         <div style="margin-left:auto;text-align:right"><div class="lbl">Starts in</div><div class="big num" style="color:var(--teal)"><span data-until="${esc(st)}">${until(st)}</span></div></div></div>
       ${nx.opponent ? `<div class="small" style="margin-top:10px">Opponent: <b>${esc(nx.opponent)}</b></div>` : ""}</section>
+    ${D?.sample ? `<div class="ph-box" style="margin-bottom:10px"><b>Sample layout.</b> ${esc(D.status || "")}</div>` : ""}
+    ${D?.battle?.stage || (D?.buildings || []).length ? `<section class="card"><div class="ch-h"><h2>${I("flag")}Battlefield</h2>${D.battle?.updated_ct ? stamp(D.battle.updated_ct) : ""}</div>
+      <div class="mrow"><span><span class="lbl">Stage</span> <b>${esc(D.battle?.stage || "–")}</b> <span class="dim">${esc(D.battle?.clock || "")}</span></span><span class="m"></span>
+        <span class="r"><span class="lbl">Score</span> <b class="num ${(D.battle?.score_us ?? 0) >= (D.battle?.score_them ?? 0) ? "up" : "down"}">${D.battle?.score_us != null ? D.battle.score_us.toLocaleString() : "–"}</b> vs <b class="num">${D.battle?.score_them != null ? D.battle.score_them.toLocaleString() : "–"}</b></span></div>
+      ${D.status && !D.sample ? `<div class="small muted" style="margin:6px 0">${esc(D.status)}</div>` : ""}
+      ${(D.buildings || []).length ? `<ul class="rows">${D.buildings.map(b => `<li><span class="rt"><b>${esc(b.name)}</b>${b.assigned ? ' <span class="small" style="color:var(--teal)">assigned</span>' : ""}<div class="s">${b.bp_s ? b.bp_s + " pts/s" : ""}</div></span><span class="small ${b.owner === "us" ? "up" : b.owner === "them" ? "down" : "dim"}">${esc(b.owner === "us" ? "ours" : b.owner === "them" ? "theirs" : b.owner || "unknown")}</span></li>`).join("")}</ul>` : ""}</section>` : ""}
     <div class="grid g2"><section class="card"><div class="ch-h"><h2>${I("user")}Your assignment</h2></div>
         ${assign ? (typeof assign === "object" ? kvList(assign) : `<div style="font-size:15px">${esc(assign)}</div>`) : `<div class="ph-box">Your building / lane assignment shows here once leadership posts it. ${soon()}</div>`}
         <ul class="rows todo" style="margin-top:8px"><li class="hint"><span class="ri">${I("clock")}</span><span class="rt"><b>Be online by 6:50 PM</b><div class="s">Heal troops and set squads before it opens</div></span></li></ul></section>
@@ -1071,7 +1077,7 @@ function stormPage(){
             <span class="r">${t ? `<span class="num">${t.power ? abbr(t.power) : "–"}</span> <b>${esc(t.name)}</b>${t.note ? `<div class="small dim">${esc(t.note)}</div>` : ""}` : `<span class="dim">not scouted</span>`}</span></div>`; }).join("")}</section></div>
     <section class="card"><div class="ch-h"><h2>${I("pulse")}Battle log</h2></div>
       ${log.length ? `<ul class="rows">${log.slice().reverse().map(l => `<li><span class="rt"><b>${esc(l.text || l.event || l.what || "")}</b>${l.detail ? `<div class="s">${esc(l.detail)}</div>` : ""}</span><span class="small dim">${l.at ? fmtT(l.at) : ""}</span></li>`).join("")}</ul>` : `<div class="ph-box">Moves and results from the battle land here. ${soon()}</div>`}</section>
-    ${D ? `<details class="more card"><summary>All Desert Storm data</summary>${kvList(Object.fromEntries(Object.entries(D).filter(([k]) => !["next","assignment","enemies","scouted","log","our_squads"].includes(k))))}</details>` : ""}`;
+    ${D ? `<details class="more card"><summary>All Desert Storm data</summary>${kvList(Object.fromEntries(Object.entries(D).filter(([k]) => !["next","assignment","enemies","scouted","log","our_squads","battle","buildings","snapshots","sample","status","at"].includes(k))))}</details>` : ""}`;
 }
 
 /* ---------- alliance: leadership, name vote, Korean digest ---------- */
