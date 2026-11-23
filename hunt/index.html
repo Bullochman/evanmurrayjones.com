@@ -348,13 +348,16 @@
           paint:{ 'line-color':['case',['==',['get','quality'],'prime'],'#55ff66','#a7d98a'],'line-width':['case',['==',['get','quality'],'prime'],2.4,1.1],'line-opacity':0.95 } });
         map.addLayer({ id:'edges', type:'line', source:'habitat', filter:['==',['get','kind'],'edge'], layout:{visibility:'none','line-join':'round'}, paint:{ 'line-color':'#ff9a3a','line-width':2,'line-opacity':0.6 } });
         map.addLayer({ id:'routes', type:'line', source:'habitat', filter:['==',['get','kind'],'route'], layout:{visibility:'visible','line-join':'round','line-cap':'round'}, paint:{ 'line-color':'#ffe23a','line-width':3.5,'line-dasharray':[1.4,0.9],'line-opacity':0.95 } });
-        map.on('click','bedding',function(e){ var p=e.features[0].properties; new maplibregl.Popup({offset:8,maxWidth:'250px'}).setLngLat(e.lngLat).setHTML('<span class="tag" style="background:#2e9e3a">'+(p.quality==='prime'?'Prime bedding':'Bedding')+'</span><div class="row" style="display:block">'+(p.note||'')+'</div>').addTo(map); });
-        // 💤 markers at each prime bedding so they are unmistakable
+        // 💤 markers only on the 12 largest prime bedding zones (so 95 of them don't bury the map)
         function ringCentroid(geom){ var ring=null; if(geom.type==='Polygon') ring=geom.coordinates[0]; else if(geom.type==='MultiPolygon') ring=geom.coordinates[0][0]; if(!ring||!ring.length) return null; var sx=0,sy=0; ring.forEach(function(c){ sx+=c[0]; sy+=c[1]; }); return [sx/ring.length, sy/ring.length]; }
-        gj.features.forEach(function(f){ if(f.properties.kind!=='bedding'||f.properties.quality!=='prime') return; var c=ringCentroid(f.geometry); if(!c) return;
-          var el=document.createElement('div'); el.className='hunt-marker'; el.style.fontSize='20px'; el.textContent='💤';
-          new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(c)
-            .setPopup(new maplibregl.Popup({offset:12,maxWidth:'250px'}).setHTML('<span class="tag" style="background:#2e9e3a">Prime bedding</span><div class="row" style="display:block">'+(f.properties.note||'')+'</div>')).addTo(map); });
+        function ringArea(r){ var a=0; for(var i=0,n=r.length,j=n-1;i<n;j=i++){ a+=r[j][0]*r[i][1]-r[i][0]*r[j][1]; } return Math.abs(a/2); }
+        function polyArea(g){ if(g.type==='Polygon') return ringArea(g.coordinates[0]); if(g.type==='MultiPolygon'){ var s=0; g.coordinates.forEach(function(p){ s+=ringArea(p[0]); }); return s; } return 0; }
+        gj.features.filter(function(f){ return f.properties.kind==='bedding' && f.properties.quality==='prime'; })
+          .sort(function(a,b){ return polyArea(b.geometry)-polyArea(a.geometry); })
+          .slice(0,12).forEach(function(f){ var c=ringCentroid(f.geometry); if(!c) return;
+            var el=document.createElement('div'); el.className='hunt-marker'; el.style.fontSize='20px'; el.textContent='💤';
+            new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(c)
+              .setPopup(new maplibregl.Popup({offset:12,maxWidth:'250px'}).setHTML('<span class="tag" style="background:#2e9e3a;color:#06120a">Prime bedding</span><div class="row" style="display:block">'+(f.properties.note||'')+'</div>')).addTo(map); });
       });
       loadOptional('assets/huntable.geojson', function(gj){
         map.addSource('huntable',{ type:'geojson', data:gj });
@@ -415,10 +418,17 @@
       // single click handler: place a pin, or read elevation (+ parcel if present)
       map.on('click', function(e){
         if(placingCat){ addPin(placingCat, e.lngLat.lng, e.lngLat.lat); setPlacing(null); return; }
-        var feats = map.queryRenderedFeatures(e.point, { layers: layersPresent(['hl-fill','nb-fill']) });
         var ll=e.lngLat, head='';
-        if(feats && feats.length){
-          var p=feats[0].properties, c=p.category;
+        var bed = map.queryRenderedFeatures(e.point, { layers: layersPresent(['bedding']) });
+        var par = map.queryRenderedFeatures(e.point, { layers: layersPresent(['hl-fill','nb-fill']) });
+        if(bed && bed.length){
+          var bq=bed[0].properties;
+          head += '<span class="tag" style="background:#2e9e3a;color:#06120a">'+(bq.quality==='prime'?'Prime bedding':'Bedding')+'</span>'+
+                  '<h3>Likely deer bedding</h3>'+
+                  '<div class="row" style="display:block;color:var(--ink-soft)">'+(bq.note||'')+'</div>';
+          if(par && par.length && par[0].properties.NAME_1){ head += '<div class="row">On parcel <b>'+par[0].properties.NAME_1+'</b></div>'; }
+        } else if(par && par.length){
+          var p=par[0].properties, c=p.category;
           var acres=(p.DEEDED_ACR!=null && p.DEEDED_ACR!=='')?p.DEEDED_ACR+' ac':'—';
           head += '<span class="tag" style="background:'+(COLORS[c]||'#8b9179')+';color:#0d0f0c">'+(catName[c]||'Parcel')+'</span>'+
                   '<h3>'+(p.NAME_1||'Unknown owner')+'</h3>'+
@@ -455,7 +465,7 @@
       .catch(function(){ cb(null); });
   }
   function layersPresent(ids){ return ids.filter(function(id){ return map.getLayer(id); }); }
-  function loadOptional(url, cb){ var u=url+(url.indexOf('?')<0?'?':'&')+'v=3'; fetch(u).then(function(r){ return r.ok?r.json():null; }).then(function(gj){ if(gj) cb(gj); }).catch(function(){}); }
+  function loadOptional(url, cb){ var u=url+(url.indexOf('?')<0?'?':'&')+'v=4'; fetch(u).then(function(r){ return r.ok?r.json():null; }).then(function(gj){ if(gj) cb(gj); }).catch(function(){}); }
 
   // ---------- pins ----------
   function addPin(cat, lng, lat){
