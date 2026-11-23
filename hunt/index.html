@@ -339,7 +339,8 @@
       loadOptional('assets/habitat.geojson', function(gj){
         map.addSource('habitat',{ type:'geojson', data:gj });
         map.addLayer({ id:'feeding', type:'fill', source:'habitat', filter:['==',['get','kind'],'feeding'], layout:{visibility:'none'}, paint:{ 'fill-color':'#e0bb3a','fill-opacity':0.35 } });
-        map.addLayer({ id:'hardwood', type:'fill', source:'habitat', filter:['==',['get','kind'],'hardwood_bottom'], layout:{visibility:'none'}, paint:{ 'fill-color':'#7a5a22','fill-opacity':0.45 } });
+        map.addLayer({ id:'hardwood', type:'fill', source:'habitat', filter:['==',['get','kind'],'hardwood_bottom'], layout:{visibility:'visible'}, paint:{ 'fill-color':'#8a5a1e','fill-opacity':0.4 } });
+        map.addLayer({ id:'hardwood-line', type:'line', source:'habitat', filter:['==',['get','kind'],'hardwood_bottom'], layout:{visibility:'visible','line-join':'round'}, paint:{ 'line-color':'#d89a3a','line-width':1.4,'line-dasharray':[2,1.2],'line-opacity':0.9 } });
         // bedding ON by default, with a bright outline so it reads on the satellite
         map.addLayer({ id:'bedding', type:'fill', source:'habitat', filter:['==',['get','kind'],'bedding'], layout:{visibility:'visible'},
           paint:{ 'fill-color':['case',['==',['get','quality'],'prime'],'#2e9e3a','#5a7d4a'],'fill-opacity':['case',['==',['get','quality'],'prime'],0.5,0.28] } });
@@ -522,7 +523,7 @@
   $('#topo-op').oninput=function(){ $('#topo-opv').textContent=this.value+'%'; withMap(function(){ map.setPaintProperty('topo','raster-opacity', (+$('#topo-op').value)/100); }); };
 
   function toggleLayers(btn, layers){ var on=btn.getAttribute('aria-pressed')!=='true'; press(btn,on); withMap(function(){ layers.forEach(function(l){ setVis(l,on); }); }); }
-  $('#t-bed').onclick=function(){ toggleLayers(this,['bedding','bedding-line','hardwood']); };
+  $('#t-bed').onclick=function(){ toggleLayers(this,['bedding','bedding-line','hardwood','hardwood-line']); };
   $('#t-feed').onclick=function(){ toggleLayers(this,['feeding']); };
   $('#t-route').onclick=function(){ toggleLayers(this,['routes']); };
   $('#t-edge').onclick=function(){ toggleLayers(this,['edges']); };
