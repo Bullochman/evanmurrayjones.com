@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Pond &amp; Lake Siting — Terrain</title>
+<meta name="description" content="Where a pond or lake would naturally hold water on the property — drainages, catchment, and candidate dam sites from the elevation data.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💧</text></svg>">
+<style>
+  :root{
+    --bg:#0e1116; --panel:#171c24; --panel-soft:#1f2630; --line:#333d4a;
+    --ink:#eaf0f6; --ink-soft:#aeb9c6; --ink-faint:#7f8b99;
+    --blue:#39a0ff; --deep:#1f6feb; --pine:#6aa06b; --accent:#ff7a1a;
+    --radius:12px; --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-text-size-adjust:100%;}
+  a{color:var(--blue);}
+  .topbar{display:flex;align-items:center;gap:.6rem;padding:.55rem max(.8rem,env(safe-area-inset-left));
+    background:var(--panel);border-bottom:1px solid var(--line);}
+  .topbar .title{font-weight:700;font-size:1rem;}
+  .topbar .title .em{color:var(--blue);}
+  .topbar .sub{font-size:.76rem;color:var(--ink-faint);}
+  .topbar .spacer{flex:1;}
+  .topbar a{font-size:.8rem;color:var(--ink-soft);text-decoration:none;}
+
+  .stage{position:relative;width:100%;height:calc(100svh - 50px);min-height:420px;background:#0d0f0c;}
+  #map{position:absolute;inset:0;}
+
+  .panel{position:absolute;z-index:6;background:color-mix(in srgb,var(--panel) 93%,transparent);
+    border:1px solid var(--line);border-radius:var(--radius);backdrop-filter:blur(8px);box-shadow:0 6px 22px rgba(0,0,0,.45);}
+  .layers{top:10px;left:10px;padding:.5rem .55rem;}
+  .layers .hd{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);margin:.1rem 0 .35rem;}
+  .segrow{display:flex;gap:.3rem;flex-wrap:wrap;}
+  .seg{font:inherit;font-size:.76rem;font-weight:600;cursor:pointer;color:var(--ink-soft);
+    background:var(--panel-soft);border:1px solid var(--line);border-radius:100px;padding:.32rem .6rem;}
+  .seg[aria-pressed=true]{background:var(--blue);color:#06101c;border-color:var(--blue);}
+
+  .sites{top:10px;right:10px;width:min(76vw,290px);max-height:calc(100svh - 140px);overflow:auto;padding:.6rem .6rem .5rem;}
+  .sites h2{font-size:.82rem;margin:0 0 .15rem;color:var(--ink);}
+  .sites .lead{font-size:.72rem;color:var(--ink-faint);margin:0 0 .5rem;line-height:1.35;}
+  .site{display:flex;gap:.5rem;align-items:flex-start;background:var(--panel-soft);border:1px solid var(--line);
+    border-radius:10px;padding:.5rem .55rem;margin-bottom:.4rem;cursor:pointer;}
+  .site:hover{border-color:var(--blue);}
+  .site .rank{flex:none;width:22px;height:22px;border-radius:50%;background:var(--deep);color:#fff;font-weight:700;
+    font-size:.78rem;display:flex;align-items:center;justify-content:center;}
+  .site .body{min-width:0;}
+  .site .big{font-size:.86rem;font-weight:600;color:var(--ink);}
+  .site .meta{font-size:.72rem;color:var(--ink-soft);margin-top:.1rem;}
+  .site .why{font-size:.7rem;color:var(--ink-faint);margin-top:.2rem;line-height:1.3;}
+  .sites .pending{font-size:.78rem;color:var(--ink-faint);padding:.4rem 0;}
+  .sites .disc{font-size:.66rem;color:var(--ink-faint);margin:.4rem 0 0;line-height:1.35;border-top:1px solid var(--line);padding-top:.4rem;}
+
+  .flybar{position:absolute;left:10px;bottom:52px;z-index:6;display:flex;flex-wrap:wrap;gap:.35rem;max-width:calc(100% - 20px);}
+  .flybar button{font:inherit;font-size:.75rem;font-weight:600;cursor:pointer;color:var(--ink);
+    background:color-mix(in srgb,var(--panel) 90%,transparent);border:1px solid var(--line);border-radius:100px;
+    padding:.4rem .7rem;backdrop-filter:blur(6px);}
+  .flybar button:hover{background:var(--blue);color:#06101c;border-color:var(--blue);}
+
+  .readout{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;z-index:6;font-size:.76rem;color:var(--ink);
+    background:color-mix(in srgb,var(--panel) 92%,transparent);border:1px solid var(--line);border-radius:100px;
+    padding:.35rem .8rem;backdrop-filter:blur(6px);white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.4);
+    max-width:calc(100vw - 24px);overflow:hidden;text-overflow:ellipsis;}
+  .readout b{color:var(--blue);font-variant-numeric:tabular-nums;}
+
+  .maplibregl-ctrl-group button{width:40px;height:40px;}
+  @media (pointer:coarse){.maplibregl-ctrl-group button{width:46px;height:46px;}}
+  .maplibregl-popup{max-width:260px!important;font-family:var(--sans);}
+  .maplibregl-popup-content{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:10px;
+    padding:.7rem .85rem .8rem;box-shadow:0 8px 30px rgba(0,0,0,.4);}
+  .maplibregl-popup-content h3{font-size:.98rem;margin:0 0 .3rem;}
+  .maplibregl-popup-content .row{font-size:.78rem;color:var(--ink-soft);display:flex;justify-content:space-between;
+    gap:1rem;padding:.12rem 0;border-top:1px dotted var(--line);}
+  .maplibregl-popup-content .row:first-of-type{border-top:none;}
+  .maplibregl-popup-content .row b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;}
+  .maplibregl-popup-content .tag{display:inline-block;font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;
+    font-weight:700;padding:.14rem .5rem;border-radius:100px;margin-bottom:.4rem;color:#06101c;background:var(--blue);}
+
+  .poster{position:absolute;inset:0;z-index:7;display:flex;align-items:center;justify-content:center;flex-direction:column;
+    background:#0d0f0c url(../assets/map-poster.jpg) center/cover no-repeat;border:0;cursor:pointer;color:var(--ink);font:inherit;}
+  .poster span{font-weight:700;font-size:1rem;background:color-mix(in srgb,var(--panel) 90%,transparent);
+    border:1px solid var(--line);border-radius:100px;padding:.7rem 1.2rem;box-shadow:0 6px 22px rgba(0,0,0,.5);}
+  .poster[hidden]{display:none;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="title">💧 <span class="em">Pond &amp; lake</span> siting</span>
+  <span class="sub">where water would hold</span>
+  <span class="spacer"></span>
+  <a href="/hunt/">&larr; Scouting map</a>
+</div>
+
+<div class="stage" id="stage">
+  <div id="map" role="region" aria-label="3-D terrain map for pond and lake siting"></div>
+  <button type="button" class="poster" id="poster"><span>Tap to load the map</span></button>
+
+  <div class="panel layers">
+    <div class="hd">Show</div>
+    <div class="segrow">
+      <button class="seg" id="b-sat" aria-pressed="true">Satellite</button>
+      <button class="seg" id="b-contours" aria-pressed="true">Contours</button>
+      <button class="seg" id="b-hill" aria-pressed="true">Hillshade</button>
+      <button class="seg" id="b-water" aria-pressed="true">Water</button>
+    </div>
+  </div>
+
+  <div class="panel sites" id="sites">
+    <h2>Candidate pond sites</h2>
+    <p class="lead">Spots where the land forms a natural bowl — a narrow neck to dam, with a wide, low area behind it to fill. Ranked best first. Tap one to fly there.</p>
+    <div id="site-list"><p class="pending" id="site-pending">⛏️ Analyzing the terrain… the candidate sites will appear here shortly. Pull to refresh if it&rsquo;s been a minute.</p></div>
+    <p class="disc">Estimates from ~10 m public elevation data — planning guesses, not an engineered design. A real pond needs a soils check and a surveyor.</p>
+  </div>
+
+  <div class="flybar">
+    <button id="fly-property">My property</button>
+    <button id="fly-area">Wider area</button>
+    <button id="reset-north">North · flatten</button>
+  </div>
+
+  <div class="readout" id="readout">Tap the map to read elevation</div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var IMAGERY='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+  var DEM='https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png';
+  var CENTER=[-86.39230,33.71300];
+  var M2FT=3.28084;
+  var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function dur(ms){ return RM?0:ms; }
+  var $=function(s){ return document.querySelector(s); };
+  var map=null, hasHydro=false, hasContours=false;
+
+  function loadLib(cb){
+    if(window.maplibregl) return cb();
+    var css=document.createElement('link'); css.rel='stylesheet'; css.href='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css'; document.head.appendChild(css);
+    var js=document.createElement('script'); js.src='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js';
+    js.onload=cb; js.onerror=function(){ var b=$('#poster'); b.hidden=false; b.disabled=false; b.querySelector('span').textContent='Map could not load — tap to retry'; };
+    document.head.appendChild(js);
+  }
+  function start(){ if(map) return; var b=$('#poster'); b.disabled=true; b.querySelector('span').textContent='Loading…'; loadLib(function(){ if(!map) initMap(); }); }
+  $('#poster').onclick=start;
+  if(window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches){ start(); } else { setTimeout(function(){ if(!map) start(); },1200); }
+
+  function elevationAt(ll){ if(!map||!map.queryTerrainElevation) return null; try{ var m=map.queryTerrainElevation(ll,{exaggerated:false}); return m==null?null:m*M2FT; }catch(e){ return null; } }
+  function loadOptional(url,cb){ fetch(url).then(function(r){ return r.ok?r.json():null; }).then(function(gj){ if(gj) cb(gj); }).catch(function(){}); }
+  function setVis(l,on){ if(map&&map.getLayer(l)) map.setLayoutProperty(l,'visibility',on?'visible':'none'); }
+  function press(b,on){ b.setAttribute('aria-pressed',on); }
+
+  function initMap(){
+    map=new maplibregl.Map({
+      container:'map', center:CENTER, zoom:15.2, pitch:58, bearing:-18, maxPitch:85,
+      attributionControl:false, cooperativeGestures:true,
+      style:{ version:8, glyphs:'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
+        sources:{
+          sat:{ type:'raster', tiles:[IMAGERY], tileSize:256, maxzoom:19, attribution:'Imagery © Esri, Maxar, Earthstar Geographics' },
+          dem:{ type:'raster-dem', tiles:[DEM], tileSize:256, maxzoom:13, encoding:'terrarium', attribution:'Elevation: Mapzen / AWS Terrain Tiles' }
+        },
+        layers:[ { id:'sat', type:'raster', source:'sat' } ],
+        terrain:{ source:'dem', exaggeration:1.3 }
+      }
+    });
+    map.addControl(new maplibregl.NavigationControl({ visualizePitch:true }), 'top-right');
+    map.addControl(new maplibregl.GeolocateControl({ positionOptions:{ enableHighAccuracy:true }, trackUserLocation:true, showUserHeading:true }), 'top-right');
+    map.addControl(new maplibregl.ScaleControl({ maxWidth:110, unit:'imperial' }), 'bottom-right');
+    map.addControl(new maplibregl.AttributionControl({ compact:true }), 'bottom-right');
+
+    map.on('load', function(){
+      $('#poster').hidden=true;
+
+      map.addLayer({ id:'hillshade', type:'hillshade', source:'dem',
+        paint:{ 'hillshade-exaggeration':0.6, 'hillshade-shadow-color':'#001018', 'hillshade-highlight-color':'#ffffff' } });
+
+      // property outline for reference
+      loadOptional('../assets/property-neighbors.geojson', function(gj){
+        map.addSource('parcels',{ type:'geojson', data:gj });
+        map.addLayer({ id:'home-border', type:'line', source:'parcels', filter:['==',['get','category'],'foundation'],
+          layout:{ 'line-join':'round' }, paint:{ 'line-color':'#39a0ff','line-width':['interpolate',['linear'],['zoom'],13,2.5,17,6],'line-opacity':0.9,'line-dasharray':[2,1.5] } });
+      });
+
+      // contour lines
+      loadOptional('../assets/contours.geojson', function(gj){
+        map.addSource('contours',{ type:'geojson', data:gj });
+        map.addLayer({ id:'contours-line', type:'line', source:'contours', layout:{ 'line-join':'round' },
+          paint:{ 'line-color':['case',['==',['get','idx'],true],'#ffe3b0','#d8b98a'],
+                  'line-width':['case',['==',['get','idx'],true],1.5,0.6],'line-opacity':0.7 } });
+        map.addLayer({ id:'contours-label', type:'symbol', source:'contours', minzoom:14.5, filter:['==',['get','idx'],true],
+          layout:{ 'symbol-placement':'line','text-field':['concat',['to-string',['get','ele_ft']],"'"],'text-size':10,'text-font':['Open Sans Regular'] },
+          paint:{ 'text-color':'#ffe9c8','text-halo-color':'#06101c','text-halo-width':1.2 } });
+        hasContours=true;
+      });
+
+      // hydrology (built by the pond-siting analysis; absent until then)
+      loadOptional('../assets/hydro.geojson', function(gj){
+        map.addSource('hydro',{ type:'geojson', data:gj });
+        map.addLayer({ id:'hydro-pool', type:'fill', source:'hydro', filter:['==',['get','kind'],'pool'],
+          paint:{ 'fill-color':'#1f6feb','fill-opacity':0.42 } });
+        map.addLayer({ id:'hydro-pool-line', type:'line', source:'hydro', filter:['==',['get','kind'],'pool'],
+          paint:{ 'line-color':'#8fd0ff','line-width':1.4,'line-opacity':0.9 } });
+        map.addLayer({ id:'hydro-drain', type:'line', source:'hydro', filter:['==',['get','kind'],'drainage'],
+          layout:{ 'line-join':'round','line-cap':'round' },
+          paint:{ 'line-color':'#39a0ff','line-width':['interpolate',['linear'],['coalesce',['get','strength'],3],1,0.8,10,4.5],'line-opacity':0.8 } });
+        map.addLayer({ id:'hydro-pond', type:'circle', source:'hydro', filter:['==',['get','kind'],'pond'],
+          paint:{ 'circle-radius':8,'circle-color':'#1f6feb','circle-stroke-color':'#fff','circle-stroke-width':2.5 } });
+        hasHydro=true;
+        buildSiteList(gj);
+        map.on('click','hydro-pond', function(e){ popPond(e.features[0]); });
+        map.on('mouseenter','hydro-pond', function(){ map.getCanvas().style.cursor='pointer'; });
+        map.on('mouseleave','hydro-pond', function(){ map.getCanvas().style.cursor=''; });
+      });
+
+      fitProperty(false);
+
+      map.on('click', function(e){
+        var f=map.queryRenderedFeatures(e.point,{layers:['hydro-pond'].filter(function(l){return map.getLayer(l);})});
+        if(f && f.length) return; // handled by pond handler
+        var ft=elevationAt(e.lngLat);
+        new maplibregl.Popup({ offset:8, maxWidth:'240px' }).setLngLat(e.lngLat)
+          .setHTML('<span class="tag">Elevation</span><h3>Spot elevation</h3>'+
+            '<div class="row">Elevation <b>'+(ft==null?'loading…':Math.round(ft)+' ft')+'</b></div>'+
+            '<div class="row">Lat, Lng <b>'+e.lngLat.lat.toFixed(5)+', '+e.lngLat.lng.toFixed(5)+'</b></div>').addTo(map);
+      });
+      if(window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches){
+        map.on('mousemove', function(e){ var ft=elevationAt(e.lngLat);
+          $('#readout').innerHTML=(ft==null)?'Move over the map — elevation loading…':'Elevation <b>'+Math.round(ft)+' ft</b> &middot; '+e.lngLat.lat.toFixed(4)+', '+e.lngLat.lng.toFixed(4); });
+      }
+    });
+  }
+
+  function popPond(f){
+    var p=f.properties||{}, c=(f.geometry&&f.geometry.coordinates)||CENTER;
+    var html='<span class="tag">Candidate #'+(p.rank||'?')+'</span><h3>Possible pond site</h3>'+
+      (p.pool_acres!=null?'<div class="row">Approx pool <b>'+(+p.pool_acres).toFixed(1)+' ac</b></div>':'')+
+      (p.dam_len_ft!=null?'<div class="row">Dam length <b>~'+Math.round(p.dam_len_ft)+' ft</b></div>':'')+
+      (p.ele_ft!=null?'<div class="row">Base elevation <b>'+Math.round(p.ele_ft)+' ft</b></div>':'')+
+      (p.note?'<div class="row" style="display:block;color:var(--ink-faint)">'+String(p.note).replace(/</g,'&lt;')+'</div>':'');
+    new maplibregl.Popup({ offset:12, maxWidth:'250px' }).setLngLat(c).setHTML(html).addTo(map);
+  }
+
+  function buildSiteList(gj){
+    var ponds=gj.features.filter(function(f){ return (f.properties||{}).kind==='pond'; });
+    ponds.sort(function(a,b){ return (a.properties.rank||99)-(b.properties.rank||99); });
+    var host=$('#site-list');
+    if(!ponds.length){ host.innerHTML='<p class="pending">No clear pond sites found in the elevation data for this property.</p>'; return; }
+    host.innerHTML=ponds.map(function(f){
+      var p=f.properties, c=f.geometry.coordinates;
+      var acres=p.pool_acres!=null?(+p.pool_acres).toFixed(1)+' ac pool':'—';
+      var dam=p.dam_len_ft!=null?'~'+Math.round(p.dam_len_ft)+' ft dam':'';
+      var ele=p.ele_ft!=null?Math.round(p.ele_ft)+' ft':'';
+      return '<div class="site" data-lng="'+c[0]+'" data-lat="'+c[1]+'" data-rank="'+(p.rank||'')+'">'+
+        '<div class="rank">'+(p.rank||'•')+'</div><div class="body">'+
+        '<div class="big">'+acres+'</div>'+
+        '<div class="meta">'+[dam,ele].filter(Boolean).join(' · ')+'</div>'+
+        (p.note?'<div class="why">'+String(p.note).replace(/</g,'&lt;')+'</div>':'')+
+        '</div></div>';
+    }).join('');
+    Array.prototype.forEach.call(host.querySelectorAll('.site'), function(row){
+      row.addEventListener('click', function(){
+        var lng=+row.getAttribute('data-lng'), lat=+row.getAttribute('data-lat');
+        map.flyTo({ center:[lng,lat], zoom:17, pitch:60, duration:dur(1400) });
+        var pond=ponds.filter(function(f){ return String(f.properties.rank)===row.getAttribute('data-rank'); })[0];
+        if(pond) setTimeout(function(){ popPond(pond); }, RM?0:900);
+      });
+    });
+  }
+
+  function withMap(fn){ if(!map){ start(); } if(map&&map.isStyleLoaded&&map.isStyleLoaded()) return fn(); if(map){ map.once('idle',fn); return; } var t=setInterval(function(){ if(map){ clearInterval(t); map.isStyleLoaded()?fn():map.once('idle',fn); } },60); }
+  function fitProperty(anim){ map.fitBounds([[-86.3985,33.7092],[-86.3880,33.7158]],{ padding:50, pitch:58, bearing:-18, duration:anim?dur(1400):0 }); }
+  $('#fly-property').onclick=function(){ withMap(function(){ fitProperty(true); }); };
+  $('#fly-area').onclick=function(){ withMap(function(){ map.fitBounds([[-86.4100,33.6991],[-86.3767,33.7323]],{ padding:30, pitch:45, duration:dur(1400) }); }); };
+  $('#reset-north').onclick=function(){ withMap(function(){ map.easeTo({ bearing:0, pitch:0, duration:dur(900) }); }); };
+
+  $('#b-sat').onclick=function(){ var on=this.getAttribute('aria-pressed')!=='true'; press(this,on); withMap(function(){ setVis('sat',on); }); };
+  $('#b-contours').onclick=function(){ var on=this.getAttribute('aria-pressed')!=='true'; press(this,on); withMap(function(){ setVis('contours-line',on); setVis('contours-label',on); }); };
+  $('#b-hill').onclick=function(){ var on=this.getAttribute('aria-pressed')!=='true'; press(this,on); withMap(function(){ setVis('hillshade',on); }); };
+  $('#b-water').onclick=function(){ var on=this.getAttribute('aria-pressed')!=='true'; press(this,on); withMap(function(){ ['hydro-pool','hydro-pool-line','hydro-drain','hydro-pond'].forEach(function(l){ setVis(l,on); }); }); };
+})();
+</script>
+</body>
+</html>
