@@ -148,6 +148,14 @@
       <button class="seg" id="b-hill" aria-pressed="false">Hillshade</button>
       <button class="seg" id="b-contours" aria-pressed="false">Contours</button>
     </div>
+    <div class="hd" style="margin-top:.55rem">Deer &amp; hunt</div>
+    <div class="segrow">
+      <button class="seg" id="t-bed" aria-pressed="false">Bedding</button>
+      <button class="seg" id="t-feed" aria-pressed="false">Feeding</button>
+      <button class="seg" id="t-route" aria-pressed="false">Routes</button>
+      <button class="seg" id="t-edge" aria-pressed="false">Edges</button>
+      <button class="seg" id="t-safe" aria-pressed="false">Safe zone</button>
+    </div>
     <a class="pondlink" href="/hunt/pond/">💧 Pond &amp; lake siting &rarr;</a>
   </div>
 
@@ -301,6 +309,36 @@
         hasContours=true;
       });
 
+      // --- deer habitat + hunt plan (built by analysis; optional) ---
+      loadOptional('assets/habitat.geojson', function(gj){
+        map.addSource('habitat',{ type:'geojson', data:gj });
+        map.addLayer({ id:'feeding', type:'fill', source:'habitat', filter:['==',['get','kind'],'feeding'], layout:{visibility:'none'}, paint:{ 'fill-color':'#e0bb3a','fill-opacity':0.3 } });
+        map.addLayer({ id:'hardwood', type:'fill', source:'habitat', filter:['==',['get','kind'],'hardwood_bottom'], layout:{visibility:'none'}, paint:{ 'fill-color':'#7a5a22','fill-opacity':0.4 } });
+        map.addLayer({ id:'bedding', type:'fill', source:'habitat', filter:['==',['get','kind'],'bedding'], layout:{visibility:'none'},
+          paint:{ 'fill-color':['case',['==',['get','quality'],'prime'],'#2e9e3a','#5a7d4a'],'fill-opacity':['case',['==',['get','quality'],'prime'],0.55,0.3] } });
+        map.addLayer({ id:'edges', type:'line', source:'habitat', filter:['==',['get','kind'],'edge'], layout:{visibility:'none','line-join':'round'}, paint:{ 'line-color':'#ff9a3a','line-width':2,'line-opacity':0.6 } });
+        map.addLayer({ id:'routes', type:'line', source:'habitat', filter:['==',['get','kind'],'route'], layout:{visibility:'none','line-join':'round','line-cap':'round'}, paint:{ 'line-color':'#ffe23a','line-width':3.5,'line-dasharray':[1.4,0.9],'line-opacity':0.95 } });
+        map.on('click','bedding',function(e){ var p=e.features[0].properties; new maplibregl.Popup({offset:8,maxWidth:'250px'}).setLngLat(e.lngLat).setHTML('<span class="tag" style="background:#2e9e3a">'+(p.quality==='prime'?'Prime bedding':'Bedding')+'</span><div class="row" style="display:block">'+(p.note||'')+'</div>').addTo(map); });
+      });
+      loadOptional('assets/huntable.geojson', function(gj){
+        map.addSource('huntable',{ type:'geojson', data:gj });
+        map.addLayer({ id:'huntable', type:'fill', source:'huntable', filter:['==',['get','kind'],'huntable'], layout:{visibility:'none'}, paint:{ 'fill-color':'#39ff88','fill-opacity':0.12 } });
+        map.addLayer({ id:'huntable-line', type:'line', source:'huntable', filter:['==',['get','kind'],'huntable'], layout:{visibility:'none'}, paint:{ 'line-color':'#39ff88','line-width':1.6,'line-opacity':0.65 } });
+      });
+      loadOptional('assets/plan.geojson', function(gj){
+        map.addSource('plan',{ type:'geojson', data:gj });
+        map.addLayer({ id:'shot', type:'line', source:'plan', filter:['==',['get','kind'],'shot'], paint:{ 'line-color':'#ffffff','line-width':2,'line-dasharray':[2,1.5],'line-opacity':0.9 } });
+        gj.features.forEach(function(f){ if(f.geometry.type!=='Point') return; var k=f.properties.kind;
+          var el=document.createElement('div'); el.className='hunt-marker'; el.style.fontSize='26px'; el.textContent=(k==='corn'?'🌽':'🪜');
+          new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(f.geometry.coordinates)
+            .setPopup(new maplibregl.Popup({offset:14,maxWidth:'250px'}).setHTML('<span class="tag">'+(k==='corn'?'🌽 Corn pile':'🪜 Stand')+'</span><div class="row" style="display:block">'+String(f.properties.note||'')+'</div>')).addTo(map); });
+      });
+      loadOptional('assets/houses.geojson', function(gj){
+        gj.features.forEach(function(f){ if(f.geometry.type!=='Point') return;
+          var el=document.createElement('div'); el.className='hunt-marker'; el.style.fontSize='17px'; el.style.opacity='0.85'; el.textContent='🏠';
+          new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(f.geometry.coordinates).addTo(map); });
+      });
+
       fetch('assets/property-neighbors.geojson').then(function(r){ return r.json(); }).then(function(gj){
         map.addSource('parcels', { type:'geojson', data:gj, promoteId:'PARCELID' });
         map.addLayer({ id:'nb-fill', type:'fill', source:'parcels', filter:['==',['get','category'],'neighbor'],
@@ -447,6 +485,13 @@
     });
   };
   $('#topo-op').oninput=function(){ $('#topo-opv').textContent=this.value+'%'; withMap(function(){ map.setPaintProperty('topo','raster-opacity', (+$('#topo-op').value)/100); }); };
+
+  function toggleLayers(btn, layers){ var on=btn.getAttribute('aria-pressed')!=='true'; press(btn,on); withMap(function(){ layers.forEach(function(l){ setVis(l,on); }); }); }
+  $('#t-bed').onclick=function(){ toggleLayers(this,['bedding','hardwood']); };
+  $('#t-feed').onclick=function(){ toggleLayers(this,['feeding']); };
+  $('#t-route').onclick=function(){ toggleLayers(this,['routes']); };
+  $('#t-edge').onclick=function(){ toggleLayers(this,['edges']); };
+  $('#t-safe').onclick=function(){ toggleLayers(this,['huntable','huntable-line']); };
 
   function withMap(fn){
     if(!map){ start(); }
