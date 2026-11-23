@@ -148,7 +148,7 @@
   if(window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches){ start(); } else { setTimeout(function(){ if(!map) start(); },1200); }
 
   function elevationAt(ll){ if(!map||!map.queryTerrainElevation) return null; try{ var m=map.queryTerrainElevation(ll,{exaggerated:false}); return m==null?null:m*M2FT; }catch(e){ return null; } }
-  function loadOptional(url,cb){ fetch(url).then(function(r){ return r.ok?r.json():null; }).then(function(gj){ if(gj) cb(gj); }).catch(function(){}); }
+  function loadOptional(url,cb){ var u=url+(url.indexOf('?')<0?'?':'&')+'v=3'; fetch(u).then(function(r){ return r.ok?r.json():null; }).then(function(gj){ if(gj) cb(gj); }).catch(function(){}); }
   function setVis(l,on){ if(map&&map.getLayer(l)) map.setLayoutProperty(l,'visibility',on?'visible':'none'); }
   function press(b,on){ b.setAttribute('aria-pressed',on); }
 
