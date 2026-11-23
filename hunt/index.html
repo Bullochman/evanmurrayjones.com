@@ -284,6 +284,11 @@
       }
     });
     try { window.__huntmap = map; } catch(e){}
+    // hash-driven camera so an external script can frame/orbit the map for recording: #cam=lng,lat,zoom,pitch,bearing
+    function applyCamFromHash(){ var mm=(location.hash||'').match(/cam=(-?[\d.]+),(-?[\d.]+),([\d.]+),([\d.]+),(-?[\d.]+)/);
+      if(mm){ try{ map.jumpTo({ center:[+mm[1],+mm[2]], zoom:+mm[3], pitch:+mm[4], bearing:+mm[5] }); }catch(e){} } }
+    window.addEventListener('hashchange', applyCamFromHash);
+    map.on('load', function(){ setTimeout(applyCamFromHash, 300); });
     map.addControl(new maplibregl.NavigationControl({ visualizePitch:true }), 'top-right');
     map.addControl(new maplibregl.GeolocateControl({ positionOptions:{ enableHighAccuracy:true }, trackUserLocation:true, showUserHeading:true }), 'top-right');
     map.addControl(new maplibregl.ScaleControl({ maxWidth:110, unit:'imperial' }), 'bottom-right');
