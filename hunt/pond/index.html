@@ -176,12 +176,23 @@
       map.addLayer({ id:'hillshade', type:'hillshade', source:'dem',
         paint:{ 'hillshade-exaggeration':0.6, 'hillshade-shadow-color':'#001018', 'hillshade-highlight-color':'#ffffff' } });
 
-      // property outline for reference
+      // parcels — lightly shaded + labeled in the same colors as the scouting map, under the blue pond
       loadOptional('../assets/property-neighbors.geojson', function(gj){
         map.addSource('parcels',{ type:'geojson', data:gj });
-        map.addLayer({ id:'home-border', type:'line', source:'parcels', filter:['==',['get','category'],'foundation'],
-          layout:{ 'line-join':'round' }, paint:{ 'line-color':'#39a0ff','line-width':['interpolate',['linear'],['zoom'],13,2.5,17,6],'line-opacity':0.9,'line-dasharray':[2,1.5] } });
+        var famColor=['match',['get','category'],'foundation','#6aa06b','tucker','#B98A2E','riddle','#9E5A38','#ffffff'];
+        map.addLayer({ id:'nb-line', type:'line', source:'parcels', filter:['==',['get','category'],'neighbor'],
+          paint:{ 'line-color':'#e8e2d2','line-width':0.7,'line-opacity':0.35 } });
+        map.addLayer({ id:'fam-fill', type:'fill', source:'parcels', filter:['in',['get','category'],['literal',['foundation','tucker']]],
+          paint:{ 'fill-color':famColor,'fill-opacity':0.18 } });
+        map.addLayer({ id:'fam-line', type:'line', source:'parcels', filter:['in',['get','category'],['literal',['foundation','tucker']]],
+          layout:{ 'line-join':'round' }, paint:{ 'line-color':famColor,'line-width':['interpolate',['linear'],['zoom'],13,1.6,17,3.4],'line-opacity':0.95 } });
+        map.addLayer({ id:'fam-label', type:'symbol', source:'parcels', minzoom:14,
+          filter:['in',['get','category'],['literal',['foundation','tucker']]],
+          layout:{ 'text-field':['get','NAME_1'],'text-size':['interpolate',['linear'],['zoom'],14,9,17,12],'text-font':['Open Sans Regular'],'text-max-width':8 },
+          paint:{ 'text-color':'#eaf0f6','text-halo-color':'#06101c','text-halo-width':1.3 } });
+        addHydro();
       });
+      setTimeout(addHydro, 2000); // fallback if the parcels file is slow/absent
 
       // contour lines
       loadOptional('../assets/contours.geojson', function(gj){
@@ -195,8 +206,10 @@
         hasContours=true;
       });
 
-      // hydrology (built by the pond-siting analysis; absent until then)
+      // hydrology (added after parcels so the blue pond draws on top of the shaded land)
+      function addHydro(){ if(hasHydro || (map.getSource&&map.getSource('hydro'))) return;
       loadOptional('../assets/hydro.geojson', function(gj){
+        if(map.getSource('hydro')) return;
         map.addSource('hydro',{ type:'geojson', data:gj });
         map.addLayer({ id:'hydro-pool', type:'fill', source:'hydro', filter:['==',['get','kind'],'pool'],
           paint:{ 'fill-color':'#1f6feb','fill-opacity':0.42 } });
@@ -213,6 +226,7 @@
         map.on('mouseenter','hydro-pond', function(){ map.getCanvas().style.cursor='pointer'; });
         map.on('mouseleave','hydro-pond', function(){ map.getCanvas().style.cursor=''; });
       });
+      }
 
       fitProperty(false);
 
