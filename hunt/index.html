@@ -81,13 +81,15 @@
   @media (pointer:coarse){.maplibregl-ctrl-group button{width:46px;height:46px;}}
 
   .maplibregl-popup{max-width:260px!important;font-family:var(--sans);}
-  .maplibregl-popup-content{background:var(--panel);color:var(--ink);border:1px solid var(--line);
-    border-radius:10px;padding:.7rem .85rem .8rem;box-shadow:0 8px 30px rgba(0,0,0,.4);}
-  .maplibregl-popup-content h3{font-size:.98rem;margin:0 0 .3rem;color:var(--ink);}
-  .maplibregl-popup-content .row{font-size:.78rem;color:var(--ink-soft);display:flex;justify-content:space-between;
-    gap:1rem;padding:.12rem 0;border-top:1px dotted var(--line);}
+  .maplibregl-popup-content{background:var(--panel)!important;color:var(--ink)!important;border:1px solid var(--line);
+    border-radius:10px;padding:.7rem .95rem .85rem!important;box-shadow:0 8px 30px rgba(0,0,0,.5);}
+  .maplibregl-popup-tip{border-top-color:var(--panel)!important;border-bottom-color:var(--panel)!important;}
+  .maplibregl-popup-close-button{color:var(--ink)!important;font-size:1.2rem;padding:0 .3rem;}
+  .maplibregl-popup-content h3{font-size:1rem;margin:0 0 .35rem;color:var(--ink)!important;}
+  .maplibregl-popup-content .row{font-size:.84rem;color:var(--ink)!important;display:flex;justify-content:space-between;
+    gap:1rem;padding:.18rem 0;border-top:1px dotted var(--line);}
   .maplibregl-popup-content .row:first-of-type{border-top:none;}
-  .maplibregl-popup-content .row b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;}
+  .maplibregl-popup-content .row b{color:var(--accent)!important;font-weight:700;font-variant-numeric:tabular-nums;font-size:.92rem;}
   .maplibregl-popup-content .tag{display:inline-block;font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;
     font-weight:700;padding:.14rem .5rem;border-radius:100px;margin-bottom:.4rem;color:#0d0f0c;background:var(--accent);}
   .maplibregl-popup-content textarea{width:100%;min-height:3.2rem;margin:.35rem 0 .3rem;background:var(--panel-soft);
@@ -340,38 +342,43 @@
       map.on('click', function(e){
         if(placingCat){ addPin(placingCat, e.lngLat.lng, e.lngLat.lat); setPlacing(null); return; }
         var feats = map.queryRenderedFeatures(e.point, { layers: layersPresent(['hl-fill','nb-fill']) });
-        var elevFt = elevationAt(e.lngLat);
-        var html = '';
+        var ll=e.lngLat, head='';
         if(feats && feats.length){
           var p=feats[0].properties, c=p.category;
           var acres=(p.DEEDED_ACR!=null && p.DEEDED_ACR!=='')?p.DEEDED_ACR+' ac':'—';
-          html += '<span class="tag" style="background:'+(COLORS[c]||'#8b9179')+';color:#0d0f0c">'+(catName[c]||'Parcel')+'</span>'+
+          head += '<span class="tag" style="background:'+(COLORS[c]||'#8b9179')+';color:#0d0f0c">'+(catName[c]||'Parcel')+'</span>'+
                   '<h3>'+(p.NAME_1||'Unknown owner')+'</h3>'+
                   '<div class="row">Parcel <b>'+(p.PARCELID||'—')+'</b></div>'+
                   '<div class="row">Acres <b>'+acres+'</b></div>';
-        } else {
-          html += '<span class="tag">Elevation</span><h3>Spot elevation</h3>';
-        }
-        html += '<div class="row">Elevation <b>'+(elevFt==null?'loading…':Math.round(elevFt)+' ft')+'</b></div>'+
-                '<div class="row">Lat, Lng <b>'+e.lngLat.lat.toFixed(5)+', '+e.lngLat.lng.toFixed(5)+'</b></div>';
-        new maplibregl.Popup({ offset:8, maxWidth:'260px' }).setLngLat(e.lngLat).setHTML(html).addTo(map);
+        } else { head += '<span class="tag">Elevation</span><h3>Spot elevation</h3>'; }
+        function full(ev){ return head + '<div class="row">Elevation <b>'+ev+'</b></div>'+
+          '<div class="row">Lat, Lng <b>'+ll.lat.toFixed(5)+', '+ll.lng.toFixed(5)+'</b></div>'; }
+        var pop=new maplibregl.Popup({ offset:8, maxWidth:'260px' }).setLngLat(ll).setHTML(full('reading…')).addTo(map);
+        fetchElevationFt(ll.lat, ll.lng, function(ft){ pop.setHTML(full(ft==null?'n/a':Math.round(ft)+' ft')); });
       });
 
       // live elevation on hover (desktop)
       if(window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches){
+        var _lastE=0;
         map.on('mousemove', function(e){
           if(placingCat) return;
-          var ft = elevationAt(e.lngLat);
-          $('#readout').innerHTML = (ft==null) ? 'Move over the map — elevation loading…'
-            : 'Elevation <b>'+Math.round(ft)+' ft</b> &middot; '+e.lngLat.lat.toFixed(4)+', '+e.lngLat.lng.toFixed(4);
+          var now=Date.now(); if(now-_lastE<250) return; _lastE=now; var ll=e.lngLat;
+          fetchElevationFt(ll.lat, ll.lng, function(ft){ $('#readout').innerHTML = (ft==null) ? 'Elevation n/a here'
+            : 'Elevation <b>'+Math.round(ft)+' ft</b> &middot; '+ll.lat.toFixed(4)+', '+ll.lng.toFixed(4); });
         });
       }
     });
   }
 
-  function elevationAt(lngLat){
-    if(!map || !map.queryTerrainElevation) return null;
-    try { var m = map.queryTerrainElevation(lngLat, { exaggerated:false }); return (m==null)?null:m*M2FT; } catch(e){ return null; }
+  // Real ground elevation via open-meteo (CORS-ok); queryTerrainElevation was returning bad values.
+  var _elevCache={};
+  function fetchElevationFt(lat,lng,cb){
+    var key=lat.toFixed(5)+','+lng.toFixed(5);
+    if(key in _elevCache) return cb(_elevCache[key]);
+    fetch('https://api.open-meteo.com/v1/elevation?latitude='+lat+'&longitude='+lng)
+      .then(function(r){ return r.json(); })
+      .then(function(j){ var m=(j&&j.elevation&&j.elevation.length)?j.elevation[0]:null; var ft=(m==null)?null:m*M2FT; _elevCache[key]=ft; cb(ft); })
+      .catch(function(){ cb(null); });
   }
   function layersPresent(ids){ return ids.filter(function(id){ return map.getLayer(id); }); }
   function loadOptional(url, cb){ var u=url+(url.indexOf('?')<0?'?':'&')+'v=3'; fetch(u).then(function(r){ return r.ok?r.json():null; }).then(function(gj){ if(gj) cb(gj); }).catch(function(){}); }
@@ -398,17 +405,18 @@
   function pinPopupHtml(p){
     var c=catById[p.cat]||catById.spot;
     var opts=CATS.map(function(x){ return '<option value="'+x.id+'"'+(x.id===p.cat?' selected':'')+'>'+x.icon+' '+x.name+'</option>'; }).join('');
-    var ft = elevationAt({lng:p.lng,lat:p.lat});
     return '<span class="tag">'+c.icon+' '+c.name+'</span>'+
       '<div class="row">Type <select data-pp="cat">'+opts+'</select></div>'+
       '<textarea data-pp="note" placeholder="Notes — wind, sign, what you saw…">'+(p.note||'').replace(/</g,'&lt;')+'</textarea>'+
-      '<div class="row">Elevation <b>'+(ft==null?'—':Math.round(ft)+' ft')+'</b></div>'+
+      '<div class="row">Elevation <b data-pp="elev">…</b></div>'+
       '<div class="pp-actions" style="display:flex;gap:.4rem;justify-content:space-between;align-items:center;margin-top:.3rem">'+
         '<button class="pp-del" data-pp="del">Delete</button><button class="pp-save" data-pp="save">Save</button></div>';
   }
   function wirePopup(p, m){
     var root=m.getPopup().getElement(); if(!root) return;
     var sel=root.querySelector('[data-pp=cat]'), ta=root.querySelector('[data-pp=note]');
+    var elb=root.querySelector('[data-pp=elev]');
+    if(elb){ fetchElevationFt(p.lat, p.lng, function(ft){ elb.textContent = ft==null?'—':Math.round(ft)+' ft'; }); }
     root.querySelector('[data-pp=save]').onclick=function(){
       if(sel) p.cat=sel.value; if(ta) p.note=ta.value; savePins(pins);
       m.getElement().textContent=(catById[p.cat]||catById.spot).icon; m.getPopup().setHTML(pinPopupHtml(p));
