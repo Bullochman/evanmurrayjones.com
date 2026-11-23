@@ -283,6 +283,7 @@
         terrain:{ source:'dem', exaggeration:1.2 }
       }
     });
+    try { window.__huntmap = map; } catch(e){}
     map.addControl(new maplibregl.NavigationControl({ visualizePitch:true }), 'top-right');
     map.addControl(new maplibregl.GeolocateControl({ positionOptions:{ enableHighAccuracy:true }, trackUserLocation:true, showUserHeading:true }), 'top-right');
     map.addControl(new maplibregl.ScaleControl({ maxWidth:110, unit:'imperial' }), 'bottom-right');
