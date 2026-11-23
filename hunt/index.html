@@ -159,7 +159,7 @@
     </div>
     <div class="hd" style="margin-top:.55rem">Deer &amp; hunt</div>
     <div class="segrow">
-      <button class="seg" id="t-bed" aria-pressed="true">Bedding</button>
+      <button class="seg" id="t-bed" aria-pressed="false">All bedding</button>
       <button class="seg" id="t-feed" aria-pressed="false">Feeding</button>
       <button class="seg" id="t-route" aria-pressed="true">Routes</button>
       <button class="seg" id="t-edge" aria-pressed="false">Edges</button>
@@ -342,22 +342,27 @@
         map.addLayer({ id:'hardwood', type:'fill', source:'habitat', filter:['==',['get','kind'],'hardwood_bottom'], layout:{visibility:'visible'}, paint:{ 'fill-color':'#8a5a1e','fill-opacity':0.4 } });
         map.addLayer({ id:'hardwood-line', type:'line', source:'habitat', filter:['==',['get','kind'],'hardwood_bottom'], layout:{visibility:'visible','line-join':'round'}, paint:{ 'line-color':'#d89a3a','line-width':1.4,'line-dasharray':[2,1.2],'line-opacity':0.9 } });
         // bedding ON by default, with a bright outline so it reads on the satellite
-        map.addLayer({ id:'bedding', type:'fill', source:'habitat', filter:['==',['get','kind'],'bedding'], layout:{visibility:'visible'},
-          paint:{ 'fill-color':['case',['==',['get','quality'],'prime'],'#2e9e3a','#5a7d4a'],'fill-opacity':['case',['==',['get','quality'],'prime'],0.5,0.28] } });
-        map.addLayer({ id:'bedding-line', type:'line', source:'habitat', filter:['==',['get','kind'],'bedding'], layout:{visibility:'visible','line-join':'round'},
-          paint:{ 'line-color':['case',['==',['get','quality'],'prime'],'#55ff66','#a7d98a'],'line-width':['case',['==',['get','quality'],'prime'],2.4,1.1],'line-opacity':0.95 } });
+        // the FULL 205 bedding zones are OFF by default (they bury the map) — the "Bedding" button shows them all
+        map.addLayer({ id:'bedding', type:'fill', source:'habitat', filter:['==',['get','kind'],'bedding'], layout:{visibility:'none'},
+          paint:{ 'fill-color':['case',['==',['get','quality'],'prime'],'#2e9e3a','#5a7d4a'],'fill-opacity':['case',['==',['get','quality'],'prime'],0.4,0.22] } });
+        map.addLayer({ id:'bedding-line', type:'line', source:'habitat', filter:['==',['get','kind'],'bedding'], layout:{visibility:'none','line-join':'round'},
+          paint:{ 'line-color':['case',['==',['get','quality'],'prime'],'#55ff66','#a7d98a'],'line-width':['case',['==',['get','quality'],'prime'],2,1],'line-opacity':0.9 } });
         map.addLayer({ id:'edges', type:'line', source:'habitat', filter:['==',['get','kind'],'edge'], layout:{visibility:'none','line-join':'round'}, paint:{ 'line-color':'#ff9a3a','line-width':2,'line-opacity':0.6 } });
-        map.addLayer({ id:'routes', type:'line', source:'habitat', filter:['==',['get','kind'],'route'], layout:{visibility:'visible','line-join':'round','line-cap':'round'}, paint:{ 'line-color':'#ffe23a','line-width':3.5,'line-dasharray':[1.4,0.9],'line-opacity':0.95 } });
-        // 💤 markers only on the 12 largest prime bedding zones (so 95 of them don't bury the map)
+        map.addLayer({ id:'routes-casing', type:'line', source:'habitat', filter:['==',['get','kind'],'route'], layout:{visibility:'visible','line-join':'round','line-cap':'round'}, paint:{ 'line-color':'#1a1205','line-width':['interpolate',['linear'],['zoom'],13,4,17,9],'line-opacity':0.65 } });
+        map.addLayer({ id:'routes', type:'line', source:'habitat', filter:['==',['get','kind'],'route'], layout:{visibility:'visible','line-join':'round','line-cap':'round'}, paint:{ 'line-color':'#ffd21a','line-width':['interpolate',['linear'],['zoom'],13,2.2,17,5.5],'line-opacity':1 } });
+        // By default: ONLY the strongest bedding zones stand out, bold + a 💤 each. Clean, usable.
         function ringCentroid(geom){ var ring=null; if(geom.type==='Polygon') ring=geom.coordinates[0]; else if(geom.type==='MultiPolygon') ring=geom.coordinates[0][0]; if(!ring||!ring.length) return null; var sx=0,sy=0; ring.forEach(function(c){ sx+=c[0]; sy+=c[1]; }); return [sx/ring.length, sy/ring.length]; }
         function ringArea(r){ var a=0; for(var i=0,n=r.length,j=n-1;i<n;j=i++){ a+=r[j][0]*r[i][1]-r[i][0]*r[j][1]; } return Math.abs(a/2); }
         function polyArea(g){ if(g.type==='Polygon') return ringArea(g.coordinates[0]); if(g.type==='MultiPolygon'){ var s=0; g.coordinates.forEach(function(p){ s+=ringArea(p[0]); }); return s; } return 0; }
-        gj.features.filter(function(f){ return f.properties.kind==='bedding' && f.properties.quality==='prime'; })
-          .sort(function(a,b){ return polyArea(b.geometry)-polyArea(a.geometry); })
-          .slice(0,12).forEach(function(f){ var c=ringCentroid(f.geometry); if(!c) return;
-            var el=document.createElement('div'); el.className='hunt-marker'; el.style.fontSize='20px'; el.textContent='💤';
-            new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(c)
-              .setPopup(new maplibregl.Popup({offset:12,maxWidth:'250px'}).setHTML('<span class="tag" style="background:#2e9e3a;color:#06120a">Prime bedding</span><div class="row" style="display:block">'+(f.properties.note||'')+'</div>')).addTo(map); });
+        var topBeds = gj.features.filter(function(f){ return f.properties.kind==='bedding' && f.properties.quality==='prime'; })
+          .sort(function(a,b){ return polyArea(b.geometry)-polyArea(a.geometry); }).slice(0,8);
+        map.addSource('topbed', { type:'geojson', data:{ type:'FeatureCollection', features: topBeds } });
+        map.addLayer({ id:'topbed-fill', type:'fill', source:'topbed', paint:{ 'fill-color':'#2e9e3a','fill-opacity':0.5 } });
+        map.addLayer({ id:'topbed-line', type:'line', source:'topbed', layout:{'line-join':'round'}, paint:{ 'line-color':'#8dff97','line-width':3,'line-opacity':1 } });
+        topBeds.forEach(function(f){ var c=ringCentroid(f.geometry); if(!c) return;
+          var el=document.createElement('div'); el.className='hunt-marker'; el.style.fontSize='22px'; el.textContent='💤';
+          new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(c)
+            .setPopup(new maplibregl.Popup({offset:12,maxWidth:'250px'}).setHTML('<span class="tag" style="background:#2e9e3a;color:#06120a">Prime bedding</span><div class="row" style="display:block">'+(f.properties.note||'')+'</div>')).addTo(map); });
       });
       loadOptional('assets/huntable.geojson', function(gj){
         map.addSource('huntable',{ type:'geojson', data:gj });
@@ -367,10 +372,22 @@
       loadOptional('assets/plan.geojson', function(gj){
         map.addSource('plan',{ type:'geojson', data:gj });
         map.addLayer({ id:'shot', type:'line', source:'plan', filter:['==',['get','kind'],'shot'], paint:{ 'line-color':'#ffffff','line-width':2,'line-dasharray':[2,1.5],'line-opacity':0.9 } });
+        var standF = gj.features.filter(function(f){ return f.properties.kind==='stand'; })[0];
+        if(standF){
+          var s=standF.geometry.coordinates;
+          function geoRing(lng,lat,m,n){ var R=6378137,d=m/R,la=lat*Math.PI/180,lo=lng*Math.PI/180,o=[]; for(var i=0;i<=n;i++){ var b=2*Math.PI*i/n; var la2=Math.asin(Math.sin(la)*Math.cos(d)+Math.cos(la)*Math.sin(d)*Math.cos(b)); var lo2=lo+Math.atan2(Math.sin(b)*Math.sin(d)*Math.cos(la),Math.cos(d)-Math.sin(la)*Math.sin(la2)); o.push([lo2*180/Math.PI,la2*180/Math.PI]); } return o; }
+          map.addSource('range',{ type:'geojson', data:{ type:'FeatureCollection', features:[
+            { type:'Feature', properties:{ r:'100' }, geometry:{ type:'LineString', coordinates:geoRing(s[0],s[1],91.44,72) } },
+            { type:'Feature', properties:{ r:'150' }, geometry:{ type:'LineString', coordinates:geoRing(s[0],s[1],137.16,72) } }
+          ] } });
+          map.addLayer({ id:'range-150', type:'line', source:'range', filter:['==',['get','r'],'150'], paint:{ 'line-color':'#ff5a4a','line-width':1.4,'line-dasharray':[2,2],'line-opacity':0.55 } });
+          map.addLayer({ id:'range-100', type:'line', source:'range', filter:['==',['get','r'],'100'], paint:{ 'line-color':'#ff5a4a','line-width':2,'line-opacity':0.9 } });
+        }
         gj.features.forEach(function(f){ if(f.geometry.type!=='Point') return; var k=f.properties.kind;
           var el=document.createElement('div'); el.className='hunt-marker'; el.style.fontSize='26px'; el.textContent=(k==='corn'?'🌽':'🪜');
+          var extra = (k==='stand') ? '<div class="row" style="display:block;color:var(--ink-soft)">Your SKS (7.62×39): solid out to ~100 yd (red ring), ~150 yd max with an optic (dashed). The corn sits well inside that.</div>' : '';
           new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(f.geometry.coordinates)
-            .setPopup(new maplibregl.Popup({offset:14,maxWidth:'250px'}).setHTML('<span class="tag">'+(k==='corn'?'🌽 Corn pile':'🪜 Stand')+'</span><div class="row" style="display:block">'+String(f.properties.note||'')+'</div>')).addTo(map); });
+            .setPopup(new maplibregl.Popup({offset:14,maxWidth:'260px'}).setHTML('<span class="tag">'+(k==='corn'?'🌽 Corn pile':'🪜 Stand')+'</span><div class="row" style="display:block">'+String(f.properties.note||'')+'</div>'+extra)).addTo(map); });
       });
       loadOptional('assets/houses.geojson', function(gj){
         gj.features.forEach(function(f){ if(f.geometry.type!=='Point') return;
@@ -535,7 +552,7 @@
   function toggleLayers(btn, layers){ var on=btn.getAttribute('aria-pressed')!=='true'; press(btn,on); withMap(function(){ layers.forEach(function(l){ setVis(l,on); }); }); }
   $('#t-bed').onclick=function(){ toggleLayers(this,['bedding','bedding-line','hardwood','hardwood-line']); };
   $('#t-feed').onclick=function(){ toggleLayers(this,['feeding']); };
-  $('#t-route').onclick=function(){ toggleLayers(this,['routes']); };
+  $('#t-route').onclick=function(){ toggleLayers(this,['routes','routes-casing']); };
   $('#t-edge').onclick=function(){ toggleLayers(this,['edges']); };
   $('#t-safe').onclick=function(){ toggleLayers(this,['huntable','huntable-line']); };
 
@@ -547,7 +564,7 @@
   }
 
   // ---------- fly buttons ----------
-  function fitProperty(anim){ map.fitBounds([[-86.3985,33.7092],[-86.3880,33.7158]],{ padding:50, pitch:52, bearing:-18, duration:anim?dur(1400):0 }); }
+  function fitProperty(anim){ map.fitBounds([[-86.3998,33.7042],[-86.3872,33.7162]],{ padding:40, pitch:54, bearing:-18, duration:anim?dur(1400):0 }); }
   $('#fly-property').onclick=function(){ withMap(function(){ fitProperty(true); }); };
   $('#fly-area').onclick=function(){ withMap(function(){ map.fitBounds([[-86.4100,33.6991],[-86.3767,33.7323]],{ padding:30, pitch:40, duration:dur(1400) }); }); };
   $('#reset-north').onclick=function(){ withMap(function(){ map.easeTo({ bearing:0, pitch:0, duration:dur(900) }); }); };
