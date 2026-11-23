@@ -65,6 +65,15 @@
     padding:.4rem .7rem;backdrop-filter:blur(6px);}
   .flybar button:hover{background:var(--pine);color:#0d0f0c;border-color:var(--pine);}
 
+  .compass{position:absolute;left:10px;bottom:96px;z-index:6;display:flex;gap:.2rem;align-items:center;
+    background:color-mix(in srgb,var(--panel) 90%,transparent);border:1px solid var(--line);border-radius:100px;
+    padding:.25rem .35rem;backdrop-filter:blur(6px);box-shadow:0 3px 12px rgba(0,0,0,.3);}
+  .compass button{font:inherit;font-size:.8rem;font-weight:700;min-width:30px;height:30px;cursor:pointer;color:var(--ink);
+    background:transparent;border:0;border-radius:50%;line-height:1;}
+  .compass button:hover{background:var(--accent);color:#1a1205;}
+  .compass .sep{width:1px;height:18px;background:var(--line);margin:0 .1rem;}
+  @media (pointer:coarse){.compass button{min-width:38px;height:38px;font-size:.9rem;}}
+
   .readout{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;z-index:6;
     font-size:.76rem;color:var(--ink);background:color-mix(in srgb,var(--panel) 92%,transparent);
     border:1px solid var(--line);border-radius:100px;padding:.35rem .8rem;backdrop-filter:blur(6px);
@@ -150,9 +159,9 @@
     </div>
     <div class="hd" style="margin-top:.55rem">Deer &amp; hunt</div>
     <div class="segrow">
-      <button class="seg" id="t-bed" aria-pressed="false">Bedding</button>
+      <button class="seg" id="t-bed" aria-pressed="true">Bedding</button>
       <button class="seg" id="t-feed" aria-pressed="false">Feeding</button>
-      <button class="seg" id="t-route" aria-pressed="false">Routes</button>
+      <button class="seg" id="t-route" aria-pressed="true">Routes</button>
       <button class="seg" id="t-edge" aria-pressed="false">Edges</button>
       <button class="seg" id="t-safe" aria-pressed="false">Safe zone</button>
     </div>
@@ -170,6 +179,17 @@
     <button id="fly-property">My property</button>
     <button id="fly-area">Wider area</button>
     <button id="reset-north">North · flatten</button>
+  </div>
+
+  <div class="compass" id="compass" role="group" aria-label="Rotate map">
+    <button id="rot-left" title="Rotate left 45°" aria-label="Rotate left">⟲</button>
+    <span class="sep"></span>
+    <button id="rot-n" title="Face north">N</button>
+    <button id="rot-e" title="Face east">E</button>
+    <button id="rot-s" title="Face south">S</button>
+    <button id="rot-w" title="Face west">W</button>
+    <span class="sep"></span>
+    <button id="rot-right" title="Rotate right 45°" aria-label="Rotate right">⟳</button>
   </div>
 
   <div class="legend" id="legend">
@@ -318,13 +338,22 @@
       // --- deer habitat + hunt plan (built by analysis; optional) ---
       loadOptional('assets/habitat.geojson', function(gj){
         map.addSource('habitat',{ type:'geojson', data:gj });
-        map.addLayer({ id:'feeding', type:'fill', source:'habitat', filter:['==',['get','kind'],'feeding'], layout:{visibility:'none'}, paint:{ 'fill-color':'#e0bb3a','fill-opacity':0.3 } });
-        map.addLayer({ id:'hardwood', type:'fill', source:'habitat', filter:['==',['get','kind'],'hardwood_bottom'], layout:{visibility:'none'}, paint:{ 'fill-color':'#7a5a22','fill-opacity':0.4 } });
-        map.addLayer({ id:'bedding', type:'fill', source:'habitat', filter:['==',['get','kind'],'bedding'], layout:{visibility:'none'},
-          paint:{ 'fill-color':['case',['==',['get','quality'],'prime'],'#2e9e3a','#5a7d4a'],'fill-opacity':['case',['==',['get','quality'],'prime'],0.55,0.3] } });
+        map.addLayer({ id:'feeding', type:'fill', source:'habitat', filter:['==',['get','kind'],'feeding'], layout:{visibility:'none'}, paint:{ 'fill-color':'#e0bb3a','fill-opacity':0.35 } });
+        map.addLayer({ id:'hardwood', type:'fill', source:'habitat', filter:['==',['get','kind'],'hardwood_bottom'], layout:{visibility:'none'}, paint:{ 'fill-color':'#7a5a22','fill-opacity':0.45 } });
+        // bedding ON by default, with a bright outline so it reads on the satellite
+        map.addLayer({ id:'bedding', type:'fill', source:'habitat', filter:['==',['get','kind'],'bedding'], layout:{visibility:'visible'},
+          paint:{ 'fill-color':['case',['==',['get','quality'],'prime'],'#2e9e3a','#5a7d4a'],'fill-opacity':['case',['==',['get','quality'],'prime'],0.5,0.28] } });
+        map.addLayer({ id:'bedding-line', type:'line', source:'habitat', filter:['==',['get','kind'],'bedding'], layout:{visibility:'visible','line-join':'round'},
+          paint:{ 'line-color':['case',['==',['get','quality'],'prime'],'#55ff66','#a7d98a'],'line-width':['case',['==',['get','quality'],'prime'],2.4,1.1],'line-opacity':0.95 } });
         map.addLayer({ id:'edges', type:'line', source:'habitat', filter:['==',['get','kind'],'edge'], layout:{visibility:'none','line-join':'round'}, paint:{ 'line-color':'#ff9a3a','line-width':2,'line-opacity':0.6 } });
-        map.addLayer({ id:'routes', type:'line', source:'habitat', filter:['==',['get','kind'],'route'], layout:{visibility:'none','line-join':'round','line-cap':'round'}, paint:{ 'line-color':'#ffe23a','line-width':3.5,'line-dasharray':[1.4,0.9],'line-opacity':0.95 } });
+        map.addLayer({ id:'routes', type:'line', source:'habitat', filter:['==',['get','kind'],'route'], layout:{visibility:'visible','line-join':'round','line-cap':'round'}, paint:{ 'line-color':'#ffe23a','line-width':3.5,'line-dasharray':[1.4,0.9],'line-opacity':0.95 } });
         map.on('click','bedding',function(e){ var p=e.features[0].properties; new maplibregl.Popup({offset:8,maxWidth:'250px'}).setLngLat(e.lngLat).setHTML('<span class="tag" style="background:#2e9e3a">'+(p.quality==='prime'?'Prime bedding':'Bedding')+'</span><div class="row" style="display:block">'+(p.note||'')+'</div>').addTo(map); });
+        // 💤 markers at each prime bedding so they are unmistakable
+        function ringCentroid(geom){ var ring=null; if(geom.type==='Polygon') ring=geom.coordinates[0]; else if(geom.type==='MultiPolygon') ring=geom.coordinates[0][0]; if(!ring||!ring.length) return null; var sx=0,sy=0; ring.forEach(function(c){ sx+=c[0]; sy+=c[1]; }); return [sx/ring.length, sy/ring.length]; }
+        gj.features.forEach(function(f){ if(f.properties.kind!=='bedding'||f.properties.quality!=='prime') return; var c=ringCentroid(f.geometry); if(!c) return;
+          var el=document.createElement('div'); el.className='hunt-marker'; el.style.fontSize='20px'; el.textContent='💤';
+          new maplibregl.Marker({element:el,anchor:'center'}).setLngLat(c)
+            .setPopup(new maplibregl.Popup({offset:12,maxWidth:'250px'}).setHTML('<span class="tag" style="background:#2e9e3a">Prime bedding</span><div class="row" style="display:block">'+(f.properties.note||'')+'</div>')).addTo(map); });
       });
       loadOptional('assets/huntable.geojson', function(gj){
         map.addSource('huntable',{ type:'geojson', data:gj });
@@ -493,7 +522,7 @@
   $('#topo-op').oninput=function(){ $('#topo-opv').textContent=this.value+'%'; withMap(function(){ map.setPaintProperty('topo','raster-opacity', (+$('#topo-op').value)/100); }); };
 
   function toggleLayers(btn, layers){ var on=btn.getAttribute('aria-pressed')!=='true'; press(btn,on); withMap(function(){ layers.forEach(function(l){ setVis(l,on); }); }); }
-  $('#t-bed').onclick=function(){ toggleLayers(this,['bedding','hardwood']); };
+  $('#t-bed').onclick=function(){ toggleLayers(this,['bedding','bedding-line','hardwood']); };
   $('#t-feed').onclick=function(){ toggleLayers(this,['feeding']); };
   $('#t-route').onclick=function(){ toggleLayers(this,['routes']); };
   $('#t-edge').onclick=function(){ toggleLayers(this,['edges']); };
@@ -511,6 +540,13 @@
   $('#fly-property').onclick=function(){ withMap(function(){ fitProperty(true); }); };
   $('#fly-area').onclick=function(){ withMap(function(){ map.fitBounds([[-86.4100,33.6991],[-86.3767,33.7323]],{ padding:30, pitch:40, duration:dur(1400) }); }); };
   $('#reset-north').onclick=function(){ withMap(function(){ map.easeTo({ bearing:0, pitch:0, duration:dur(900) }); }); };
+  function faceBearing(b){ withMap(function(){ map.easeTo({ bearing:b, duration:dur(600) }); }); }
+  $('#rot-n').onclick=function(){ faceBearing(0); };
+  $('#rot-e').onclick=function(){ faceBearing(90); };
+  $('#rot-s').onclick=function(){ faceBearing(180); };
+  $('#rot-w').onclick=function(){ faceBearing(270); };
+  $('#rot-left').onclick=function(){ withMap(function(){ map.easeTo({ bearing: map.getBearing()-45, duration:dur(400) }); }); };
+  $('#rot-right').onclick=function(){ withMap(function(){ map.easeTo({ bearing: map.getBearing()+45, duration:dur(400) }); }); };
 })();
 </script>
 </body>
